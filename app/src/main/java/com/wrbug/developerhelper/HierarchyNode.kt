@@ -5,7 +5,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 class HierarchyNode() : Parcelable {
-    var id: Long = (2L shl 32)-1 and System.currentTimeMillis()
+    var id: Long = -1L
     var bounds: Rect? = null
     var checkable: Boolean = false
     var checked: Boolean = false

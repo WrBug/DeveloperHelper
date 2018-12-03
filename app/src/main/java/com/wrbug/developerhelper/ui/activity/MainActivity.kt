@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.service.DeveloperHelperAccessibilityService
 import kotlinx.android.synthetic.main.activity_main.*
 import com.wrbug.developerhelper.service.FloatWindowService
 

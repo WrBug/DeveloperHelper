@@ -1,8 +1,10 @@
 package com.wrbug.developerhelper.service
 
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
@@ -19,9 +21,12 @@ class FloatWindowService : Service() {
         val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         windowManager
     }
+    private val receiver = Receiver()
     private var floatView: View? = null
     override fun onCreate() {
         super.onCreate()
+        val filter = IntentFilter(ReceiverConstant.ACTION_SET_FLOAT_VIEW_VISIBLE)
+        registerReceiver(receiver, filter)
         //设置悬浮窗布局属性
         val mWindowLayoutParams = WindowManager.LayoutParams();
         //设置类型,具体有哪些值可取在后面附上
@@ -60,10 +65,28 @@ class FloatWindowService : Service() {
 
     override fun onDestroy() {
         mWindowManager.removeView(floatView)
+        unregisterReceiver(receiver)
         super.onDestroy()
     }
 
     override fun onBind(intent: Intent): IBinder {
         return null!!
+    }
+
+
+    private inner class Receiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when (intent?.action) {
+                ReceiverConstant.ACTION_SET_FLOAT_VIEW_VISIBLE -> {
+                    val visible = intent.getBooleanExtra("visible", false)
+                    floatView?.visibility = if (visible) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
+                }
+            }
+        }
+
     }
 }

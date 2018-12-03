@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
+import android.util.LongSparseArray
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.wrbug.developerhelper.ui.activity.HierarchyActivity
@@ -18,7 +19,11 @@ import java.util.HashMap
 
 class DeveloperHelperAccessibilityService : AccessibilityService() {
     private val receiver = DeveloperHelperAccessibilityReceiver()
-    var hierarchyNodes = HashMap<Long, HierarchyNode>()
+
+    companion object {
+        internal var serviceRunning = false
+    }
+
     override fun onInterrupt() {
     }
 
@@ -33,17 +38,29 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     }
 
 
-    fun readNode(): String {
+    fun readNode(): HashMap<Long, HierarchyNode> {
+        val hierarchyNodes = HashMap<Long, HierarchyNode>()
         if (rootInActiveWindow != null) {
-            hierarchyNodes.clear()
-            readNodeInfo(rootInActiveWindow, 0L)
-            return JsonHelper.toJson(hierarchyNodes)
+            readNodeInfo(hierarchyNodes, rootInActiveWindow, 0L)
         }
-        return ""
+        return hierarchyNodes
     }
 
-    private fun readNodeInfo(accessibilityNodeInfo: AccessibilityNodeInfo, parentId: Long) {
-        Log.i("aaa", "count=" + accessibilityNodeInfo.childCount)
+    override fun onCreate() {
+        super.onCreate()
+        serviceRunning = true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        serviceRunning = false
+    }
+
+    private fun readNodeInfo(
+        hierarchyNodes: HashMap<Long, HierarchyNode>,
+        accessibilityNodeInfo: AccessibilityNodeInfo,
+        parentId: Long
+    ) {
         if (accessibilityNodeInfo.childCount == 0) {
             return
         }
@@ -54,13 +71,13 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             rect.offset(0, -60)
             val node = HierarchyNode()
             if (parentId != 0L) {
-                node.id = node.id + parentId + index
+                node.id = hierarchyNodes.size.toLong()
                 hierarchyNodes[node.id] = node
                 val hierarchyNode = hierarchyNodes[parentId]
                 hierarchyNode?.childId?.add(node.id)
                 node.parentId = hierarchyNode?.id!!
             } else {
-                node.id = node.id + index
+                node.id = hierarchyNodes.size.toLong()
                 hierarchyNodes[node.id] = node
             }
             node.resourceId = if (child.viewIdResourceName == null) {
@@ -99,15 +116,14 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             node.password = child.isPassword
             node.scrollable = child.isScrollable
             node.selected = child.isSelected
-            readNodeInfo(child, node.id)
+            readNodeInfo(hierarchyNodes, child, node.id)
         }
     }
 
 
     inner class DeveloperHelperAccessibilityReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, data: Intent?) {
-            Log.i("aaaa", data?.action)
-            Log.i("aaaa", readNode())
+            val hierarchyNodes = readNode()
             val intent = Intent(context, HierarchyActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             val bundle = Bundle()
