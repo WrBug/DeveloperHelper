@@ -14,6 +14,7 @@ import android.view.View
 import android.view.WindowManager
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.constant.ReceiverConstant
+import com.wrbug.developerhelper.ui.widget.layoutinfoview.LayoutInfoView
 
 
 class FloatWindowService : Service() {
@@ -25,8 +26,7 @@ class FloatWindowService : Service() {
     private var floatView: View? = null
     override fun onCreate() {
         super.onCreate()
-        val filter = IntentFilter(ReceiverConstant.ACTION_SET_FLOAT_VIEW_VISIBLE)
-        registerReceiver(receiver, filter)
+        initReceiver()
         //设置悬浮窗布局属性
         val mWindowLayoutParams = WindowManager.LayoutParams();
         //设置类型,具体有哪些值可取在后面附上
@@ -46,9 +46,9 @@ class FloatWindowService : Service() {
         //设置 y 轴的偏移量
         mWindowLayoutParams.y = 0;
         //如果悬浮窗图片为透明图片,需要设置该参数为 PixelFormat.RGBA_8888
-        mWindowLayoutParams.format = PixelFormat.RGBA_8888;
+        mWindowLayoutParams.format = PixelFormat.RGBA_8888
         //设置悬浮窗的宽度
-        mWindowLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        mWindowLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT
         //设置悬浮窗的高度
         mWindowLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
         floatView = LayoutInflater.from(this).inflate(R.layout.layout_float_window_button, null)
@@ -56,6 +56,13 @@ class FloatWindowService : Service() {
             sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))
         }
         mWindowManager.addView(floatView, mWindowLayoutParams)
+    }
+
+    private fun initReceiver() {
+        val filter = IntentFilter(ReceiverConstant.ACTION_SET_FLOAT_VIEW_VISIBLE)
+        filter.addAction(ReceiverConstant.ACTION_SHOW_LAYOUT_INFO_VIEW)
+        filter.addAction(ReceiverConstant.ACTION_HIDE_LAYOUT_INFO_VIEW)
+        registerReceiver(receiver, filter)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

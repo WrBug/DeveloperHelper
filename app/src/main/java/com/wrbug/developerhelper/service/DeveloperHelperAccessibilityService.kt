@@ -7,18 +7,16 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
-import android.util.LongSparseArray
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.wrbug.developerhelper.ui.activity.HierarchyActivity
 import com.wrbug.developerhelper.HierarchyNode
 import com.wrbug.developerhelper.constant.ReceiverConstant
-import com.wrbug.developerhelper.util.JsonHelper
 import java.util.HashMap
 
 class DeveloperHelperAccessibilityService : AccessibilityService() {
     private val receiver = DeveloperHelperAccessibilityReceiver()
+    private var nodeId = 0L
 
     companion object {
         internal var serviceRunning = false
@@ -41,7 +39,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     fun readNode(): HashMap<Long, HierarchyNode> {
         val hierarchyNodes = HashMap<Long, HierarchyNode>()
         if (rootInActiveWindow != null) {
-            readNodeInfo(hierarchyNodes, rootInActiveWindow, 0L)
+            readNodeInfo(hierarchyNodes, rootInActiveWindow, null)
         }
         return hierarchyNodes
     }
@@ -56,10 +54,15 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
         serviceRunning = false
     }
 
+    private fun setNodeId(node: HierarchyNode) {
+        node.id = nodeId
+        nodeId++
+    }
+
     private fun readNodeInfo(
         hierarchyNodes: HashMap<Long, HierarchyNode>,
         accessibilityNodeInfo: AccessibilityNodeInfo,
-        parentId: Long
+        parentNode: HierarchyNode?
     ) {
         if (accessibilityNodeInfo.childCount == 0) {
             return
@@ -70,15 +73,10 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             child.getBoundsInScreen(rect)
             rect.offset(0, -60)
             val node = HierarchyNode()
-            if (parentId != 0L) {
-                node.id = hierarchyNodes.size.toLong()
-                hierarchyNodes[node.id] = node
-                val hierarchyNode = hierarchyNodes[parentId]
-                hierarchyNode?.childId?.add(node.id)
-                node.parentId = hierarchyNode?.id!!
-            } else {
-                node.id = hierarchyNodes.size.toLong()
-                hierarchyNodes[node.id] = node
+            setNodeId(node)
+            if (parentNode != null) {
+                parentNode.childId.add(node.id)
+                node.parentId = parentNode.id
             }
             node.resourceId = if (child.viewIdResourceName == null) {
                 ""
@@ -99,7 +97,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
                 child.className.toString()
             }
             node.clickable = child.isClickable
-            node.contentdesc = if (child.contentDescription == null) {
+            node.contentDesc = if (child.contentDescription == null) {
                 ""
             } else {
                 child.contentDescription.toString()
@@ -107,7 +105,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             node.enabled = child.isEnabled
             node.focusable = child.isFocusable
             node.focused = child.isFocused
-            node.longclickable = child.isLongClickable
+            node.longClickable = child.isLongClickable
             node.packagePath = if (child.packageName == null) {
                 ""
             } else {
@@ -116,7 +114,8 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             node.password = child.isPassword
             node.scrollable = child.isScrollable
             node.selected = child.isSelected
-            readNodeInfo(hierarchyNodes, child, node.id)
+            readNodeInfo(hierarchyNodes, child, node)
+            hierarchyNodes[node.id] = node
         }
     }
 
