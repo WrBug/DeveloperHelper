@@ -12,6 +12,7 @@ import android.widget.FrameLayout
 import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.LayoutInfoView
+import com.wrbug.developerhelper.util.UiUtils
 
 class HierarchyDetailView : FrameLayout {
     private val paint: Paint by lazy {
@@ -76,10 +77,19 @@ class HierarchyDetailView : FrameLayout {
         }
         val bounds = parentHierarchyNode?.screenBounds
         canvas?.drawRect(bounds, parentpPaint)
+
     }
 
     private fun drawNode(canvas: Canvas?) {
         val bounds = hierarchyNode?.screenBounds
         canvas?.drawRect(bounds, paint)
+        drawLine(bounds?.left ?: 0, 0, (bounds?.top!! + bounds.bottom) / 2, (bounds?.top!! + bounds.bottom) / 2, canvas, paint)
+        drawLine((bounds.left + bounds.right) / 2, (bounds.left + bounds.right) / 2, bounds.top, 0, canvas, paint)
+        drawLine(bounds.right, UiUtils.getDeviceWidth(), (bounds?.top + bounds.bottom) / 2, (bounds?.top!! + bounds.bottom) / 2, canvas, paint)
+        drawLine((bounds.left + bounds.right) / 2, (bounds.left + bounds.right) / 2, bounds.bottom, UiUtils.getDeviceHeight(), canvas, paint)
+    }
+
+    private fun drawLine(startX: Int, endX: Int, startY: Int, endY: Int, canvas: Canvas?, paint: Paint) {
+        canvas?.drawLine(startX.toFloat(), startY.toFloat(), endX.toFloat(), endY.toFloat(), paint)
     }
 }
