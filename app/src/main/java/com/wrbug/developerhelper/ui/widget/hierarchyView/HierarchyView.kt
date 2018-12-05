@@ -7,7 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.wrbug.developerhelper.HierarchyNode
+import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.R
 import java.util.*
 import kotlin.Comparator

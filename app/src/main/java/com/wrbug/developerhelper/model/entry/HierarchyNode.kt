@@ -1,4 +1,4 @@
-package com.wrbug.developerhelper
+package com.wrbug.developerhelper.model.entry
 
 import android.graphics.Rect
 import android.os.Parcel

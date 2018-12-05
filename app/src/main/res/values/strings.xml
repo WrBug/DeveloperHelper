@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">DeveloperHelper</string>
+    <string name="title_activity_guide">GuideActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="onboarding_pre_button_description">Pre</string>
+    <string name="onboarding_finish_button_description_wait">Preparing, please wait…</string>
+    <string name="onboarding_finish_button_description">Finish</string>
+    <string name="onboarding_next_button_description">Next</string>
+    <string name="float_window_permission">系统悬浮窗权限</string>
+    <string name="float_window_opened">悬浮窗权限已开启</string>
+    <string name="float_window_closed">悬浮窗权限未开启，点击前往设置</string>
 </resources>

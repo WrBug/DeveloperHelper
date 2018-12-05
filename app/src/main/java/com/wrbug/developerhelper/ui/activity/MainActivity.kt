@@ -7,35 +7,21 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.service.DeveloperHelperAccessibilityService
 import kotlinx.android.synthetic.main.activity_main.*
 import com.wrbug.developerhelper.service.FloatWindowService
+import com.wrbug.developerhelper.ui.activity.guide.GuideActivity
 
 
-class MainActivity : Activity() {
+class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         tv.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!Settings.canDrawOverlays(this)) {
-                    startActivityForResult(
-                        Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")),
-                        0
-                    )
-                } else {
-                    startService(Intent(this, FloatWindowService::class.java))
-                }
-                return@setOnClickListener
-            }
-            startService(Intent(this, FloatWindowService::class.java))
-
+            startActivity(Intent(this, GuideActivity::class.java))
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-    }
 }

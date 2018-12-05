@@ -4,14 +4,14 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import com.wrbug.developerhelper.HierarchyNode
+import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.ui.widget.hierarchyView.HierarchyView
 import kotlinx.android.synthetic.main.activity_hierarchy.*
-import java.util.HashMap
 
-class HierarchyActivity : AppCompatActivity() {
+class HierarchyActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

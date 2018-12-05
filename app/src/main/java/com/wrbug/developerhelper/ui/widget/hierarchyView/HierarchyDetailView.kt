@@ -9,7 +9,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import com.wrbug.developerhelper.HierarchyNode
+import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.LayoutInfoView
 

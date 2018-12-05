@@ -10,7 +10,7 @@ import android.os.Bundle
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.wrbug.developerhelper.ui.activity.HierarchyActivity
-import com.wrbug.developerhelper.HierarchyNode
+import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import java.util.HashMap
 
