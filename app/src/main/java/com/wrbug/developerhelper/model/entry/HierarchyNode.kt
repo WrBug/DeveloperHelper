@@ -6,7 +6,8 @@ import android.os.Parcelable
 
 class HierarchyNode() : Parcelable {
     var id: Long = -1L
-    var bounds: Rect? = null
+    var screenBounds: Rect? = null
+    var parentBounds: Rect? = null
     var checkable: Boolean = false
     var checked: Boolean = false
     var classPath: String = ""
@@ -28,7 +29,8 @@ class HierarchyNode() : Parcelable {
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readLong()
-        bounds = parcel.readParcelable(Rect::class.java.classLoader)
+        screenBounds = parcel.readParcelable(Rect::class.java.classLoader)
+        parentBounds = parcel.readParcelable(Rect::class.java.classLoader)
         checkable = parcel.readByte() != 0.toByte()
         checked = parcel.readByte() != 0.toByte()
         classPath = parcel.readString()
@@ -50,7 +52,8 @@ class HierarchyNode() : Parcelable {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(id)
-        parcel.writeParcelable(bounds, flags)
+        parcel.writeParcelable(screenBounds, flags)
+        parcel.writeParcelable(parentBounds, flags)
         parcel.writeByte(if (checkable) 1 else 0)
         parcel.writeByte(if (checked) 1 else 0)
         parcel.writeString(classPath)

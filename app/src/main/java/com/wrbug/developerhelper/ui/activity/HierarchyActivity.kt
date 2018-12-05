@@ -20,9 +20,9 @@ class HierarchyActivity : BaseActivity() {
         setFloatViewVisible(false)
         hierarchyView.setHierarchyNodes(list)
         hierarchyView.setOnHierarchyNodeClickListener(object : HierarchyView.OnHierarchyNodeClickListener {
-            override fun onClick(node: HierarchyNode) {
+            override fun onClick(node: HierarchyNode,parentNode: HierarchyNode?) {
                 hierarchyDetailView.visibility = View.VISIBLE
-                hierarchyDetailView.hierarchyNode = node
+                hierarchyDetailView.setNode(node,parentNode)
             }
 
         })

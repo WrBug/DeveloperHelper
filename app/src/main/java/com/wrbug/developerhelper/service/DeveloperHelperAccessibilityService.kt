@@ -12,6 +12,7 @@ import android.view.accessibility.AccessibilityNodeInfo
 import com.wrbug.developerhelper.ui.activity.HierarchyActivity
 import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.constant.ReceiverConstant
+import com.wrbug.developerhelper.util.UiUtils
 import java.util.HashMap
 
 class DeveloperHelperAccessibilityService : AccessibilityService() {
@@ -69,9 +70,11 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
         }
         for (index in 0 until accessibilityNodeInfo.childCount) {
             val child = accessibilityNodeInfo.getChild(index)
-            val rect = Rect()
-            child.getBoundsInScreen(rect)
-            rect.offset(0, -60)
+            val screenRect = Rect()
+            val parentRect = Rect()
+            child.getBoundsInScreen(screenRect)
+            child.getBoundsInParent(parentRect)
+            screenRect.offset(0, -UiUtils.getStatusHeight())
             val node = HierarchyNode()
             setNodeId(node)
             if (parentNode != null) {
@@ -88,7 +91,8 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
                 text = child.text.toString()
             }
             node.text = text
-            node.bounds = rect
+            node.screenBounds = screenRect
+            node.parentBounds = parentRect
             node.checkable = child.isCheckable
             node.checked = child.isChecked
             node.classPath = if (child.className == null) {

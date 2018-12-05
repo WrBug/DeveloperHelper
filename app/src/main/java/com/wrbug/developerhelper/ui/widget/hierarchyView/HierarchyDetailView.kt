@@ -21,6 +21,13 @@ class HierarchyDetailView : FrameLayout {
         paint.strokeWidth = 3F
         paint
     }
+    private val parentpPaint: Paint by lazy {
+        val paint = Paint()
+        paint.color = context.resources.getColor(R.color.colorAccentLight)
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = 3F
+        paint
+    }
     private val layoutInfoView: LayoutInfoView by lazy {
         val layoutInfoView = LayoutInfoView(context)
         val params = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -28,11 +35,8 @@ class HierarchyDetailView : FrameLayout {
         addView(layoutInfoView, params)
         layoutInfoView
     }
-    var hierarchyNode: HierarchyNode? = null
-        set(value) {
-            field = value
-            invalidate()
-        }
+    private var parentHierarchyNode: HierarchyNode? = null
+    private var hierarchyNode: HierarchyNode? = null
 
     constructor(context: Context) : super(context) {
         initView()
@@ -41,6 +45,12 @@ class HierarchyDetailView : FrameLayout {
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         initView()
+    }
+
+    fun setNode(hierarchyNode: HierarchyNode, parentHierarchyNode: HierarchyNode?) {
+        this.hierarchyNode = hierarchyNode
+        this.parentHierarchyNode = parentHierarchyNode
+        invalidate()
     }
 
     private fun initView() {
@@ -54,11 +64,22 @@ class HierarchyDetailView : FrameLayout {
         super.onDraw(canvas)
         if (hierarchyNode != null) {
             drawNode(canvas)
+            if (hierarchyNode?.parentId!! > -1) {
+                drawParentNode(canvas)
+            }
         }
     }
 
+    private fun drawParentNode(canvas: Canvas?) {
+        if (parentHierarchyNode == null) {
+            return
+        }
+        val bounds = parentHierarchyNode?.screenBounds
+        canvas?.drawRect(bounds, parentpPaint)
+    }
+
     private fun drawNode(canvas: Canvas?) {
-        val bounds = hierarchyNode?.bounds
+        val bounds = hierarchyNode?.screenBounds
         canvas?.drawRect(bounds, paint)
     }
 }

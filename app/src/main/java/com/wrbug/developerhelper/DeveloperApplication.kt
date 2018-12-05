@@ -2,17 +2,14 @@ package com.wrbug.developerhelper
 
 import android.app.Application
 import com.tencent.mmkv.MMKV
+import com.wrbug.developerhelper.basecommon.BaseApp
 
 
+class DeveloperApplication : BaseApp() {
 
-class DeveloperApplication : Application() {
-    companion object {
-        var instance: DeveloperApplication? = null
-    }
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
         MMKV.initialize(this)
     }
 }

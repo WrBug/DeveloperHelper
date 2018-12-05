@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Button xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:text="dump"
-    android:layout_height="wrap_content"
-    android:padding="5dp">
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:padding="5dp"
+    android:alpha="0.7"
+    android:src="@mipmap/ic_launcher_round">
 
-</Button>
+</ImageView>
