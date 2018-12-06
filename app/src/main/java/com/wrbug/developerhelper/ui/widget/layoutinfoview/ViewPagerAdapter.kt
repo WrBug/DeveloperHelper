@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.wrbug.developerhelper.model.entry.HierarchyNode
+import com.wrbug.developerhelper.ui.widget.boundsinfoview.BoundsInfoView
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.ItemInfo
 
@@ -21,11 +22,15 @@ class ViewPagerAdapter(
 
     init {
         initInfoTab()
-//        initLayoutTable()
+        initLayoutTable()
     }
 
     private fun initLayoutTable() {
         tabList.add("Layout")
+        val boundsInfoView = BoundsInfoView(context)
+        boundsInfoView.bounds = hierarchyNode.screenBounds
+        boundsInfoView.unit=BoundsInfoView.Unit.DP
+        viewList.add(boundsInfoView)
     }
 
     private fun initInfoTab() {

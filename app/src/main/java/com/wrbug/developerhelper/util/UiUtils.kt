@@ -6,21 +6,25 @@ import com.wrbug.developerhelper.basecommon.BaseApp
 
 object UiUtils {
 
-    fun dp2px(dpVal: Float, context: Context): Int {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpVal, context.resources.displayMetrics).toInt()
+    fun dp2px(dpVal: Float): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dpVal,
+            BaseApp.instance?.resources?.displayMetrics
+        ).toInt()
     }
 
-    fun sp2px(spVal: Float, context: Context): Int {
-        return TypedValue.applyDimension(2, spVal, context.resources.displayMetrics).toInt()
+    fun sp2px(spVal: Float): Int {
+        return TypedValue.applyDimension(2, spVal, BaseApp.instance?.resources?.displayMetrics).toInt()
     }
 
-    fun px2dp(pxVal: Float, context: Context): Float {
-        val scale = context.resources.displayMetrics.density
+    fun px2dp(pxVal: Float): Float {
+        val scale = BaseApp.instance?.resources?.displayMetrics?.density!!
         return pxVal / scale
     }
 
-    fun px2sp(pxVal: Float, context: Context): Float {
-        return pxVal / context.resources.displayMetrics.scaledDensity
+    fun px2sp(pxVal: Float): Float {
+        return pxVal / BaseApp.instance?.resources?.displayMetrics?.scaledDensity!!
     }
 
     /**
