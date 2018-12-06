@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.ui.widget.helper.CanvasHelper
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.LayoutInfoView
 import com.wrbug.developerhelper.util.UiUtils
 
@@ -29,13 +30,7 @@ class HierarchyDetailView : FrameLayout {
         paint.strokeWidth = 3F
         paint
     }
-    private val layoutInfoView: LayoutInfoView by lazy {
-        val layoutInfoView = LayoutInfoView(context)
-        val params = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        params.gravity = Gravity.BOTTOM
-        addView(layoutInfoView, params)
-        layoutInfoView
-    }
+
     private var parentHierarchyNode: HierarchyNode? = null
     private var hierarchyNode: HierarchyNode? = null
 
@@ -52,12 +47,12 @@ class HierarchyDetailView : FrameLayout {
         this.hierarchyNode = hierarchyNode
         this.parentHierarchyNode = parentHierarchyNode
         invalidate()
+        LayoutInfoView(context,hierarchyNode).show()
     }
 
     private fun initView() {
         setBackgroundColor(Color.TRANSPARENT)
         setWillNotDraw(false)
-        layoutInfoView.visibility = View.VISIBLE
     }
 
 
@@ -83,10 +78,38 @@ class HierarchyDetailView : FrameLayout {
     private fun drawNode(canvas: Canvas?) {
         val bounds = hierarchyNode?.screenBounds
         canvas?.drawRect(bounds, paint)
-        drawLine(bounds?.left ?: 0, 0, (bounds?.top!! + bounds.bottom) / 2, (bounds?.top!! + bounds.bottom) / 2, canvas, paint)
-        drawLine((bounds.left + bounds.right) / 2, (bounds.left + bounds.right) / 2, bounds.top, 0, canvas, paint)
-        drawLine(bounds.right, UiUtils.getDeviceWidth(), (bounds?.top + bounds.bottom) / 2, (bounds?.top!! + bounds.bottom) / 2, canvas, paint)
-        drawLine((bounds.left + bounds.right) / 2, (bounds.left + bounds.right) / 2, bounds.bottom, UiUtils.getDeviceHeight(), canvas, paint)
+        CanvasHelper.drawAL(
+            bounds?.left ?: 0,
+            0,
+            (bounds?.top!! + bounds.bottom) / 2,
+            (bounds?.top!! + bounds.bottom) / 2,
+            canvas,
+            paint
+        )
+        CanvasHelper.drawAL(
+            (bounds.left + bounds.right) / 2,
+            (bounds.left + bounds.right) / 2,
+            bounds.top,
+            0,
+            canvas,
+            paint
+        )
+        CanvasHelper.drawAL(
+            bounds.right,
+            UiUtils.getDeviceWidth(),
+            (bounds?.top + bounds.bottom) / 2,
+            (bounds?.top!! + bounds.bottom) / 2,
+            canvas,
+            paint
+        )
+        CanvasHelper.drawAL(
+            (bounds.left + bounds.right) / 2,
+            (bounds.left + bounds.right) / 2,
+            bounds.bottom,
+            UiUtils.getDeviceHeight(),
+            canvas,
+            paint
+        )
     }
 
     private fun drawLine(startX: Int, endX: Int, startY: Int, endY: Int, canvas: Canvas?, paint: Paint) {

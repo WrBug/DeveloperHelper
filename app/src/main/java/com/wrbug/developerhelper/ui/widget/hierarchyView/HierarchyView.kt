@@ -8,10 +8,6 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.wrbug.developerhelper.model.entry.HierarchyNode
-import java.util.*
-import kotlin.Comparator
-import kotlin.collections.ArrayList
-import kotlin.collections.LinkedHashMap
 
 class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private val strokePaint = Paint()

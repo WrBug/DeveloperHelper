@@ -10,7 +10,7 @@ class HierarchyNode() : Parcelable {
     var parentBounds: Rect? = null
     var checkable: Boolean = false
     var checked: Boolean = false
-    var classPath: String = ""
+    var widget: String = ""
     var clickable: Boolean = false
     var contentDesc: String = ""
     var enabled: Boolean = false
@@ -33,7 +33,7 @@ class HierarchyNode() : Parcelable {
         parentBounds = parcel.readParcelable(Rect::class.java.classLoader)
         checkable = parcel.readByte() != 0.toByte()
         checked = parcel.readByte() != 0.toByte()
-        classPath = parcel.readString()
+        widget = parcel.readString()
         clickable = parcel.readByte() != 0.toByte()
         contentDesc = parcel.readString()
         enabled = parcel.readByte() != 0.toByte()
@@ -56,7 +56,7 @@ class HierarchyNode() : Parcelable {
         parcel.writeParcelable(parentBounds, flags)
         parcel.writeByte(if (checkable) 1 else 0)
         parcel.writeByte(if (checked) 1 else 0)
-        parcel.writeString(classPath)
+        parcel.writeString(widget)
         parcel.writeByte(if (clickable) 1 else 0)
         parcel.writeString(contentDesc)
         parcel.writeByte(if (enabled) 1 else 0)

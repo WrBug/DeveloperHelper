@@ -95,7 +95,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             node.parentBounds = parentRect
             node.checkable = child.isCheckable
             node.checked = child.isChecked
-            node.classPath = if (child.className == null) {
+            node.widget = if (child.className == null) {
                 ""
             } else {
                 child.className.toString()
