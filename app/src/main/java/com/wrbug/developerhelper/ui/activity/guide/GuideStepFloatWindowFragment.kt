@@ -36,7 +36,7 @@ class GuideStepFloatWindowFragment : GuideStepFragment() {
     private fun checkFloatWindow() {
         if (activity != null && DeviceUtils.isFloatWindowOpened(activity!!)) {
             contentTv.text = getString(R.string.float_window_opened)
-            activity?.startService(Intent(activity, FloatWindowService::class.java))
+            FloatWindowService.start(activity!!)
         } else {
             contentTv.text = getString(R.string.float_window_closed)
         }

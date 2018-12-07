@@ -24,10 +24,12 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
         contentPaint.color = Color.argb(20, 0, 0, 0)
     }
 
-    fun setHierarchyNodes(hierarchyNodes: Map<Long, HierarchyNode>?) {
+    fun setHierarchyNodes(hierarchyNodes: List<HierarchyNode>?) {
         mHierarchyNodeMap.clear()
-        if (hierarchyNodes != null) {
-            mHierarchyNodeMap.putAll(hierarchyNodes.toSortedMap(Comparator { _, _ -> -1 }))
+        hierarchyNodes?.let {
+            for (value in it) {
+                mHierarchyNodeMap[value.id] = value
+            }
         }
         invalidate()
     }

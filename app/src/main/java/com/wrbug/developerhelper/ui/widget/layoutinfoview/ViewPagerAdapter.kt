@@ -29,7 +29,6 @@ class ViewPagerAdapter(
         tabList.add("Layout")
         val boundsInfoView = BoundsInfoView(context)
         boundsInfoView.bounds = hierarchyNode.screenBounds
-        boundsInfoView.unit=BoundsInfoView.Unit.DP
         viewList.add(boundsInfoView)
     }
 
@@ -37,21 +36,25 @@ class ViewPagerAdapter(
         tabList.add("Info")
         val recyclerView = RecyclerView(context)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val list = arrayListOf<ItemInfo>()
-        list.add(ItemInfo("Package", hierarchyNode.packagePath))
-        list.add(ItemInfo("Widget", hierarchyNode.widget))
-        list.add(ItemInfo("Enable", hierarchyNode.enabled))
-        list.add(ItemInfo("Clickable", hierarchyNode.clickable))
-        list.add(ItemInfo("Checkable", hierarchyNode.checkable))
-        list.add(ItemInfo("Checked", hierarchyNode.checked))
-        list.add(ItemInfo("Text", hierarchyNode.text))
-        list.add(ItemInfo("Focusable", hierarchyNode.focusable))
-        list.add(ItemInfo("Focused", hierarchyNode.focused))
-        list.add(ItemInfo("LongClickable", hierarchyNode.longClickable))
-        list.add(ItemInfo("ScreenBounds", hierarchyNode.screenBounds ?: ""))
-        list.add(ItemInfo("ParentBounds", hierarchyNode.parentBounds ?: ""))
-        list.add(ItemInfo("Password", hierarchyNode.password))
-        list.add(ItemInfo("Selected", hierarchyNode.selected))
+        val list = with(hierarchyNode) {
+            val list = arrayListOf<ItemInfo>()
+            list.add(ItemInfo("Package", packagePath))
+            list.add(ItemInfo("Widget", widget))
+            list.add(ItemInfo("Enable", enabled))
+            list.add(ItemInfo("Clickable", clickable))
+            list.add(ItemInfo("Checkable", checkable))
+            list.add(ItemInfo("Checked", checked))
+            list.add(ItemInfo("Text", text))
+            list.add(ItemInfo("Focusable", focusable))
+            list.add(ItemInfo("Focused", focused))
+            list.add(ItemInfo("LongClickable", longClickable))
+            list.add(ItemInfo("ScreenBounds", screenBounds ?: ""))
+            list.add(ItemInfo("ParentBounds", parentBounds ?: ""))
+            list.add(ItemInfo("Password", password))
+            list.add(ItemInfo("Selected", selected))
+            list
+        }
+
         recyclerView.adapter = infoAdapter
         val params = ViewPager.LayoutParams()
         infoAdapter.setItems(list)

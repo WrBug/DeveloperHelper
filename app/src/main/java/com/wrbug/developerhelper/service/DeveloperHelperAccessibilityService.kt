@@ -13,7 +13,8 @@ import com.wrbug.developerhelper.ui.activity.HierarchyActivity
 import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.util.UiUtils
-import java.util.HashMap
+import java.util.*
+import kotlin.collections.ArrayList
 
 class DeveloperHelperAccessibilityService : AccessibilityService() {
     private val receiver = DeveloperHelperAccessibilityReceiver()
@@ -37,8 +38,8 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     }
 
 
-    fun readNode(): HashMap<Long, HierarchyNode> {
-        val hierarchyNodes = HashMap<Long, HierarchyNode>()
+    fun readNode(): ArrayList<HierarchyNode> {
+        val hierarchyNodes = arrayListOf<HierarchyNode>()
         if (rootInActiveWindow != null) {
             readNodeInfo(hierarchyNodes, rootInActiveWindow, null)
         }
@@ -61,7 +62,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     }
 
     private fun readNodeInfo(
-        hierarchyNodes: HashMap<Long, HierarchyNode>,
+        hierarchyNodes: ArrayList<HierarchyNode>,
         accessibilityNodeInfo: AccessibilityNodeInfo,
         parentNode: HierarchyNode?
     ) {
@@ -119,7 +120,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             node.scrollable = child.isScrollable
             node.selected = child.isSelected
             readNodeInfo(hierarchyNodes, child, node)
-            hierarchyNodes[node.id] = node
+            hierarchyNodes.add(node)
         }
     }
 
@@ -130,7 +131,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             val intent = Intent(context, HierarchyActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             val bundle = Bundle()
-            bundle.putSerializable("node", hierarchyNodes)
+            bundle.putParcelableArrayList("node", hierarchyNodes)
             intent.putExtras(bundle)
             startActivity(intent)
         }

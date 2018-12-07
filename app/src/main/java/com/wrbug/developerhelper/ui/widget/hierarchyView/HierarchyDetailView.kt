@@ -47,7 +47,7 @@ class HierarchyDetailView : FrameLayout {
         this.hierarchyNode = hierarchyNode
         this.parentHierarchyNode = parentHierarchyNode
         invalidate()
-        LayoutInfoView(context,hierarchyNode).show()
+        LayoutInfoView(context, hierarchyNode).show()
     }
 
     private fun initView() {
@@ -76,43 +76,42 @@ class HierarchyDetailView : FrameLayout {
     }
 
     private fun drawNode(canvas: Canvas?) {
-        val bounds = hierarchyNode?.screenBounds
-        canvas?.drawRect(bounds, paint)
-        CanvasHelper.drawAL(
-            bounds?.left ?: 0,
-            0,
-            (bounds?.top!! + bounds.bottom) / 2,
-            (bounds?.top!! + bounds.bottom) / 2,
-            canvas,
-            paint
-        )
-        CanvasHelper.drawAL(
-            (bounds.left + bounds.right) / 2,
-            (bounds.left + bounds.right) / 2,
-            bounds.top,
-            0,
-            canvas,
-            paint
-        )
-        CanvasHelper.drawAL(
-            bounds.right,
-            UiUtils.getDeviceWidth(),
-            (bounds?.top + bounds.bottom) / 2,
-            (bounds?.top!! + bounds.bottom) / 2,
-            canvas,
-            paint
-        )
-        CanvasHelper.drawAL(
-            (bounds.left + bounds.right) / 2,
-            (bounds.left + bounds.right) / 2,
-            bounds.bottom,
-            UiUtils.getDeviceHeight(),
-            canvas,
-            paint
-        )
+        hierarchyNode?.screenBounds?.let {
+            canvas?.drawRect(it, paint)
+            CanvasHelper.drawAL(
+                it.left ?: 0,
+                0,
+                (it.top + it.bottom) / 2,
+                (it.top + it.bottom) / 2,
+                canvas,
+                paint
+            )
+            CanvasHelper.drawAL(
+                (it.left + it.right) / 2,
+                (it.left + it.right) / 2,
+                it.top,
+                0,
+                canvas,
+                paint
+            )
+            CanvasHelper.drawAL(
+                it.right,
+                UiUtils.getDeviceWidth(),
+                (it.top + it.bottom) / 2,
+                (it.top + it.bottom) / 2,
+                canvas,
+                paint
+            )
+            CanvasHelper.drawAL(
+                (it.left + it.right) / 2,
+                (it.left + it.right) / 2,
+                it.bottom,
+                UiUtils.getDeviceHeight(),
+                canvas,
+                paint
+            )
+        }
+
     }
 
-    private fun drawLine(startX: Int, endX: Int, startY: Int, endY: Int, canvas: Canvas?, paint: Paint) {
-        canvas?.drawLine(startX.toFloat(), startY.toFloat(), endX.toFloat(), endY.toFloat(), paint)
-    }
 }

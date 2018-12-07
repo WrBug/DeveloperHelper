@@ -16,13 +16,13 @@ class HierarchyActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hierarchy)
-        val list = intent.getSerializableExtra("node") as? Map<Long, HierarchyNode>
+        val list = intent.getParcelableArrayListExtra<HierarchyNode>("node")
         setFloatViewVisible(false)
         hierarchyView.setHierarchyNodes(list)
         hierarchyView.setOnHierarchyNodeClickListener(object : HierarchyView.OnHierarchyNodeClickListener {
-            override fun onClick(node: HierarchyNode,parentNode: HierarchyNode?) {
+            override fun onClick(node: HierarchyNode, parentNode: HierarchyNode?) {
                 hierarchyDetailView.visibility = View.VISIBLE
-                hierarchyDetailView.setNode(node,parentNode)
+                hierarchyDetailView.setNode(node, parentNode)
             }
 
         })

@@ -19,7 +19,7 @@ class BoundsInfoView : View {
         }
     private val edgeLineSize = UiUtils.dp2px(4F).toFloat()
     private val paint = Paint()
-    var unit: Unit = Unit.PX
+    var unit: Unit = Unit.DP
         set(value) {
             if (field == value) {
                 return
@@ -42,127 +42,128 @@ class BoundsInfoView : View {
     }
 
     private fun drawMarginSize(lineRect: RectF, canvas: Canvas?) {
-        if (bounds == null) {
-            return
+        bounds?.let {
+            paint.reset()
+            paint.isAntiAlias = true
+            paint.textSize = UiUtils.dp2px(14F).toFloat()
+            var leftMargin = it.left
+            var topMargin = it.top
+            var rightMargin = UiUtils.getDeviceWidth() - it.right
+            var bottomMargin = UiUtils.getDeviceHeight() - it.bottom
+            if (unit == Unit.DP) {
+                leftMargin = UiUtils.px2dp(leftMargin.toFloat()).toInt()
+                topMargin = UiUtils.px2dp(topMargin.toFloat()).toInt()
+                rightMargin = UiUtils.px2dp(rightMargin.toFloat()).toInt()
+                bottomMargin = UiUtils.px2dp(bottomMargin.toFloat()).toInt()
+            }
+            val leftMarginText = "$leftMargin ${unit.s}"
+            val topMarginText = "$topMargin ${unit.s}"
+            val rightMarginText = "$rightMargin ${unit.s}"
+            val bottomMarginText = "$bottomMargin ${unit.s}"
+            val bounds = Rect()
+            paint.getTextBounds(leftMarginText, 0, leftMarginText.length, bounds)
+            canvas?.drawText(
+                leftMarginText,
+                lineRect.left - bounds.width() - edgeLineSize / 2 - textMargin,
+                (lineRect.top + lineRect.bottom) / 2 + bounds.height() / 2,
+                paint
+            )
+
+            paint.getTextBounds(topMarginText, 0, topMarginText.length, bounds)
+            canvas?.drawText(
+                topMarginText,
+                (lineRect.left + lineRect.right) / 2 - bounds.width() / 2,
+                lineRect.top - edgeLineSize / 2 - textMargin,
+                paint
+            )
+
+            paint.getTextBounds(rightMarginText, 0, rightMarginText.length, bounds)
+            canvas?.drawText(
+                rightMarginText,
+                lineRect.right + edgeLineSize / 2 + textMargin,
+                (lineRect.top + lineRect.bottom) / 2 + bounds.height() / 2,
+                paint
+            )
+
+            paint.getTextBounds(bottomMarginText, 0, bottomMarginText.length, bounds)
+            canvas?.drawText(
+                bottomMarginText,
+                (lineRect.left + lineRect.right) / 2 - bounds.width() / 2,
+                lineRect.bottom + bounds.height() + edgeLineSize / 2 + textMargin,
+                paint
+            )
         }
-        paint.reset()
-        paint.isAntiAlias = true
-        paint.textSize = UiUtils.dp2px(14F).toFloat()
-        var leftMargin = bounds?.left ?: 0
-        var topMargin = bounds?.top ?: 0
-        var rightMargin = UiUtils.getDeviceWidth() - bounds?.right!!
-        var bottomMargin = UiUtils.getDeviceHeight() - bounds?.bottom!!
-        if (unit == Unit.DP) {
-            leftMargin = UiUtils.px2dp(leftMargin.toFloat()).toInt()
-            topMargin = UiUtils.px2dp(topMargin.toFloat()).toInt()
-            rightMargin = UiUtils.px2dp(rightMargin.toFloat()).toInt()
-            bottomMargin = UiUtils.px2dp(bottomMargin.toFloat()).toInt()
-        }
-        val leftMarginText = "$leftMargin ${unit.s}"
-        val topMarginText = "$topMargin ${unit.s}"
-        val rightMarginText = "$rightMargin ${unit.s}"
-        val bottomMarginText = "$bottomMargin ${unit.s}"
-        val bounds = Rect()
-        paint.getTextBounds(leftMarginText, 0, leftMarginText.length, bounds)
-        canvas?.drawText(
-            leftMarginText,
-            lineRect.left - bounds.width() - edgeLineSize / 2 - textMargin,
-            (lineRect.top + lineRect.bottom) / 2 + bounds.height() / 2,
-            paint
-        )
-
-        paint.getTextBounds(topMarginText, 0, topMarginText.length, bounds)
-        canvas?.drawText(
-            topMarginText,
-            (lineRect.left + lineRect.right) / 2 - bounds.width() / 2,
-            lineRect.top - edgeLineSize / 2 - textMargin,
-            paint
-        )
-
-        paint.getTextBounds(rightMarginText, 0, rightMarginText.length, bounds)
-        canvas?.drawText(
-            rightMarginText,
-            lineRect.right + edgeLineSize / 2 + textMargin,
-            (lineRect.top + lineRect.bottom) / 2 + bounds.height() / 2,
-            paint
-        )
-
-        paint.getTextBounds(bottomMarginText, 0, bottomMarginText.length, bounds)
-        canvas?.drawText(
-            bottomMarginText,
-            (lineRect.left + lineRect.right) / 2 - bounds.width() / 2,
-            lineRect.bottom + bounds.height() + edgeLineSize / 2 + textMargin,
-            paint
-        )
     }
 
     private fun drawRectSize(rect: RectF, canvas: Canvas?) {
-        if (bounds == null) {
-            return
+        bounds?.let {
+            var width = it.right - it.left
+            var height = it.bottom - it.top
+            if (unit == Unit.DP) {
+                width = UiUtils.px2dp(width.toFloat()).toInt()
+                height = UiUtils.px2dp(height.toFloat()).toInt()
+            }
+            val text = "$width ${unit.s} × $height ${unit.s}"
+            paint.reset()
+            paint.isAntiAlias = true
+            paint.textSize = UiUtils.dp2px(14F).toFloat()
+            val bounds = Rect()
+            paint.getTextBounds(text, 0, text.length, bounds)
+            val textWidth = bounds.width()
+            val textHeight = bounds.height()
+            canvas?.drawText(
+                text,
+                (rect.left + rect.right) / 2 - textWidth / 2,
+                (rect.top + rect.bottom) / 2 + textHeight / 2,
+                paint
+            )
         }
-        var width = bounds?.right!! - bounds?.left!!
-        var height = bounds?.bottom!! - bounds?.top!!
-        if (unit == Unit.DP) {
-            width = UiUtils.px2dp(width.toFloat()).toInt()
-            height = UiUtils.px2dp(height.toFloat()).toInt()
-        }
-        val text = "$width ${unit.s} × $height ${unit.s}"
-        paint.reset()
-        paint.isAntiAlias = true
-        paint.textSize = UiUtils.dp2px(14F).toFloat()
-        val bounds = Rect()
-        paint.getTextBounds(text, 0, text.length, bounds)
-        val textWidth = bounds.width()
-        val textHeight = bounds.height()
-        canvas?.drawText(
-            text,
-            (rect.left + rect.right) / 2 - textWidth / 2,
-            (rect.top + rect.bottom) / 2 + textHeight / 2,
-            paint
-        )
+
     }
 
     private fun drawAl(rect: RectF, lineRect: RectF, canvas: Canvas?) {
-        paint.reset()
-        paint.style = Paint.Style.STROKE
-        paint.isAntiAlias = true
-        paint.color = resources.getColor(R.color.colorAccent)
-        paint.strokeWidth = UiUtils.dp2px(1F).toFloat()
-        CanvasHelper.drawAL(
-            rect.left,
-            lineRect.left + edgeLineSize / 2,
-            (rect.top + rect.bottom) / 2,
-            (rect.top + rect.bottom) / 2,
-            canvas,
-            paint
-        )
+        canvas?.run {
+            paint.reset()
+            paint.style = Paint.Style.STROKE
+            paint.isAntiAlias = true
+            paint.color = resources.getColor(R.color.colorAccent)
+            paint.strokeWidth = UiUtils.dp2px(1F).toFloat()
+            CanvasHelper.drawAL(
+                rect.left,
+                lineRect.left + edgeLineSize / 2,
+                (rect.top + rect.bottom) / 2,
+                (rect.top + rect.bottom) / 2,
+                canvas,
+                paint
+            )
 
-        CanvasHelper.drawAL(
-            (rect.left + rect.right) / 2,
-            (rect.left + rect.right) / 2,
-            rect.top,
-            lineRect.top + edgeLineSize / 2,
-            canvas,
-            paint
-        )
+            CanvasHelper.drawAL(
+                (rect.left + rect.right) / 2,
+                (rect.left + rect.right) / 2,
+                rect.top,
+                lineRect.top + edgeLineSize / 2,
+                canvas,
+                paint
+            )
 
-        CanvasHelper.drawAL(
-            rect.right,
-            lineRect.right - edgeLineSize / 2,
-            (rect.top + rect.bottom) / 2,
-            (rect.top + rect.bottom) / 2,
-            canvas,
-            paint
-        )
+            CanvasHelper.drawAL(
+                rect.right,
+                lineRect.right - edgeLineSize / 2,
+                (rect.top + rect.bottom) / 2,
+                (rect.top + rect.bottom) / 2,
+                canvas,
+                paint
+            )
 
-        CanvasHelper.drawAL(
-            (rect.left + rect.right) / 2,
-            (rect.left + rect.right) / 2,
-            rect.bottom,
-            lineRect.bottom - edgeLineSize / 2,
-            canvas,
-            paint
-        )
+            CanvasHelper.drawAL(
+                (rect.left + rect.right) / 2,
+                (rect.left + rect.right) / 2,
+                rect.bottom,
+                lineRect.bottom - edgeLineSize / 2,
+                canvas,
+                paint
+            )
+        }
     }
 
     private fun drawEdge(rect: RectF, canvas: Canvas?): RectF {
@@ -174,36 +175,36 @@ class BoundsInfoView : View {
         val lineHeight = measuredHeight / 6
         val lineRect =
             RectF(rect.left / 2F, rect.top / 2F, measuredWidth - rect.left / 2F, measuredHeight - rect.top / 2F)
-        canvas?.drawLine(
-            lineRect.left,
-            (rect.top + rect.bottom) / 2F - lineHeight / 2F,
-            lineRect.left,
-            (rect.top + rect.bottom) / 2F + lineHeight / 2F,
-            paint
-        )
-        canvas?.drawLine(
-            (rect.left + rect.right) / 2F - lineWidth / 2F,
-            lineRect.top,
-            (rect.left + rect.right) / 2F + lineWidth / 2F,
-            lineRect.top,
-            paint
-        )
-
-        canvas?.drawLine(
-            lineRect.right,
-            (rect.top + rect.bottom) / 2F - lineHeight / 2F,
-            lineRect.right,
-            (rect.top + rect.bottom) / 2F + lineHeight / 2F,
-            paint
-        )
-
-        canvas?.drawLine(
-            (rect.left + rect.right) / 2F - lineWidth / 2F,
-            lineRect.bottom,
-            (rect.left + rect.right) / 2F + lineWidth / 2F,
-            lineRect.bottom,
-            paint
-        )
+        canvas?.run {
+            drawLine(
+                lineRect.left,
+                (rect.top + rect.bottom) / 2F - lineHeight / 2F,
+                lineRect.left,
+                (rect.top + rect.bottom) / 2F + lineHeight / 2F,
+                paint
+            )
+            drawLine(
+                (rect.left + rect.right) / 2F - lineWidth / 2F,
+                lineRect.top,
+                (rect.left + rect.right) / 2F + lineWidth / 2F,
+                lineRect.top,
+                paint
+            )
+            drawLine(
+                lineRect.right,
+                (rect.top + rect.bottom) / 2F - lineHeight / 2F,
+                lineRect.right,
+                (rect.top + rect.bottom) / 2F + lineHeight / 2F,
+                paint
+            )
+            drawLine(
+                (rect.left + rect.right) / 2F - lineWidth / 2F,
+                lineRect.bottom,
+                (rect.left + rect.right) / 2F + lineWidth / 2F,
+                lineRect.bottom,
+                paint
+            )
+        }
         return lineRect
     }
 

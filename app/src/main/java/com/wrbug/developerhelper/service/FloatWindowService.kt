@@ -18,6 +18,14 @@ import com.wrbug.developerhelper.ui.widget.layoutinfoview.LayoutInfoView
 
 
 class FloatWindowService : Service() {
+
+
+    companion object {
+        fun start(context: Context) {
+            context.startService(Intent(context, FloatWindowService::class.java))
+        }
+    }
+
     private val mWindowManager: WindowManager by lazy {
         val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         windowManager
