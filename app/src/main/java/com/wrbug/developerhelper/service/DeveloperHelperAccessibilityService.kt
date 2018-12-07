@@ -79,8 +79,10 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             val node = HierarchyNode()
             setNodeId(node)
             if (parentNode != null) {
-                parentNode.childId.add(node.id)
+                parentNode.childId.add(node)
                 node.parentId = parentNode.id
+            } else {
+                hierarchyNodes.add(node)
             }
             node.resourceId = if (child.viewIdResourceName == null) {
                 ""
@@ -120,7 +122,6 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             node.scrollable = child.isScrollable
             node.selected = child.isSelected
             readNodeInfo(hierarchyNodes, child, node)
-            hierarchyNodes.add(node)
         }
     }
 

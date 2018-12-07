@@ -12,7 +12,7 @@ import com.wrbug.developerhelper.model.entry.HierarchyNode
 class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private val strokePaint = Paint()
     private val contentPaint = Paint()
-    private var mHierarchyNodeMap: LinkedHashMap<Long, HierarchyNode> = LinkedHashMap()
+    private var mHierarchyNodes = arrayListOf<HierarchyNode>()
     private var onHierarchyNodeClickListener: OnHierarchyNodeClickListener? = null
 
     constructor(context: Context) : this(context, null)
@@ -25,11 +25,9 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
     }
 
     fun setHierarchyNodes(hierarchyNodes: List<HierarchyNode>?) {
-        mHierarchyNodeMap.clear()
+        mHierarchyNodes.clear()
         hierarchyNodes?.let {
-            for (value in it) {
-                mHierarchyNodeMap[value.id] = value
-            }
+            mHierarchyNodes.addAll(it)
         }
         invalidate()
     }
@@ -43,7 +41,7 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
             MotionEvent.ACTION_DOWN -> {
                 val hierarchyNode = getNode(event.x, event.y)
                 if (hierarchyNode != null && onHierarchyNodeClickListener != null) {
-                    onHierarchyNodeClickListener?.onClick(hierarchyNode, mHierarchyNodeMap[hierarchyNode.parentId])
+                    onHierarchyNodeClickListener?.onClick(hierarchyNode.selectedNode, hierarchyNode.parentNode)
                 }
             }
         }
@@ -51,8 +49,13 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
     }
 
     override fun onDraw(canvas: Canvas?) {
-        for (hierarchyNode in mHierarchyNodeMap) {
-            drawWidget(canvas, hierarchyNode.value)
+        drawRect(canvas, mHierarchyNodes)
+    }
+
+    private fun drawRect(canvas: Canvas?, hierarchyNodes: List<HierarchyNode>) {
+        for (hierarchyNode in hierarchyNodes) {
+            drawWidget(canvas, hierarchyNode)
+            drawRect(canvas, hierarchyNode.childId)
         }
     }
 
@@ -62,8 +65,8 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
         canvas?.drawRect(mBounds, strokePaint)
     }
 
-    fun getNode(x: Float, y: Float): HierarchyNode? {
-        for (hierarchyNode in mHierarchyNodeMap.values) {
+    fun getNode(x: Float, y: Float): SelectedNodeInfo? {
+        for (hierarchyNode in mHierarchyNodes) {
             val node = getNode(x, y, hierarchyNode)
             if (node != null) {
                 return node
@@ -72,18 +75,18 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
         return null
     }
 
-    private fun getNode(x: Float, y: Float, hierarchyNode: HierarchyNode): HierarchyNode? {
+    private fun getNode(x: Float, y: Float, hierarchyNode: HierarchyNode): SelectedNodeInfo? {
         val rect = hierarchyNode.screenBounds ?: return null
-        if (rect.left < x && rect.right >= x && rect.top < y && rect.bottom >= y) {
+        if (rect.contains(x.toInt(), y.toInt())) {
             if (!hierarchyNode.childId.isEmpty()) {
-                for (id in hierarchyNode.childId) {
-                    val node = getNode(x, y, mHierarchyNodeMap[id]!!)
+                for (child in hierarchyNode.childId.reversed()) {
+                    val node = getNode(x, y, child)
                     if (node != null) {
-                        return node
+                        return SelectedNodeInfo(node.selectedNode,hierarchyNode)
                     }
                 }
             }
-            return hierarchyNode
+            return SelectedNodeInfo(hierarchyNode,null)
         }
         return null
     }

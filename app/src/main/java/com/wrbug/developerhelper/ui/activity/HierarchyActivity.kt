@@ -1,13 +1,13 @@
 package com.wrbug.developerhelper.ui.activity
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.util.ArrayMap
 import android.view.View
-import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.constant.ReceiverConstant
+import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.ui.widget.hierarchyView.HierarchyView
 import kotlinx.android.synthetic.main.activity_hierarchy.*
 
@@ -28,10 +28,8 @@ class HierarchyActivity : BaseActivity() {
         })
     }
 
-
     override fun onDestroy() {
         setFloatViewVisible(true)
-        hideLayoutInfoView()
         super.onDestroy()
     }
 
@@ -43,14 +41,10 @@ class HierarchyActivity : BaseActivity() {
         super.onBackPressed()
     }
 
+
     private fun setFloatViewVisible(visible: Boolean) {
         val intent = Intent(ReceiverConstant.ACTION_SET_FLOAT_VIEW_VISIBLE)
         intent.putExtra("visible", visible)
-        sendBroadcast(intent)
-    }
-
-    private fun hideLayoutInfoView() {
-        val intent = Intent(ReceiverConstant.ACTION_HIDE_LAYOUT_INFO_VIEW)
         sendBroadcast(intent)
     }
 }

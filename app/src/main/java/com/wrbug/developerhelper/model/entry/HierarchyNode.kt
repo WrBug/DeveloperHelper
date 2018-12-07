@@ -3,8 +3,11 @@ package com.wrbug.developerhelper.model.entry
 import android.graphics.Rect
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.reflect.TypeToken
+import com.wrbug.developerhelper.util.JsonHelper
+import java.io.Serializable
 
-class HierarchyNode() : Parcelable {
+class HierarchyNode() : Parcelable, Serializable {
     var id: Long = -1L
     var screenBounds: Rect? = null
     var parentBounds: Rect? = null
@@ -25,7 +28,7 @@ class HierarchyNode() : Parcelable {
     var text: String = ""
     var resourceId: String = ""
     var parentId: Long = -1L
-    val childId: ArrayList<Long> = arrayListOf()
+    var childId: ArrayList<HierarchyNode> = arrayListOf()
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readLong()
@@ -48,6 +51,8 @@ class HierarchyNode() : Parcelable {
         text = parcel.readString()
         resourceId = parcel.readString()
         parentId = parcel.readLong()
+        childId = JsonHelper.fromJson(parcel.readString(), object : TypeToken<ArrayList<HierarchyNode>>() {}.type) ?:
+                arrayListOf()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -71,6 +76,7 @@ class HierarchyNode() : Parcelable {
         parcel.writeString(text)
         parcel.writeString(resourceId)
         parcel.writeLong(parentId)
+        parcel.writeString(JsonHelper.toJson(childId))
     }
 
     override fun describeContents(): Int {
@@ -86,6 +92,5 @@ class HierarchyNode() : Parcelable {
             return arrayOfNulls(size)
         }
     }
-
 
 }

@@ -40,6 +40,7 @@ class ViewPagerAdapter(
             val list = arrayListOf<ItemInfo>()
             list.add(ItemInfo("Package", packagePath))
             list.add(ItemInfo("Widget", widget))
+            list.add(ItemInfo("resourceId", resourceId))
             list.add(ItemInfo("Enable", enabled))
             list.add(ItemInfo("Clickable", clickable))
             list.add(ItemInfo("Checkable", checkable))

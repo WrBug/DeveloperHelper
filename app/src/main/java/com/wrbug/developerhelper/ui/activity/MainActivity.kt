@@ -13,11 +13,15 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         FloatWindowService.start(this)
-        tv.setOnClickListener {
+        setContentView(R.layout.activity_main)
+        tv111.setOnClickListener {
             startActivity(Intent(this, GuideActivity::class.java))
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
 }
