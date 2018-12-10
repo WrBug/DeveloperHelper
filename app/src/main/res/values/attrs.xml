@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SettingItemView">
+        <attr name="src" format="dimension" />
+        <attr name="title" format="string" />
+        <attr name="summary" format="string" />
+        <attr name="switchVisible" format="boolean" />
+        <attr name="checked" format="boolean" />
+    </declare-styleable>
+</resources>

@@ -1,47 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/res1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activity.MainActivity">
 
-    <TextView
-        android:id="@+id/tv111"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <ScrollView
-        android:id="@+id/res2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        <include layout="@layout/layout_toolbar" />
+    </android.support.design.widget.AppBarLayout>
 
-        <LinearLayout
-            android:id="@+id/res3"
-            android:layout_width="100dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:background="@color/colorAccent"
-            android:padding="30dp">
+            android:padding="16dp"
+            android:text="基本设置"
+            android:textColor="@color/colorAccent" />
 
-            <EditText
-                android:id="@+id/res4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="asfcsdasd" />
+        <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:src="@drawable/ic_accessibility_666666"
+            app:title="开启无障碍辅助" />
 
-        </LinearLayout>
-    </ScrollView>
-</android.support.constraint.ConstraintLayout>
+        <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:src="@drawable/ic_float_air_bubble_666666"
+            app:title="开启悬浮窗权限" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/material_text_color_black_divider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="高级功能设置"
+            android:textColor="@color/colorAccent" />
+
+        <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:src="@drawable/ic_root_666666"
+            app:checked="true"
+            app:summary="推荐开启，用于获取应用数据库等信息"
+            app:title="开启root权限" />
+
+        <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:src="@drawable/ic_xposed_666666"
+            app:title="启用xposed特性"
+            app:summary="开发中"/>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
