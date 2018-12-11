@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
-
+apply plugin: 'kotlin-kapt'//kapt 插件
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -20,6 +20,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -34,8 +37,16 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.tencent:mmkv:1.0.14'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.github.yhaolpz:FloatWindow:1.0.9'
+    implementation 'com.jaredrummler:android-shell:1.0.0'
     implementation project(':basecommon')
+    kapt "com.android.databinding:compiler:$gradle_version"
+
+    //dagger2
+    implementation 'com.google.dagger:dagger:2.16'
+    kapt 'com.google.dagger:dagger-compiler:2.16'
+}
+kapt {
+    generateStubs = true
 }

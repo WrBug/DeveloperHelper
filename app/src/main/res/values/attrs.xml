@@ -6,5 +6,6 @@
         <attr name="summary" format="string" />
         <attr name="switchVisible" format="boolean" />
         <attr name="checked" format="boolean" />
+        <attr name="checkable" format="boolean" />
     </declare-styleable>
 </resources>
