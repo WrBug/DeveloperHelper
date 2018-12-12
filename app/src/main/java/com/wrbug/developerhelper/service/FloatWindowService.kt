@@ -8,8 +8,6 @@ import android.content.IntentFilter
 import android.os.IBinder
 import android.provider.Settings
 import android.view.LayoutInflater
-import android.view.View
-import android.view.WindowManager
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.yhao.floatwindow.FloatWindow
@@ -18,9 +16,8 @@ import com.yhao.floatwindow.Screen
 
 class FloatWindowService : Service() {
 
-
     companion object {
-        const val tag = "floatView"
+        const val FLOAT_BUTTON = "floatButton"
         fun start(context: Context) {
             context.startService(Intent(context, FloatWindowService::class.java))
         }
@@ -30,20 +27,17 @@ class FloatWindowService : Service() {
         }
     }
 
-    private val mWindowManager: WindowManager by lazy {
-        val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        windowManager
-    }
+
     private val receiver = Receiver()
-    private var floatView: View? = null
     override fun onCreate() {
         super.onCreate()
         initReceiver()
-        floatView = LayoutInflater.from(this).inflate(R.layout.layout_float_window_button, null)
-        floatView?.let { it ->
+        LayoutInflater.from(this).inflate(R.layout.layout_float_window_button, null)?.let { it ->
             it.setOnClickListener {
                 if (!DeveloperHelperAccessibilityService.serviceRunning) {
-                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                     return@setOnClickListener
                 }
                 sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))
@@ -54,25 +48,25 @@ class FloatWindowService : Service() {
                 .setWidth(Screen.width, 0.1f)                               //设置控件宽高
                 .setHeight(Screen.width, 0.1f)
                 .setY(Screen.height, 0.3f)
-                .setTag(tag)
+                .setTag(FLOAT_BUTTON)
                 .setDesktopShow(true)                        //桌面显示
                 .build()
-            showFloatView()
+            showFloatButton()
         }
 
 
     }
 
-    private fun showFloatView() {
-        FloatWindow.get(tag).show()
+    private fun showFloatButton() {
+        FloatWindow.get(FLOAT_BUTTON).show()
     }
 
-    private fun hideFloatView() {
-        FloatWindow.get(tag).hide()
+    private fun hideFloatButton() {
+        FloatWindow.get(FLOAT_BUTTON).hide()
     }
 
     private fun initReceiver() {
-        val filter = IntentFilter(ReceiverConstant.ACTION_SET_FLOAT_VIEW_VISIBLE)
+        val filter = IntentFilter(ReceiverConstant.ACTION_SET_FLOAT_BUTTON_VISIBLE)
         registerReceiver(receiver, filter)
     }
 
@@ -81,7 +75,7 @@ class FloatWindowService : Service() {
     }
 
     override fun onDestroy() {
-        mWindowManager.removeView(floatView)
+        FloatWindow.destroy(FLOAT_BUTTON)
         unregisterReceiver(receiver)
         super.onDestroy()
     }
@@ -92,12 +86,12 @@ class FloatWindowService : Service() {
     private inner class Receiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
-                ReceiverConstant.ACTION_SET_FLOAT_VIEW_VISIBLE -> {
+                ReceiverConstant.ACTION_SET_FLOAT_BUTTON_VISIBLE -> {
                     val visible = intent.getBooleanExtra("visible", false)
                     if (visible) {
-                        showFloatView()
+                        showFloatButton()
                     } else {
-                        hideFloatView()
+                        hideFloatButton()
                     }
                 }
             }

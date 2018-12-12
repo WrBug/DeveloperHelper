@@ -35,7 +35,7 @@
         </service>
 
         <activity
-            android:name=".ui.activity.HierarchyActivity"
+            android:name=".ui.activity.hierachy.HierarchyActivity"
             android:theme="@style/translucent" />
 
         <service

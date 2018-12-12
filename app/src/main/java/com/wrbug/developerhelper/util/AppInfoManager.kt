@@ -12,18 +12,11 @@ object AppInfoManager {
      */
     fun getAllApps(): HashMap<String, ApkInfo> {
         val apkMap = HashMap<String, ApkInfo>()
-        val packageInfoMap = HashMap<String, PackageInfo>()
         val pManager = BaseApp.instance.packageManager
         // 获取手机内所有应用
-        val appList = pManager.getInstalledApplications(0)
         val paklist = pManager.getInstalledPackages(0)
         for (packageInfo in paklist) {
-            packageInfoMap[packageInfo.packageName] = packageInfo
-        }
-        for (appInfo in appList) {
-            packageInfoMap[appInfo.packageName]?.let {
-                apkMap[appInfo.processName] = ApkInfo(it, appInfo)
-            }
+            apkMap[packageInfo.packageName] = ApkInfo(packageInfo, packageInfo.applicationInfo)
         }
         return apkMap
     }

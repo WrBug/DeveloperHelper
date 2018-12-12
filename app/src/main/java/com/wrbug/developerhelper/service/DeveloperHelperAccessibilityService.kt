@@ -9,13 +9,12 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import com.wrbug.developerhelper.ui.activity.HierarchyActivity
+import com.wrbug.developerhelper.ui.activity.hierachy.HierarchyActivity
 import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.model.entry.ApkInfo
 import com.wrbug.developerhelper.util.AppInfoManager
 import com.wrbug.developerhelper.util.UiUtils
-import java.util.*
 import kotlin.collections.ArrayList
 
 class DeveloperHelperAccessibilityService : AccessibilityService() {
@@ -31,9 +30,8 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        event?.let {
-            val packageName = it.packageName.toString()
-            currentAppInfo = AppInfoManager.getAppByPackageName(packageName)
+        event?.packageName?.let {
+            currentAppInfo = AppInfoManager.getAppByPackageName(it.toString())
         }
     }
 
@@ -139,6 +137,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             val intent = Intent(context, HierarchyActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             val bundle = Bundle()
+            bundle.putParcelable("apkInfo", currentAppInfo)
             bundle.putParcelableArrayList("node", hierarchyNodes)
             intent.putExtras(bundle)
             startActivity(intent)
