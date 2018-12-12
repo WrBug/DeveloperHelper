@@ -5,4 +5,5 @@
     android:accessibilityFlags="flagRequestTouchExplorationMode|flagRequestEnhancedWebAccessibility|flagReportViewIds|flagRequestFilterKeyEvents|flagRetrieveInteractiveWindows"
     android:canRequestFilterKeyEvents="true"
     android:canRetrieveWindowContent="true"
+    android:description="@string/accessibility_description"
     android:notificationTimeout="0" />

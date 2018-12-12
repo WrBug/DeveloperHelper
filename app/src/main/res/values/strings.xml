@@ -10,4 +10,15 @@
     <string name="float_window_permission">系统悬浮窗权限</string>
     <string name="float_window_opened">悬浮窗权限已开启</string>
     <string name="float_window_closed">悬浮窗权限未开启，点击前往设置</string>
+    <string name="accessibility_service_opened">无障碍功能已开启</string>
+    <string name="devices_is_not_root">该设备未root，无法开启</string>
+    <string name="base_setting">基本设置</string>
+    <string name="advance_setting">高级功能设置</string>
+    <string name="open_accessibility_service">开启无障碍辅助</string>
+    <string name="open_float_window">开启悬浮窗权限</string>
+    <string name="open_root_permission_summary">推荐开启，用于获取应用数据库等信息</string>
+    <string name="open_root_permission_title">开启root权限</string>
+    <string name="open_xposed_title">启用xposed特性</string>
+    <string name="open_xposed_summary">开发中</string>
+    <string name="accessibility_description">辅助功能用于界面布局分析等</string>
 </resources>

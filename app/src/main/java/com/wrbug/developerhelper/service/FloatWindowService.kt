@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
@@ -19,8 +20,13 @@ class FloatWindowService : Service() {
 
 
     companion object {
+        const val tag = "floatView"
         fun start(context: Context) {
             context.startService(Intent(context, FloatWindowService::class.java))
+        }
+
+        fun stop(context: Context) {
+            context.stopService(Intent(context, FloatWindowService::class.java))
         }
     }
 
@@ -36,9 +42,12 @@ class FloatWindowService : Service() {
         floatView = LayoutInflater.from(this).inflate(R.layout.layout_float_window_button, null)
         floatView?.let { it ->
             it.setOnClickListener {
+                if (!DeveloperHelperAccessibilityService.serviceRunning) {
+                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                    return@setOnClickListener
+                }
                 sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))
             }
-            val tag = "floatView"
             FloatWindow
                 .with(applicationContext)
                 .setView(it)
@@ -48,10 +57,18 @@ class FloatWindowService : Service() {
                 .setTag(tag)
                 .setDesktopShow(true)                        //桌面显示
                 .build()
-            FloatWindow.get(tag).show()
+            showFloatView()
         }
 
 
+    }
+
+    private fun showFloatView() {
+        FloatWindow.get(tag).show()
+    }
+
+    private fun hideFloatView() {
+        FloatWindow.get(tag).hide()
     }
 
     private fun initReceiver() {
@@ -69,9 +86,7 @@ class FloatWindowService : Service() {
         super.onDestroy()
     }
 
-    override fun onBind(intent: Intent): IBinder {
-        return null!!
-    }
+    override fun onBind(intent: Intent): IBinder = null!!
 
 
     private inner class Receiver : BroadcastReceiver() {
@@ -79,10 +94,10 @@ class FloatWindowService : Service() {
             when (intent?.action) {
                 ReceiverConstant.ACTION_SET_FLOAT_VIEW_VISIBLE -> {
                     val visible = intent.getBooleanExtra("visible", false)
-                    floatView?.visibility = if (visible) {
-                        View.VISIBLE
+                    if (visible) {
+                        showFloatView()
                     } else {
-                        View.GONE
+                        hideFloatView()
                     }
                 }
             }

@@ -21,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 
 /**
  * Various extension functions for AppCompatActivity.
@@ -33,9 +35,9 @@ fun AppCompatActivity.setupActionBar(@IdRes toolbarId: Int, action: ActionBar.()
         action()
     }
 }
-//
-//fun <T : ViewModel> AppCompatActivity.obtainViewModel(viewModelClass: Class<T>) =
-//    ViewModelProviders.of(this).get(viewModelClass)
+
+fun <T : ViewModel> AppCompatActivity.obtainViewModel(viewModelClass: Class<T>) =
+    ViewModelProviders.of(this).get(viewModelClass)
 
 /**
  * Runs a FragmentTransaction, then calls commit().

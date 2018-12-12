@@ -4,7 +4,7 @@ import android.app.Application
 
 open class BaseApp : Application() {
     companion object {
-        var instance: BaseApp? = null
+        lateinit var instance: BaseApp
     }
 
     override fun onCreate() {

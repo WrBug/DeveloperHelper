@@ -60,9 +60,11 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
     }
 
     private fun drawWidget(canvas: Canvas?, hierarchyNode: HierarchyNode) {
-        val mBounds = hierarchyNode.screenBounds
-        canvas?.drawRect(mBounds, contentPaint)
-        canvas?.drawRect(mBounds, strokePaint)
+        hierarchyNode.screenBounds?.let {
+            canvas?.drawRect(it, contentPaint)
+            canvas?.drawRect(it, strokePaint)
+        }
+
     }
 
     fun getNode(x: Float, y: Float): SelectedNodeInfo? {
@@ -82,11 +84,11 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
                 for (child in hierarchyNode.childId.reversed()) {
                     val node = getNode(x, y, child)
                     if (node != null) {
-                        return SelectedNodeInfo(node.selectedNode,hierarchyNode)
+                        return SelectedNodeInfo(node.selectedNode, hierarchyNode)
                     }
                 }
             }
-            return SelectedNodeInfo(hierarchyNode,null)
+            return SelectedNodeInfo(hierarchyNode, null)
         }
         return null
     }

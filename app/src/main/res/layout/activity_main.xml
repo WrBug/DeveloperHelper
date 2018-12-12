@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:text="基本设置"
+                android:text="@string/base_setting"
                 android:textColor="@color/colorAccent" />
 
             <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
@@ -47,7 +47,7 @@
                 app:checkable="false"
                 app:checked="@{mainVm.openAccessibility}"
                 app:src="@drawable/ic_accessibility_666666"
-                app:title="开启无障碍辅助" />
+                app:title="@string/open_accessibility_service" />
 
             <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
                 android:id="@+id/floatWindowSettingView"
@@ -57,7 +57,7 @@
                 app:checkable="false"
                 app:checked="@{mainVm.openFloatWindow}"
                 app:src="@drawable/ic_float_air_bubble_666666"
-                app:title="开启悬浮窗权限" />
+                app:title="@string/open_float_window" />
 
             <View
                 android:layout_width="match_parent"
@@ -68,17 +68,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:text="高级功能设置"
+                android:text="@string/advance_setting"
                 android:textColor="@color/colorAccent" />
 
             <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
                 android:id="@+id/rootSettingView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="@{()->presenter.onRootClick()}"
+                app:checkable="false"
                 app:checked="@{mainVm.openRoot}"
                 app:src="@drawable/ic_root_666666"
-                app:summary="推荐开启，用于获取应用数据库等信息"
-                app:title="开启root权限" />
+                app:summary="@string/open_root_permission_summary"
+                app:title="@string/open_root_permission_title" />
 
             <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
                 android:id="@+id/xposedSettingView"
@@ -87,8 +89,8 @@
                 app:checkable="false"
                 app:checked="@{mainVm.openXposed}"
                 app:src="@drawable/ic_xposed_666666"
-                app:summary="开发中"
-                app:title="启用xposed特性" />
+                app:summary="@string/open_xposed_summary"
+                app:title="@string/open_xposed_title" />
         </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

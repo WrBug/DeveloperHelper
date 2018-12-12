@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.wrbug.developerhelper.model.mmkv.manager
 
 import androidx.collection.ArrayMap
@@ -11,11 +13,11 @@ object MMKVManager {
         }
         val instance = obtainImpl(clazz)
         map[clazz] = instance
-        return instance as T
+        return instance
     }
 
-    private fun <T> obtainImpl(clazz: Class<T>): T? {
+    private fun <T> obtainImpl(clazz: Class<T>): T {
         val instance = Proxy.newProxyInstance(clazz.classLoader, arrayOf(clazz), MMKVInvocationHandler(clazz))
-        return instance as T?
+        return instance as T
     }
 }
