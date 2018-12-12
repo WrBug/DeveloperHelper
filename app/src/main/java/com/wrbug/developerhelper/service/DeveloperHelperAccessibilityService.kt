@@ -12,6 +12,8 @@ import android.view.accessibility.AccessibilityNodeInfo
 import com.wrbug.developerhelper.ui.activity.HierarchyActivity
 import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.constant.ReceiverConstant
+import com.wrbug.developerhelper.model.entry.ApkInfo
+import com.wrbug.developerhelper.util.AppInfoManager
 import com.wrbug.developerhelper.util.UiUtils
 import java.util.*
 import kotlin.collections.ArrayList
@@ -19,6 +21,7 @@ import kotlin.collections.ArrayList
 class DeveloperHelperAccessibilityService : AccessibilityService() {
     private val receiver = DeveloperHelperAccessibilityReceiver()
     private var nodeId = 0L
+    private var currentAppInfo: ApkInfo? = null
 
     companion object {
         internal var serviceRunning = false
@@ -28,6 +31,10 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
+        event?.let {
+            val packageName = it.packageName.toString()
+            currentAppInfo = AppInfoManager.getAppByPackageName(packageName)
+        }
     }
 
     override fun onServiceConnected() {

@@ -1,6 +1,5 @@
-package com.wrbug.developerhelper.basecommon.daggerinject
+package com.wrbug.developerhelper.ui.activity.main.daggerinject
 
-import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.ui.activity.main.MainActivity
 import dagger.Component
 

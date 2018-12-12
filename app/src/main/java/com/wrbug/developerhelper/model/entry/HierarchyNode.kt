@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.wrbug.developerhelper.util.JsonHelper
 import java.io.Serializable
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class HierarchyNode() : Parcelable, Serializable {
     var id: Long = -1L
     var screenBounds: Rect? = null

@@ -40,17 +40,19 @@ class ViewPagerAdapter(
             val list = arrayListOf<ItemInfo>()
             list.add(ItemInfo("Package", packagePath))
             list.add(ItemInfo("Widget", widget))
-            list.add(ItemInfo("resourceId", resourceId))
+            list.add(ItemInfo("Id", resourceId))
+            if (!text.isEmpty()) {
+                list.add(ItemInfo("Text", text))
+            }
             list.add(ItemInfo("Enable", enabled))
             list.add(ItemInfo("Clickable", clickable))
             list.add(ItemInfo("Checkable", checkable))
             list.add(ItemInfo("Checked", checked))
-            list.add(ItemInfo("Text", text))
+
             list.add(ItemInfo("Focusable", focusable))
             list.add(ItemInfo("Focused", focused))
             list.add(ItemInfo("LongClickable", longClickable))
-            list.add(ItemInfo("ScreenBounds", screenBounds ?: ""))
-            list.add(ItemInfo("ParentBounds", parentBounds ?: ""))
+            list.add(ItemInfo("Bounds", screenBounds ?: ""))
             list.add(ItemInfo("Password", password))
             list.add(ItemInfo("Selected", selected))
             list
