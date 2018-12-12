@@ -1,7 +1,7 @@
 package com.wrbug.developerhelper.ui.widget.layoutinfoview
 
 import android.content.Context
-import android.support.design.widget.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.model.entry.HierarchyNode
 import kotlinx.android.synthetic.main.view_layout_info.*

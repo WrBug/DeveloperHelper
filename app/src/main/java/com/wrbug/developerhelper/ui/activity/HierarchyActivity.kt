@@ -2,7 +2,6 @@ package com.wrbug.developerhelper.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.util.ArrayMap
 import android.view.View
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity

@@ -1,6 +1,6 @@
 package com.wrbug.developerhelper.model.mmkv.manager
 
-import android.support.v4.util.ArrayMap
+import androidx.collection.ArrayMap
 import java.lang.reflect.Proxy
 
 object MMKVManager {

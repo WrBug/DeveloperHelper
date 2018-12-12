@@ -2,15 +2,12 @@ package com.wrbug.developerhelper.ui.activity.guide
 
 import android.animation.ArgbEvaluator
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewPager
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.viewpager.widget.ViewPager
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity
 import kotlinx.android.synthetic.main.activity_guide.*
-import com.wrbug.developerhelper.R.id.buttonFinish
-import com.wrbug.developerhelper.R.id.viewPager
-import com.wrbug.developerhelper.R.id.viewPager
 
 
 class GuideActivity : BaseActivity() {

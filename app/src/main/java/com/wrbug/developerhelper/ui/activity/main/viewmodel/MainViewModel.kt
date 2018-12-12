@@ -1,8 +1,7 @@
 package com.wrbug.developerhelper.ui.activity.main.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
-import android.databinding.BaseObservable
-import android.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
+import androidx.databinding.ObservableField
 import com.wrbug.developerhelper.basecommon.BaseViewModel
 import com.wrbug.developerhelper.model.mmkv.ConfigKv
 import com.wrbug.developerhelper.model.mmkv.manager.MMKVManager

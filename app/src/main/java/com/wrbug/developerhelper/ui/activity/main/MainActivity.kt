@@ -1,12 +1,12 @@
 package com.wrbug.developerhelper.ui.activity.main
 
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import androidx.databinding.DataBindingUtil
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.basecommon.BaseVMActivity

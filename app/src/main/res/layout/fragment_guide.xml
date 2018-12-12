@@ -27,7 +27,7 @@
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/labelTv"
             style="@style/TextAppearance.AppCompat.Headline"
             android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
             android:textColor="@android:color/white"
             tools:text="Page One" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/contentTv"
             style="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="wrap_content"
