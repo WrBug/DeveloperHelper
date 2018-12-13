@@ -11,9 +11,12 @@ import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.ui.widget.hierarchyView.HierarchyView
 import kotlinx.android.synthetic.main.activity_hierarchy.*
 
-class HierarchyActivity : BaseActivity() {
+class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
+
+
     private var apkInfo: ApkInfo? = null
     private var nodeList: List<HierarchyNode>? = null
+    private var showHierachyView = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hierarchy)
@@ -31,7 +34,8 @@ class HierarchyActivity : BaseActivity() {
         dialog.show(supportFragmentManager, "")
     }
 
-    fun showHierachyView() {
+    override fun showHierachyView() {
+        showHierachyView = true
         hierarchyView.setHierarchyNodes(nodeList)
         hierarchyView.setOnHierarchyNodeClickListener(object : HierarchyView.OnHierarchyNodeClickListener {
             override fun onClick(node: HierarchyNode, parentNode: HierarchyNode?) {
@@ -45,6 +49,12 @@ class HierarchyActivity : BaseActivity() {
     override fun onDestroy() {
         setFloatButtonVisible(true)
         super.onDestroy()
+    }
+
+    override fun close() {
+        if (!showHierachyView) {
+            finish()
+        }
     }
 
     override fun onBackPressed() {

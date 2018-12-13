@@ -1,6 +1,5 @@
 package com.wrbug.developerhelper.util
 
-import android.content.pm.PackageInfo
 import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.model.entry.ApkInfo
 

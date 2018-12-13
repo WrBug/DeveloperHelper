@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_height="300dp"
     android:background="@android:color/white"
+    android:orientation="vertical"
     tools:context=".ui.activity.main.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/titleContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimaryDark">
@@ -31,7 +32,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/logoIv"
             app:layout_constraintTop_toTopOf="parent"
@@ -55,5 +56,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/apkInfoRv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:paddingTop="8dp" />
 </LinearLayout>

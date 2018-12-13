@@ -32,9 +32,7 @@ class InfoAdapter(val context: Context) : RecyclerView.Adapter<InfoAdapter.ViewH
         val itemInfo = list[p1]
         p0.itemView.titleTv.text = itemInfo.title
         p0.itemView.contentTv.text = itemInfo.content.toString()
-        p0.itemView.contentTv.setOnClickListener {
-            ClipboardUtils.saveClipboardText(it.context, (it as TextView).text.toString())
-        }
+        p0.itemView.contentTv.setOnClickListener(itemInfo.clickListener)
     }
 
 
