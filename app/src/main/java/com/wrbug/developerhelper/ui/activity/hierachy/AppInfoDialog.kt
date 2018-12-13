@@ -40,12 +40,12 @@ class AppInfoDialog : DialogFragment() {
         val view = inflater.inflate(R.layout.dialog_apk_info, container, false)
         dialog.window.takeUnless {
             it == null
-        }?.let {
-            val layoutParams = it.attributes
+        }?.run {
+            val layoutParams = attributes
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
             layoutParams.height = UiUtils.getDeviceHeight() / 2
-            it.attributes = layoutParams
-            it.setGravity(Gravity.TOP)
+            attributes = layoutParams
+            setGravity(Gravity.TOP)
         }
         return view
     }

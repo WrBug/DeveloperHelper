@@ -4,10 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.util.ClipboardUtils
+import com.wrbug.developerhelper.util.print
 import kotlinx.android.synthetic.main.item_view_info.view.*
 
 class InfoAdapter(val context: Context) : RecyclerView.Adapter<InfoAdapter.ViewHolder>() {
@@ -32,7 +31,12 @@ class InfoAdapter(val context: Context) : RecyclerView.Adapter<InfoAdapter.ViewH
         val itemInfo = list[p1]
         p0.itemView.titleTv.text = itemInfo.title
         p0.itemView.contentTv.text = itemInfo.content.toString()
-        p0.itemView.contentTv.setOnClickListener(itemInfo.clickListener)
+        p0.itemView.contentTv.setOnClickListener {
+            itemInfo.content.print()
+            itemInfo.clickListener?.run {
+                onClick(it)
+            }
+        }
     }
 
 

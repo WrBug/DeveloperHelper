@@ -30,9 +30,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        event?.packageName?.let {
-            currentAppInfo = AppInfoManager.getAppByPackageName(it.toString())
-        }
+
     }
 
     override fun onServiceConnected() {
@@ -46,6 +44,9 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     fun readNode(): ArrayList<HierarchyNode> {
         val hierarchyNodes = arrayListOf<HierarchyNode>()
         if (rootInActiveWindow != null) {
+            rootInActiveWindow.packageName?.run {
+                currentAppInfo = AppInfoManager.getAppByPackageName(toString())
+            }
             readNodeInfo(hierarchyNodes, rootInActiveWindow, null)
         }
         return hierarchyNodes
