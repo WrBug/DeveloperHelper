@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.wrbug.developerhelper.ui.activity.guide.GuideActivity">
+    <item
+        android:id="@+id/about_menu"
+        android:orderInCategory="100"
+        android:title="@string/about"
+        app:showAsAction="always" />
+</menu>
