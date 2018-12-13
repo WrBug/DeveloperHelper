@@ -56,7 +56,6 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
 
     inner class Presenter {
         fun onAccessibilityClick() {
-            ShellManager.getTopActivity()
             if (!accessibilitySettingView.checked) {
                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             } else {
