@@ -6,6 +6,10 @@
 
 Android 5.0+
 
+### 下载
+
+[https://github.com/WrBug/DeveloperHelper/releases](https://github.com/WrBug/DeveloperHelper/releases)
+
 ### 截图
 
 ![](https://i.loli.net/2018/12/13/5c122586e047f.jpg)
