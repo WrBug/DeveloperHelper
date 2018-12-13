@@ -17,11 +17,13 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
     private var apkInfo: ApkInfo? = null
     private var nodeList: List<HierarchyNode>? = null
     private var showHierachyView = false
+    private var topActivity = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hierarchy)
         apkInfo = intent.getParcelableExtra("apkInfo")
         nodeList = intent.getParcelableArrayListExtra("node")
+        topActivity = intent.getStringExtra("topActivity")
         setFloatButtonVisible(false)
         showAppInfoDialog()
     }
@@ -30,6 +32,7 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
         val dialog = AppInfoDialog()
         val bundle = Bundle()
         bundle.putParcelable("apkInfo", apkInfo)
+        bundle.putString("topActivity", topActivity)
         dialog.arguments = bundle
         dialog.show(supportFragmentManager, "")
     }

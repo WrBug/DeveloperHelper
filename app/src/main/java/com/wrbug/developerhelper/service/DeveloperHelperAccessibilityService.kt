@@ -13,6 +13,7 @@ import com.wrbug.developerhelper.ui.activity.hierachy.HierarchyActivity
 import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.model.entry.ApkInfo
+import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.util.AppInfoManager
 import com.wrbug.developerhelper.util.UiUtils
 import kotlin.collections.ArrayList
@@ -140,6 +141,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             val bundle = Bundle()
             bundle.putParcelable("apkInfo", currentAppInfo)
             bundle.putParcelableArrayList("node", hierarchyNodes)
+            bundle.putString("topActivity", ShellManager.getTopActivity())
             intent.putExtras(bundle)
             startActivity(intent)
         }

@@ -12,6 +12,7 @@ import com.wrbug.developerhelper.basecommon.obtainViewModel
 import com.wrbug.developerhelper.basecommon.setupActionBar
 import com.wrbug.developerhelper.databinding.ActivityMainBinding
 import com.wrbug.developerhelper.service.FloatWindowService
+import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.main.viewmodel.MainViewModel
 import com.wrbug.developerhelper.util.DeviceUtils
 import kotlinx.android.synthetic.main.activity_main.*
@@ -55,6 +56,7 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
 
     inner class Presenter {
         fun onAccessibilityClick() {
+            ShellManager.getTopActivity()
             if (!accessibilitySettingView.checked) {
                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             } else {

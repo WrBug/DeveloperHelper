@@ -4,13 +4,12 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
-import com.jaredrummler.android.shell.CommandResult
 import com.wrbug.developerhelper.basecommon.BaseApp
 
 
 object DeviceUtils {
     fun isRoot(): Boolean {
-        val id = ShellUtils.runWithSu("id")
+        val id = ShellUtils.runWithSuIgnoreSetting("id")
         return !TextUtils.isEmpty(id.getStdout())
     }
 
