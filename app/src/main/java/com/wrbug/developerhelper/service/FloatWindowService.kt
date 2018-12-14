@@ -1,5 +1,6 @@
 package com.wrbug.developerhelper.service
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -51,12 +52,9 @@ class FloatWindowService : Service() {
                 .setTag(FLOAT_BUTTON)
                 .setDesktopShow(true)                        //桌面显示
                 .build()
-            showFloatButton()
         }
 
-
     }
-
     private fun showFloatButton() {
         FloatWindow.get(FLOAT_BUTTON).show()
     }
@@ -70,8 +68,10 @@ class FloatWindowService : Service() {
         registerReceiver(receiver, filter)
     }
 
+    @SuppressLint("WrongConstant")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return super.onStartCommand(intent, flags, startId)
+        showFloatButton()
+        return super.onStartCommand(intent, START_STICKY, startId)
     }
 
     override fun onDestroy() {

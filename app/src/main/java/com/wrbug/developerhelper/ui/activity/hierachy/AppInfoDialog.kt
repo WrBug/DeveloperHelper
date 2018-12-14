@@ -55,7 +55,7 @@ class AppInfoDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         titleContainer.setPadding(0, UiUtils.getStatusHeight(), 0, 0)
-        apkInfo?.let {
+        apkInfo?.let { it ->
             logoIv.setImageDrawable(it.getIco())
             titleTv.text = it.getAppName()
             subTitleTv.text = it.applicationInfo.packageName
@@ -68,11 +68,20 @@ class AppInfoDialog : DialogFragment() {
             itemInfos.add(item)
             itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
             itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
-            itemInfos.add(ItemInfo("Activity", topActivity))
+            topActivity.takeUnless {
+                it.isEmpty()
+            }?.let {
+                itemInfos.add(ItemInfo("Activity", topActivity))
+            }
             it.applicationInfo.className?.let { name ->
                 itemInfos.add(ItemInfo("Application", name))
             }
             itemInfos.add(ItemInfo("uid", it.applicationInfo.uid))
+            ShellManager.getPid(it.packageInfo.packageName).takeUnless {
+                it.isEmpty()
+            }?.let {
+                itemInfos.add(ItemInfo("Pid", it))
+            }
             itemInfos.add(
                 ItemInfo(
                     "首次安装时间",

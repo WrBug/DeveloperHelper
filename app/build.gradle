@@ -5,6 +5,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'//kapt 插件
 android {
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
     signingConfigs {
         releaseConfig
     }
