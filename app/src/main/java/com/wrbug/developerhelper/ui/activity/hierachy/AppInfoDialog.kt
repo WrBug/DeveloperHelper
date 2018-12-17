@@ -60,7 +60,7 @@ class AppInfoDialog : DialogFragment() {
             titleTv.text = it.getAppName()
             subTitleTv.text = it.applicationInfo.packageName
             val itemInfos = ArrayList<ItemInfo>()
-            val item = ItemInfo("界面分析", "点击分析")
+            val item = ItemInfo(getString(R.string.page_analyze), getString(R.string.click_to_analyze))
             item.setOnClickListener(View.OnClickListener {
                 listener?.showHierachyView()
                 dismissAllowingStateLoss()
@@ -84,13 +84,13 @@ class AppInfoDialog : DialogFragment() {
             }
             itemInfos.add(
                 ItemInfo(
-                    "首次安装时间",
+                    getString(R.string.first_install_time),
                     it.packageInfo.firstInstallTime.formatyyyyMMddHHmmss()
                 )
             )
             itemInfos.add(
                 ItemInfo(
-                    "最后更新时间",
+                    getString(R.string.last_update_time),
                     it.packageInfo.lastUpdateTime.formatyyyyMMddHHmmss()
                 )
             )

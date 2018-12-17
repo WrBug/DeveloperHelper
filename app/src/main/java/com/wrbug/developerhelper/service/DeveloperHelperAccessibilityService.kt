@@ -36,11 +36,8 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        val filter = IntentFilter()
-        filter.addAction(ReceiverConstant.ACTION_HIERARCHY_VIEW)
-        registerReceiver(receiver, filter)
-    }
 
+    }
 
     fun readNode(): ArrayList<HierarchyNode> {
         val hierarchyNodes = arrayListOf<HierarchyNode>()
@@ -55,17 +52,29 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
 
     override fun onCreate() {
         super.onCreate()
+        val filter = IntentFilter()
+        filter.addAction(ReceiverConstant.ACTION_HIERARCHY_VIEW)
+        registerReceiver(receiver, filter)
+        sendStatusBroadcast(true)
         serviceRunning = true
     }
 
     override fun onDestroy() {
         super.onDestroy()
         serviceRunning = false
+        unregisterReceiver(receiver)
+        sendStatusBroadcast(false)
     }
 
     private fun setNodeId(node: HierarchyNode) {
         node.id = nodeId
         nodeId++
+    }
+
+    private fun sendStatusBroadcast(running: Boolean) {
+        val intent = Intent(ReceiverConstant.ACTION_ACCESSIBILITY_SERVICE_STATUS_CHANGED)
+        intent.putExtra("status", running)
+        sendBroadcast(intent)
     }
 
     private fun readNodeInfo(

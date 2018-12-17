@@ -14,11 +14,15 @@
     <string name="advance_setting">高级功能设置</string>
     <string name="open_accessibility_service">开启无障碍辅助</string>
     <string name="open_float_window">开启悬浮窗权限</string>
-    <string name="open_root_permission_summary">推荐开启，用于获取应用数据库等信息</string>
+    <string name="open_root_permission_summary">推荐开启，用于获取应用数据库等信息，不开启部分信息无法显示</string>
     <string name="open_root_permission_title">开启root权限</string>
     <string name="open_xposed_title">启用xposed特性</string>
     <string name="open_xposed_summary">开发中</string>
     <string name="accessibility_description">辅助功能用于界面布局分析等</string>
     <string name="about">关于</string>
     <string name="about_content">软件开发中，交流群：627962572</string>
+    <string name="page_analyze">界面分析</string>
+    <string name="click_to_analyze">点击分析</string>
+    <string name="first_install_time">首次安装时间</string>
+    <string name="last_update_time">最后更新时间</string>
 </resources>

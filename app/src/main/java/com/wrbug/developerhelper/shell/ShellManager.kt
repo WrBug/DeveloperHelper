@@ -11,6 +11,11 @@ object ShellManager {
     private const val SHELL_PROCESS_PID_1 = "ps -ef | grep \"%s\" | grep -v grep | awk '{print \$2}'"
     private const val SHELL_PROCESS_PID_2 = "top -b -n 1 |grep %s |grep -v grep"
     private const val SHELL_PROCESS_PID_3 = "top -n 1 |grep %s |grep -v grep"
+    private var SHELL_OPEN_ACCESSiBILITY_SERVICE = arrayOf(
+        "settings put secure enabled_accessibility_services com.wrbug.developerhelper/com.wrbug.developerhelper.service.DeveloperHelperAccessibilityService",
+        "settings put secure accessibility_enabled 1"
+    )
+
     fun getTopActivity(): String {
         val result: CommandResult = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
             ShellUtils.runWithSu(SHELL_TOP_ACTIVITY_LOW)
@@ -54,4 +59,8 @@ object ShellManager {
         return result.getStdout().trim().split(" ")[0]
     }
 
+    fun openAccessibilityService(): Boolean {
+        val commandResult = ShellUtils.runWithSu(*SHELL_OPEN_ACCESSiBILITY_SERVICE)
+        return commandResult.isSuccessful && commandResult.getStdout().isEmpty()
+    }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.service.AccessibilityManager
 import com.wrbug.developerhelper.service.DeveloperHelperAccessibilityService
 import kotlinx.android.synthetic.main.fragment_guide.*
 
@@ -20,8 +21,7 @@ class GuideStepAccessibilityFragment : GuideStepFragment() {
             if (DeveloperHelperAccessibilityService.serviceRunning) {
                 return@setOnClickListener
             }
-            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-            activity?.startActivity(intent)
+            AccessibilityManager.startService(activity)
 
         }
     }

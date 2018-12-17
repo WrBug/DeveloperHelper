@@ -36,9 +36,11 @@ class FloatWindowService : Service() {
         LayoutInflater.from(this).inflate(R.layout.layout_float_window_button, null)?.let { it ->
             it.setOnClickListener {
                 if (!DeveloperHelperAccessibilityService.serviceRunning) {
-                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+                    if (AccessibilityManager.startService(this)) {
+                        it.postDelayed({
+                            sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))
+                        }, 500)
+                    }
                     return@setOnClickListener
                 }
                 sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))
@@ -55,6 +57,7 @@ class FloatWindowService : Service() {
         }
 
     }
+
     private fun showFloatButton() {
         FloatWindow.get(FLOAT_BUTTON).show()
     }

@@ -1,6 +1,9 @@
 package com.wrbug.developerhelper.ui.activity.main
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -13,7 +16,9 @@ import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseVMActivity
 import com.wrbug.developerhelper.basecommon.obtainViewModel
 import com.wrbug.developerhelper.basecommon.setupActionBar
+import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.databinding.ActivityMainBinding
+import com.wrbug.developerhelper.service.AccessibilityManager
 import com.wrbug.developerhelper.service.FloatWindowService
 import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.main.viewmodel.MainViewModel
@@ -35,7 +40,10 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
         setupActionBar(R.id.toolbar) {
 
         }
+        ShellManager.openAccessibilityService()
         initListener()
+        val filter = IntentFilter(ReceiverConstant.ACTION_ACCESSIBILITY_SERVICE_STATUS_CHANGED)
+        registerReceiver(receiver, filter)
     }
 
     private fun initListener() {
@@ -56,11 +64,15 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
         return obtainViewModel(MainViewModel::class.java)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
+    }
 
     inner class Presenter {
         fun onAccessibilityClick() {
             if (!accessibilitySettingView.checked) {
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                AccessibilityManager.startService(context)
             } else {
                 showSnack(getString(R.string.accessibility_service_opened))
             }
@@ -107,6 +119,17 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+    }
+
+    private val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.run {
+                if (action == ReceiverConstant.ACTION_ACCESSIBILITY_SERVICE_STATUS_CHANGED) {
+                    accessibilitySettingView.checked = intent.getBooleanExtra("status", false)
+                }
+            }
+        }
 
     }
 }

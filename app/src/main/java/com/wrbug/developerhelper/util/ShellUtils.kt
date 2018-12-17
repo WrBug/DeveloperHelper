@@ -48,7 +48,7 @@ object ShellUtils {
 
     fun runWithSu(vararg cmds: String): CommandResult {
         if (configKv.getOpenRoot().not()) {
-            return CommandResult(arrayListOf("未开启root权限"), arrayListOf(), 0)
+            return CommandResult(arrayListOf("未开启root权限"), arrayListOf("未开启root权限"), 1)
         }
         return Shell.SU.run(*cmds)
     }
