@@ -13,6 +13,8 @@ import com.wrbug.developerhelper.ui.activity.hierachy.HierarchyActivity
 import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.model.entry.ApkInfo
+import com.wrbug.developerhelper.model.entry.TopActivityInfo
+import com.wrbug.developerhelper.shell.Callback
 import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.util.AppInfoManager
 import com.wrbug.developerhelper.util.UiUtils
@@ -22,6 +24,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     private val receiver = DeveloperHelperAccessibilityReceiver()
     private var nodeId = 0L
     private var currentAppInfo: ApkInfo? = null
+    private var topActivity: TopActivityInfo? = null
 
     companion object {
         internal var serviceRunning = false
@@ -100,10 +103,11 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             } else {
                 hierarchyNodes.add(node)
             }
-            node.resourceId = if (child.viewIdResourceName == null) {
-                ""
-            } else {
-                child.viewIdResourceName
+            child.viewIdResourceName?.let {
+                node.resourceId = it
+                if (it.contains(":id")) {
+                    node.idHex = topActivity?.viewIdHex?.get(it.substring(it.indexOf("id")))
+                }
             }
             var text = ""
             if (child.text != null) {
@@ -141,18 +145,27 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
         }
     }
 
-
     inner class DeveloperHelperAccessibilityReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, data: Intent?) {
-            val hierarchyNodes = readNode()
-            val intent = Intent(context, HierarchyActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            val bundle = Bundle()
-            bundle.putParcelable("apkInfo", currentAppInfo)
-            bundle.putParcelableArrayList("node", hierarchyNodes)
-            bundle.putString("topActivity", ShellManager.getTopActivity())
-            intent.putExtras(bundle)
-            startActivity(intent)
+            ShellManager.getTopActivity(object : Callback<TopActivityInfo> {
+                override fun onFailed() {
+
+                }
+
+                override fun onSuccess(data: TopActivityInfo) {
+                    topActivity = data
+                    val hierarchyNodes = readNode()
+                    val intent = Intent(context, HierarchyActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    val bundle = Bundle()
+                    bundle.putParcelable("apkInfo", currentAppInfo)
+                    bundle.putParcelableArrayList("node", hierarchyNodes)
+                    bundle.putParcelable("topActivity", topActivity)
+                    intent.putExtras(bundle)
+                    startActivity(intent)
+                }
+            })
+
         }
     }
 }

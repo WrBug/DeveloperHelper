@@ -55,11 +55,11 @@ object ShellUtils {
 
     abstract class ShellResultCallback(vararg args: Any) {
         protected var args = args
-        internal fun onComplete(result: CommandResult) {
+        open fun onComplete(result: CommandResult) {
 
         }
 
-        internal fun onError(msg: String) {
+        open fun onError(msg: String) {
 
         }
     }

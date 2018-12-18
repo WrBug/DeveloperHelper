@@ -28,6 +28,7 @@ class HierarchyNode() : Parcelable, Serializable {
     var selected: Boolean = false
     var text: String = ""
     var resourceId: String = ""
+    var idHex: String? = null
     var parentId: Long = -1L
     var childId: ArrayList<HierarchyNode> = arrayListOf()
 
@@ -51,6 +52,7 @@ class HierarchyNode() : Parcelable, Serializable {
         selected = parcel.readByte() != 0.toByte()
         text = parcel.readString()
         resourceId = parcel.readString()
+        idHex = parcel.readString()
         parentId = parcel.readLong()
         childId = JsonHelper.fromJson(parcel.readString(), object : TypeToken<ArrayList<HierarchyNode>>() {}.type) ?:
                 arrayListOf()
@@ -76,6 +78,7 @@ class HierarchyNode() : Parcelable, Serializable {
         parcel.writeByte(if (selected) 1 else 0)
         parcel.writeString(text)
         parcel.writeString(resourceId)
+        parcel.writeString(idHex)
         parcel.writeLong(parentId)
         parcel.writeString(JsonHelper.toJson(childId))
     }

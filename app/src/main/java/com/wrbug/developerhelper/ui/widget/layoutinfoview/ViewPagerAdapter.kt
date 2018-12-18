@@ -40,7 +40,11 @@ class ViewPagerAdapter(
             val list = arrayListOf<ItemInfo>()
             list.add(ItemInfo("Package", packagePath))
             list.add(ItemInfo("Widget", widget))
-            list.add(ItemInfo("Id", resourceId))
+            list.add(ItemInfo("IdName", resourceId))
+            idHex?.let {
+                list.add(ItemInfo("Id", it))
+            }
+
             if (!text.isEmpty()) {
                 list.add(ItemInfo("Text", text))
             }

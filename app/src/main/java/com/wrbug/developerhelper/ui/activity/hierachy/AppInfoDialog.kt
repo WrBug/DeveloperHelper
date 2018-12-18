@@ -10,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.model.entry.ApkInfo
+import com.wrbug.developerhelper.model.entry.TopActivityInfo
 import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.ItemInfo
@@ -20,14 +21,14 @@ import java.util.*
 
 class AppInfoDialog : DialogFragment() {
     var apkInfo: ApkInfo? = null
-    var topActivity: String = ""
+    var topActivity: TopActivityInfo? = null
     var listener: AppInfoDialogEventListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog)
         arguments?.let {
             apkInfo = it.getParcelable("apkInfo")
-            topActivity = it.getString("topActivity", "")
+            topActivity = it.getParcelable("topActivity")
         }
     }
 
@@ -68,10 +69,16 @@ class AppInfoDialog : DialogFragment() {
             itemInfos.add(item)
             itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
             itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
-            topActivity.takeUnless {
-                it.isEmpty()
-            }?.let {
-                itemInfos.add(ItemInfo("Activity", topActivity))
+            topActivity?.let {
+                itemInfos.add(ItemInfo("Activity", it.activity))
+                it.fragments.takeUnless { fragments ->
+                    fragments.isNullOrEmpty()
+                }?.forEach {
+                    if (it.hidden.not()) {
+                        itemInfos.add(ItemInfo("Fragment", it.name))
+                    }
+                }
+
             }
             it.applicationInfo.className?.let { name ->
                 itemInfos.add(ItemInfo("Application", name))
