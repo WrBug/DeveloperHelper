@@ -25,4 +25,6 @@
     <string name="click_to_analyze">点击分析</string>
     <string name="first_install_time">首次安装时间</string>
     <string name="last_update_time">最后更新时间</string>
+    <string name="demon_process">守护进程</string>
+    <string name="demon_process_content">易开发守护进程，点击打开易开发</string>
 </resources>

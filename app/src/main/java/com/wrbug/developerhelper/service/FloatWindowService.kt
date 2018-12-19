@@ -1,16 +1,18 @@
 package com.wrbug.developerhelper.service
 
 import android.annotation.SuppressLint
-import android.app.Service
+import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.IBinder
-import android.provider.Settings
 import android.view.LayoutInflater
+import androidx.core.app.NotificationCompat
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.constant.ReceiverConstant
+import com.wrbug.developerhelper.ui.activity.main.MainActivity
 import com.yhao.floatwindow.FloatWindow
 import com.yhao.floatwindow.Screen
 
@@ -33,6 +35,7 @@ class FloatWindowService : Service() {
     override fun onCreate() {
         super.onCreate()
         initReceiver()
+        initNotification()
         LayoutInflater.from(this).inflate(R.layout.layout_float_window_button, null)?.let { it ->
             it.setOnClickListener {
                 if (!DeveloperHelperAccessibilityService.serviceRunning) {
@@ -56,6 +59,31 @@ class FloatWindowService : Service() {
                 .build()
         }
 
+    }
+
+    private fun initNotification() {
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel =
+                NotificationChannel("channel1", getString(R.string.demon_process), NotificationManager.IMPORTANCE_LOW)
+            channel.enableLights(true)
+            channel.setShowBadge(true)
+            notificationManager.createNotificationChannel(channel)
+        }
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val builder = NotificationCompat.Builder(this, "channel1")
+            .setAutoCancel(false)
+            .setContentIntent(pendingIntent)
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText(getString(R.string.demon_process_content))
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setSmallIcon(R.drawable.ic_launcher_notify)
+            .setDefaults(Notification.DEFAULT_ALL)
+        val notification = builder.build()
+        notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
+        notificationManager.notify(1, notification)
     }
 
     private fun showFloatButton() {
