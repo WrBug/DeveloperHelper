@@ -8,9 +8,12 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.IBinder
+import android.os.PowerManager
 import android.view.LayoutInflater
+import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 import androidx.core.app.NotificationCompat
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.ui.activity.main.MainActivity
 import com.yhao.floatwindow.FloatWindow
@@ -35,7 +38,6 @@ class FloatWindowService : Service() {
     override fun onCreate() {
         super.onCreate()
         initReceiver()
-        initNotification()
         LayoutInflater.from(this).inflate(R.layout.layout_float_window_button, null)?.let { it ->
             it.setOnClickListener {
                 if (!DeveloperHelperAccessibilityService.serviceRunning) {
@@ -58,7 +60,6 @@ class FloatWindowService : Service() {
                 .setDesktopShow(true)                        //桌面显示
                 .build()
         }
-
     }
 
     private fun initNotification() {
@@ -78,12 +79,13 @@ class FloatWindowService : Service() {
             .setContentIntent(pendingIntent)
             .setContentTitle(getString(R.string.app_name))
             .setContentText(getString(R.string.demon_process_content))
-            .setPriority(NotificationCompat.PRIORITY_MAX)
             .setSmallIcon(R.drawable.ic_launcher_notify)
+            .setVibrate(null)
             .setDefaults(Notification.DEFAULT_ALL)
         val notification = builder.build()
-        notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
-        notificationManager.notify(1, notification)
+        notification.flags = Notification.FLAG_ONGOING_EVENT or Notification.FLAG_NO_CLEAR or
+                Notification.FLAG_FOREGROUND_SERVICE
+        startForeground(0x10000, notification)
     }
 
     private fun showFloatButton() {
@@ -99,15 +101,16 @@ class FloatWindowService : Service() {
         registerReceiver(receiver, filter)
     }
 
-    @SuppressLint("WrongConstant")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        initNotification()
         showFloatButton()
-        return super.onStartCommand(intent, START_STICKY, startId)
+        return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onDestroy() {
         FloatWindow.destroy(FLOAT_BUTTON)
         unregisterReceiver(receiver)
+        stopForeground(true)
         super.onDestroy()
     }
 

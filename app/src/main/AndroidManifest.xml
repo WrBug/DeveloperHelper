@@ -4,6 +4,8 @@
     package="com.wrbug.developerhelper">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
 
     <application
         android:name=".DeveloperApplication"
@@ -43,7 +45,8 @@
         <service
             android:name=".service.FloatWindowService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:process=":floatWindow" />
 
         <activity
             android:name=".ui.activity.guide.GuideActivity"

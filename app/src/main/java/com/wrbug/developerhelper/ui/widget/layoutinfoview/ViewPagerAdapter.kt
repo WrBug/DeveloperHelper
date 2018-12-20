@@ -38,9 +38,14 @@ class ViewPagerAdapter(
         recyclerView.layoutManager = LinearLayoutManager(context)
         val list = with(hierarchyNode) {
             val list = arrayListOf<ItemInfo>()
-            list.add(ItemInfo("Package", packagePath))
+            list.add(ItemInfo("Package", packageName))
             list.add(ItemInfo("Widget", widget))
-            list.add(ItemInfo("IdName", "$resourceId[$idHex]"))
+            list.add(
+                ItemInfo(
+                    "Id",
+                    "${resourceId.replace(packageName, "app")}[${idHex?.replace("#", "0x") ?: "NO_ID"}]"
+                )
+            )
             if (!text.isEmpty()) {
                 list.add(ItemInfo("Text", text))
             }

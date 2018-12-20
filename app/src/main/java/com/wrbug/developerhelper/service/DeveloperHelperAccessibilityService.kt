@@ -133,7 +133,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             node.focusable = child.isFocusable
             node.focused = child.isFocused
             node.longClickable = child.isLongClickable
-            node.packagePath = if (child.packageName == null) {
+            node.packageName = if (child.packageName == null) {
                 ""
             } else {
                 child.packageName.toString()

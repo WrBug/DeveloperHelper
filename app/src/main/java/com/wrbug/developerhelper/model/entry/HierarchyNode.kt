@@ -22,7 +22,7 @@ class HierarchyNode() : Parcelable, Serializable {
     var focused: Boolean = false
     var index: String = ""
     var longClickable: Boolean = false
-    var packagePath: String = ""
+    var packageName: String = ""
     var password: Boolean = false
     var scrollable: Boolean = false
     var selected: Boolean = false
@@ -46,7 +46,7 @@ class HierarchyNode() : Parcelable, Serializable {
         focused = parcel.readByte() != 0.toByte()
         index = parcel.readString()
         longClickable = parcel.readByte() != 0.toByte()
-        packagePath = parcel.readString()
+        packageName = parcel.readString()
         password = parcel.readByte() != 0.toByte()
         scrollable = parcel.readByte() != 0.toByte()
         selected = parcel.readByte() != 0.toByte()
@@ -72,7 +72,7 @@ class HierarchyNode() : Parcelable, Serializable {
         parcel.writeByte(if (focused) 1 else 0)
         parcel.writeString(index)
         parcel.writeByte(if (longClickable) 1 else 0)
-        parcel.writeString(packagePath)
+        parcel.writeString(packageName)
         parcel.writeByte(if (password) 1 else 0)
         parcel.writeByte(if (scrollable) 1 else 0)
         parcel.writeByte(if (selected) 1 else 0)
