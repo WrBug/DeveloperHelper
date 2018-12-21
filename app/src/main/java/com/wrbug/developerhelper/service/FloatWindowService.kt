@@ -11,10 +11,12 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+import androidx.annotation.UiThread
 import androidx.core.app.NotificationCompat
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.constant.ReceiverConstant
+import com.wrbug.developerhelper.shell.Callback
 import com.wrbug.developerhelper.ui.activity.main.MainActivity
 import com.yhao.floatwindow.FloatWindow
 import com.yhao.floatwindow.Screen
@@ -40,12 +42,17 @@ class FloatWindowService : Service() {
         initReceiver()
         LayoutInflater.from(this).inflate(R.layout.layout_float_window_button, null)?.let { it ->
             it.setOnClickListener {
-                if (!DeveloperHelperAccessibilityService.serviceRunning) {
-                    if (AccessibilityManager.startService(this)) {
-                        it.postDelayed({
-                            sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))
-                        }, 500)
-                    }
+                if (!DeveloperHelperAccessibilityService.isAccessibilitySettingsOn()) {
+                    AccessibilityManager.startService(this, object : Callback<Boolean> {
+                        override fun onSuccess(data: Boolean) {
+                            if (data) {
+                                it.postDelayed({
+                                    sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))
+                                }, 500)
+                            }
+                        }
+
+                    })
                     return@setOnClickListener
                 }
                 sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))

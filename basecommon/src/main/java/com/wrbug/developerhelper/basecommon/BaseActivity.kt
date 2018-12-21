@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 
 abstract class BaseActivity : AppCompatActivity() {
-    lateinit var toastRootView: View
+    private lateinit var toastRootView: View
     protected lateinit var context: BaseActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         context = this

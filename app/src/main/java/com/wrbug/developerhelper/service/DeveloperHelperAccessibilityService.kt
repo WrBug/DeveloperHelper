@@ -7,18 +7,21 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Rect
 import android.os.Bundle
+import android.provider.Settings
+import android.text.TextUtils
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import com.wrbug.developerhelper.ui.activity.hierachy.HierarchyActivity
-import com.wrbug.developerhelper.model.entry.HierarchyNode
+import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.model.entry.ApkInfo
+import com.wrbug.developerhelper.model.entry.HierarchyNode
 import com.wrbug.developerhelper.model.entry.TopActivityInfo
 import com.wrbug.developerhelper.shell.Callback
 import com.wrbug.developerhelper.shell.ShellManager
+import com.wrbug.developerhelper.ui.activity.hierachy.HierarchyActivity
 import com.wrbug.developerhelper.util.AppInfoManager
 import com.wrbug.developerhelper.util.UiUtils
-import kotlin.collections.ArrayList
+
 
 class DeveloperHelperAccessibilityService : AccessibilityService() {
     private val receiver = DeveloperHelperAccessibilityReceiver()
@@ -28,6 +31,36 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
 
     companion object {
         internal var serviceRunning = false
+        fun isAccessibilitySettingsOn(): Boolean {
+            var accessibilityEnabled = 0
+            val service = "com.wrbug.developerhelper/" + DeveloperHelperAccessibilityService::class.java.canonicalName
+            try {
+                accessibilityEnabled = Settings.Secure.getInt(
+                    BaseApp.instance.applicationContext.contentResolver,
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED
+                )
+            } catch (e: Settings.SettingNotFoundException) {
+            }
+
+            val mStringColonSplitter = TextUtils.SimpleStringSplitter(':')
+
+            if (accessibilityEnabled == 1) {
+                val settingValue = Settings.Secure.getString(
+                    BaseApp.instance.applicationContext.contentResolver,
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+                )
+                if (settingValue != null) {
+                    mStringColonSplitter.setString(settingValue)
+                    while (mStringColonSplitter.hasNext()) {
+                        val accessibilityService = mStringColonSplitter.next()
+                        if (accessibilityService.equals(service, ignoreCase = true)) {
+                            return true
+                        }
+                    }
+                }
+            }
+            return false
+        }
     }
 
     override fun onInterrupt() {
@@ -144,6 +177,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             readNodeInfo(hierarchyNodes, child, node)
         }
     }
+
 
     inner class DeveloperHelperAccessibilityReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, data: Intent?) {

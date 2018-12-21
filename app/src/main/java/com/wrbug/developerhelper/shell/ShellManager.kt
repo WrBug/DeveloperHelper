@@ -125,8 +125,15 @@ object ShellManager {
         return result.getStdout().trim().split(" ")[0]
     }
 
-    fun openAccessibilityService(): Boolean {
-        val commandResult = ShellUtils.runWithSu(*SHELL_OPEN_ACCESSiBILITY_SERVICE)
-        return commandResult.isSuccessful && commandResult.getStdout().isEmpty()
+    fun openAccessibilityService(callback: Callback<Boolean>? = null) {
+        ShellUtils.runWithSu(SHELL_OPEN_ACCESSiBILITY_SERVICE, object : ShellUtils.ShellResultCallback() {
+            override fun onComplete(result: CommandResult) {
+                callback?.onSuccess(result.isSuccessful && result.getStdout().isEmpty())
+            }
+
+            override fun onError(msg: String) {
+                callback?.onSuccess(false)
+            }
+        })
     }
 }

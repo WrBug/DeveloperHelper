@@ -15,7 +15,7 @@ import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.ItemInfo
 import com.wrbug.developerhelper.util.UiUtils
-import com.wrbug.developerhelper.util.formatyyyyMMddHHmmss
+import com.wrbug.developerhelper.util.format
 import kotlinx.android.synthetic.main.dialog_apk_info.*
 import java.util.*
 
@@ -92,13 +92,13 @@ class AppInfoDialog : DialogFragment() {
             itemInfos.add(
                 ItemInfo(
                     getString(R.string.first_install_time),
-                    it.packageInfo.firstInstallTime.formatyyyyMMddHHmmss()
+                    it.packageInfo.firstInstallTime.format()
                 )
             )
             itemInfos.add(
                 ItemInfo(
                     getString(R.string.last_update_time),
-                    it.packageInfo.lastUpdateTime.formatyyyyMMddHHmmss()
+                    it.packageInfo.lastUpdateTime.format()
                 )
             )
             itemInfos.add(ItemInfo("DataDir", it.applicationInfo.dataDir))
