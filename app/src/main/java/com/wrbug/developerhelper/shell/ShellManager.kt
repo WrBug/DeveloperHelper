@@ -1,10 +1,14 @@
 package com.wrbug.developerhelper.shell
 
 import com.jaredrummler.android.shell.CommandResult
+import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.model.entry.FragmentInfo
 import com.wrbug.developerhelper.model.entry.TopActivityInfo
 import com.wrbug.developerhelper.util.ShellUtils
+import java.io.File
+import java.io.FileOutputStream
 import java.util.regex.Pattern
+import kotlin.concurrent.thread
 
 
 object ShellManager {
@@ -16,6 +20,8 @@ object ShellManager {
         "settings put secure enabled_accessibility_services com.wrbug.developerhelper/com.wrbug.developerhelper.service.DeveloperHelperAccessibilityService",
         "settings put secure accessibility_enabled 1"
     )
+    private const val SHELL_GET_ZIP_FILE_LIST =
+        "app_process -Djava.class.path=/data/local/tmp/zip.dex /data/local/tmp Zip %s"
 
     fun getTopActivity(callback: Callback<TopActivityInfo>) {
         ShellUtils.runWithSu(arrayOf(SHELL_TOP_ACTIVITY), object : ShellUtils.ShellResultCallback() {
@@ -146,4 +152,15 @@ object ShellManager {
             }
         })
     }
+
+    fun getZipFileList(path: String): List<String?> {
+        val file = File(BaseApp.instance.cacheDir, "zip.dex")
+        if (file.exists()) {
+            ShellUtils.runWithSu("cp ${file.absolutePath} /data/local/tmp","rm -rf ${file.absolutePath}")
+        }
+        val commandResult = ShellUtils.runWithSu(String.format(SHELL_GET_ZIP_FILE_LIST, path))
+        return commandResult.stdout
+    }
+
+
 }

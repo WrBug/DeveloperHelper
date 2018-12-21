@@ -39,6 +39,13 @@ class InfoAdapter(val context: Context) : RecyclerView.Adapter<InfoAdapter.ViewH
         }
     }
 
+    fun notifyItemChanged(enforceItem: ItemInfo) {
+        val index = list.indexOf(enforceItem)
+        if (index >= 0) {
+            notifyItemChanged(index)
+        }
+    }
+
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

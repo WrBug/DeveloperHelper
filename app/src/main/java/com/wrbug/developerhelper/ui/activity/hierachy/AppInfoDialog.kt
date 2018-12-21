@@ -14,15 +14,21 @@ import com.wrbug.developerhelper.model.entry.TopActivityInfo
 import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.ItemInfo
+import com.wrbug.developerhelper.util.EnforceUtils
 import com.wrbug.developerhelper.util.UiUtils
 import com.wrbug.developerhelper.util.format
 import kotlinx.android.synthetic.main.dialog_apk_info.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.util.*
+import kotlin.concurrent.thread
 
 class AppInfoDialog : DialogFragment() {
     var apkInfo: ApkInfo? = null
     var topActivity: TopActivityInfo? = null
     var listener: AppInfoDialogEventListener? = null
+    val enforceItem = ItemInfo("加固类型", "正在分析")
+    lateinit var adapter: InfoAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog)
@@ -56,6 +62,11 @@ class AppInfoDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         titleContainer.setPadding(0, UiUtils.getStatusHeight(), 0, 0)
+        activity?.let {
+            adapter = InfoAdapter(it)
+            apkInfoRv.adapter = adapter
+            apkInfoRv.layoutManager = LinearLayoutManager(it)
+        }
         apkInfo?.let { it ->
             logoIv.setImageDrawable(it.getIco())
             titleTv.text = it.getAppName()
@@ -83,6 +94,7 @@ class AppInfoDialog : DialogFragment() {
             it.applicationInfo.className?.let { name ->
                 itemInfos.add(ItemInfo("Application", name))
             }
+            itemInfos.add(enforceItem)
             itemInfos.add(ItemInfo("uid", it.applicationInfo.uid))
             ShellManager.getPid(it.packageInfo.packageName).takeUnless {
                 it.isEmpty()
@@ -102,12 +114,19 @@ class AppInfoDialog : DialogFragment() {
                 )
             )
             itemInfos.add(ItemInfo("DataDir", it.applicationInfo.dataDir))
-            activity?.let {
-                val adapter = InfoAdapter(it)
-                apkInfoRv.adapter = adapter
-                apkInfoRv.layoutManager = LinearLayoutManager(it)
-                adapter.setItems(itemInfos)
+            adapter.setItems(itemInfos)
+            getEnforce(it.packageInfo.packageName)
+        }
+    }
+
+    private fun getEnforce(packageName: String) {
+        doAsync {
+            val type = EnforceUtils.getEnforceType(packageName)
+            enforceItem.content = type.type
+            uiThread {
+                adapter.notifyItemChanged(enforceItem)
             }
+
         }
     }
 
