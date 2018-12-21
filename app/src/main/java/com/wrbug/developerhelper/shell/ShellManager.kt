@@ -58,45 +58,55 @@ object ShellManager {
                     } else if (s.contains("ctive Fragments")) {
                         val list = ArrayList<FragmentInfo>()
                         val split2 =
-                            s.split("#[0-9]+:".toRegex()).dropLastWhile { it.isEmpty() }
+                            s.split("\n {6}#[0-9]+:".toRegex()).filterNot { it.isBlank() }
                         for (s2 in split2) {
-                            val fragmentInfo = FragmentInfo()
                             if (s2.contains("mFragmentId=")) {
                                 val name = s2.trim { it <= ' ' }.substring(0, s2.indexOf("{") - 1)
+                                val fragmentInfo = FragmentInfo()
                                 list.add(fragmentInfo)
                                 fragmentInfo.name = name
                                 val split3 =
-                                    s2.split(" ".toRegex()).dropLastWhile { it.isEmpty() }
+                                    s2.replace("Child FragmentManager", "Child_FragmentManager").split(" ".toRegex())
+                                        .dropLastWhile { it.isEmpty() }
                                 for (s31 in split3) {
+                                    if (s31.contains("Child_FragmentManager")) {
+                                        break
+                                    }
                                     val s3 = s31.replace("\n", "").replace(" ", "")
-                                    if (s3.startsWith("mFragmentId=")) {
-                                        fragmentInfo.fragmentId = s3.replace("mFragmentId=", "")
-                                    } else if (s3.startsWith("mContainerId=")) {
-                                        fragmentInfo.containerId = s3.replace("mContainerId=", "")
-                                    } else if (s3.startsWith("mTag=")) {
-                                        fragmentInfo.tag = s3.replace("mTag=", "")
-                                    } else if (s3.startsWith("mState=")) {
-                                        fragmentInfo.state = s3.replace("mState=", "").toInt()
-                                    } else if (s3.startsWith("mIndex=")) {
-                                        fragmentInfo.index = s3.replace("mIndex=", "").toInt()
-                                    } else if (s3.startsWith("mWho=")) {
-                                        fragmentInfo.who = s3.replace("mWho=", "")
-                                    } else if (s3.startsWith("mBackStackNesting=")) {
-                                        fragmentInfo.backStackNesting =
+                                    when {
+                                        s3.startsWith("mFragmentId=") -> fragmentInfo.fragmentId =
+                                                s3.replace("mFragmentId=", "")
+                                        s3.startsWith("mContainerId=") -> fragmentInfo.containerId =
+                                                s3.replace("mContainerId=", "")
+                                        s3.startsWith("mTag=") -> fragmentInfo.tag = s3.replace("mTag=", "")
+                                        s3.startsWith("mState=") -> fragmentInfo.state =
+                                                s3.replace("mState=", "").toInt()
+                                        s3.startsWith("mIndex=") -> fragmentInfo.index =
+                                                s3.replace("mIndex=", "").toInt()
+                                        s3.startsWith("mWho=") -> fragmentInfo.who = s3.replace("mWho=", "")
+                                        s3.startsWith("mBackStackNesting=") -> fragmentInfo.backStackNesting =
                                                 s3.replace("mBackStackNesting=", "").toInt()
-                                    } else if (s3.startsWith("mAdded=")) {
-                                        fragmentInfo.added = s3.replace("mAdded=", "") == "true"
-                                    } else if (s3.startsWith("mRemoving=")) {
-                                        fragmentInfo.removing = s3.replace("mRemoving=", "") == "true"
-                                    } else if (s3.startsWith("mFromLayout=")) {
-                                        fragmentInfo.fromLayout = s3.replace("mFromLayout=", "") ==
+                                        s3.startsWith("mAdded=") -> fragmentInfo.added = s3.replace("mAdded=", "") ==
                                                 "true"
-                                    } else if (s3.startsWith("mInLayout=")) {
-                                        fragmentInfo.inLayout = s3.replace("mInLayout=", "") == "true"
-                                    } else if (s3.startsWith("mHidden=")) {
-                                        fragmentInfo.hidden = s3.replace("mHidden=", "") == "true"
-                                    } else if (s3.startsWith("mDetached=")) {
-                                        fragmentInfo.detached = s3.replace("mDetached=", "") == "true"
+                                        s3.startsWith("mRemoving=") -> fragmentInfo.removing = s3.replace(
+                                            "mRemoving=",
+                                            ""
+                                        ) == "true"
+                                        s3.startsWith("mFromLayout=") -> fragmentInfo.fromLayout = s3.replace(
+                                            "mFromLayout=",
+                                            ""
+                                        ) ==
+                                                "true"
+                                        s3.startsWith("mInLayout=") -> fragmentInfo.inLayout = s3.replace(
+                                            "mInLayout=",
+                                            ""
+                                        ) == "true"
+                                        s3.startsWith("mHidden=") -> fragmentInfo.hidden = s3.replace("mHidden=", "") ==
+                                                "true"
+                                        s3.startsWith("mDetached=") -> fragmentInfo.detached = s3.replace(
+                                            "mDetached=",
+                                            ""
+                                        ) == "true"
                                     }
                                 }
                             }

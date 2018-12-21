@@ -16,7 +16,7 @@ class FragmentInfo() : Parcelable {
     var removing = false
     var fromLayout = false
     var inLayout = false
-    var hidden = false
+    var hidden = true
     var detached = false
 
     constructor(parcel: Parcel) : this() {
@@ -66,4 +66,6 @@ class FragmentInfo() : Parcelable {
             return arrayOfNulls(size)
         }
     }
+
+
 }
