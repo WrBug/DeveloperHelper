@@ -9,7 +9,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="30dp"
-        android:paddingRight="30dp">
+        android:paddingTop="10dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="10dp">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"

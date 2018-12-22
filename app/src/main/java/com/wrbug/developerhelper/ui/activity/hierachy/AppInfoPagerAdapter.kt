@@ -7,13 +7,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.model.entry.ApkInfo
-import com.wrbug.developerhelper.model.entry.TopActivityInfo
+import com.wrbug.developerhelper.model.entity.ApkInfo
+import com.wrbug.developerhelper.model.entity.TopActivityInfo
 import com.wrbug.developerhelper.shell.ShellManager
+import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
 import com.wrbug.developerhelper.ui.widget.appdatainfoview.AppDataInfoView
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.ItemInfo
 import com.wrbug.developerhelper.util.EnforceUtils
+import com.wrbug.developerhelper.util.UiUtils
 import com.wrbug.developerhelper.util.format
 import com.wrbug.developerhelper.util.getString
 import org.jetbrains.anko.doAsync
@@ -51,6 +53,10 @@ class AppInfoPagerAdapter(
         viewList.add(rv)
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = adapter
+        val itemDecoration = SpaceItemDecoration(0)
+        itemDecoration.setLastBottomPadding(UiUtils.dp2px(context, 10F))
+        itemDecoration.setFirstTopPadding(UiUtils.dp2px(context, 10F))
+        rv.addItemDecoration(itemDecoration)
         apkInfo?.let { it ->
             val itemInfos = ArrayList<ItemInfo>()
             val item = ItemInfo(getString(R.string.page_analyze), getString(R.string.click_to_analyze))

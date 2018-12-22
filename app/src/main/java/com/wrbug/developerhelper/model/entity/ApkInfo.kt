@@ -1,4 +1,4 @@
-package com.wrbug.developerhelper.model.entry
+package com.wrbug.developerhelper.model.entity
 
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo

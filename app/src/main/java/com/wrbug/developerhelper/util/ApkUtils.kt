@@ -2,16 +2,37 @@ package com.wrbug.developerhelper.util
 
 import android.content.Context
 import android.content.pm.PackageManager
+import com.wrbug.developerhelper.model.entity.ApkSignInfo
 import java.security.MessageDigest
 
+
 object ApkUtils {
-    fun getSha1(context: Context, packageName: String): String {
+
+    fun getApkSignInfo(context: Context, packageName: String): ApkSignInfo {
         val packageInfo = context.packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
         val cert = packageInfo.signingInfo.signingCertificateHistory[0].toByteArray()
-        val digest = MessageDigest.getInstance("SHA1")
-        val publicKey = digest.digest(cert)
+        val apkSignInfo = ApkSignInfo()
+        apkSignInfo.sha1 = byte2String(getSha1(cert))
+        apkSignInfo.md5 = byte2String(getMd5(cert))
+        return apkSignInfo
+    }
+
+
+    private fun getMd5(cert: ByteArray): ByteArray {
+        val md = MessageDigest.getInstance("MD5")
+        md.update(cert)
+        return md.digest()
+    }
+
+    private fun getSha1(cert: ByteArray): ByteArray {
+        val md = MessageDigest.getInstance("SHA1")
+        md.update(cert)
+        return md.digest()
+    }
+
+    private fun byte2String(data: ByteArray): String {
         val hexString = StringBuilder()
-        for (byte in publicKey) {
+        for (byte in data) {
             val str = Integer.toHexString(0xFF and byte.toInt()).toUpperCase()
             if (str.length == 1) {
                 hexString.append("0")

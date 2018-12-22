@@ -7,7 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.wrbug.developerhelper.model.entry.HierarchyNode
+import com.wrbug.developerhelper.model.entity.HierarchyNode
 
 class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private val strokePaint = Paint()

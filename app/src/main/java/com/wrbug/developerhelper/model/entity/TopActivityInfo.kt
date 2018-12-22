@@ -1,4 +1,4 @@
-package com.wrbug.developerhelper.model.entry
+package com.wrbug.developerhelper.model.entity
 
 import android.os.Parcel
 import android.os.Parcelable

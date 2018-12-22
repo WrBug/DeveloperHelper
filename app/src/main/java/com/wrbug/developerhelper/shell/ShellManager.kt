@@ -2,13 +2,11 @@ package com.wrbug.developerhelper.shell
 
 import com.jaredrummler.android.shell.CommandResult
 import com.wrbug.developerhelper.basecommon.BaseApp
-import com.wrbug.developerhelper.model.entry.FragmentInfo
-import com.wrbug.developerhelper.model.entry.TopActivityInfo
+import com.wrbug.developerhelper.model.entity.FragmentInfo
+import com.wrbug.developerhelper.model.entity.TopActivityInfo
 import com.wrbug.developerhelper.util.ShellUtils
 import java.io.File
-import java.io.FileOutputStream
 import java.util.regex.Pattern
-import kotlin.concurrent.thread
 
 
 object ShellManager {

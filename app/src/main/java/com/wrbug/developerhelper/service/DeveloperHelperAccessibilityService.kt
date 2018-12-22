@@ -13,9 +13,9 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.constant.ReceiverConstant
-import com.wrbug.developerhelper.model.entry.ApkInfo
-import com.wrbug.developerhelper.model.entry.HierarchyNode
-import com.wrbug.developerhelper.model.entry.TopActivityInfo
+import com.wrbug.developerhelper.model.entity.ApkInfo
+import com.wrbug.developerhelper.model.entity.HierarchyNode
+import com.wrbug.developerhelper.model.entity.TopActivityInfo
 import com.wrbug.developerhelper.shell.Callback
 import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.hierachy.HierarchyActivity

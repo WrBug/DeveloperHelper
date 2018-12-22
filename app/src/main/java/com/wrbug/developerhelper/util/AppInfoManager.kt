@@ -1,7 +1,7 @@
 package com.wrbug.developerhelper.util
 
 import com.wrbug.developerhelper.basecommon.BaseApp
-import com.wrbug.developerhelper.model.entry.ApkInfo
+import com.wrbug.developerhelper.model.entity.ApkInfo
 
 object AppInfoManager {
     private val appMap = HashMap<String, ApkInfo>()

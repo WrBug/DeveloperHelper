@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.model.entry.ApkInfo
+import com.wrbug.developerhelper.model.entity.ApkInfo
 import com.wrbug.developerhelper.util.ApkUtils
 import kotlinx.android.synthetic.main.view_app_data_info.view.*
 
@@ -32,7 +32,9 @@ class AppDataInfoView : FrameLayout {
     private fun loadData() {
         apkInfo?.run {
             apkPathTv.text = applicationInfo.publicSourceDir
-            apkSha1Tv.text = ApkUtils.getSha1(context, applicationInfo.packageName)
+            val apkSignInfo = ApkUtils.getApkSignInfo(context, applicationInfo.packageName)
+            apkSha1Tv.text = apkSignInfo.sha1
+            apkMd5Tv.text = apkSignInfo.md5
         }
     }
 }
