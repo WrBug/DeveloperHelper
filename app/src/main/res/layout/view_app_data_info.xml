@@ -70,6 +70,21 @@
             android:textColor="@color/item_title_text"
             android:textSize="16sp" />
 
+        <LinearLayout
+            android:id="@+id/sharedPreferenceContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="8dp" >
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:textColor="@color/item_content_text"
+                android:text="无"
+                android:textSize="14sp" />
+        </LinearLayout>
+
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

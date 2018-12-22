@@ -19,7 +19,6 @@ class AppInfoDialog : DialogFragment() {
     var apkInfo: ApkInfo? = null
     var topActivity: TopActivityInfo? = null
     var listener: AppInfoDialogEventListener? = null
-    lateinit var adapter: InfoAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog)

@@ -154,11 +154,16 @@ object ShellManager {
     fun getZipFileList(path: String): List<String?> {
         val file = File(BaseApp.instance.cacheDir, "zip.dex")
         if (file.exists()) {
-            ShellUtils.runWithSu("cp ${file.absolutePath} /data/local/tmp","rm -rf ${file.absolutePath}")
+            ShellUtils.runWithSu("cp ${file.absolutePath} /data/local/tmp", "rm -rf ${file.absolutePath}")
         }
         val commandResult = ShellUtils.runWithSu(String.format(SHELL_GET_ZIP_FILE_LIST, path))
         return commandResult.stdout
     }
 
+
+    fun lsDir(path: String): List<String?> {
+        val commandResult = ShellUtils.runWithSu("ls $path")
+        return commandResult.stdout
+    }
 
 }

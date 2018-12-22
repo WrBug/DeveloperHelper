@@ -4,10 +4,16 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatTextView
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.model.entity.ApkInfo
 import com.wrbug.developerhelper.util.ApkUtils
+import com.wrbug.developerhelper.util.AppInfoManager
+import com.wrbug.developerhelper.util.UiUtils
 import kotlinx.android.synthetic.main.view_app_data_info.view.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class AppDataInfoView : FrameLayout {
     var apkInfo: ApkInfo? = null
@@ -35,6 +41,29 @@ class AppDataInfoView : FrameLayout {
             val apkSignInfo = ApkUtils.getApkSignInfo(context, applicationInfo.packageName)
             apkSha1Tv.text = apkSignInfo.sha1
             apkMd5Tv.text = apkSignInfo.md5
+            getSharedPreferencesFiles(applicationInfo.packageName)
+        }
+    }
+
+    private fun getSharedPreferencesFiles(packageName: String) {
+        doAsync {
+            val files = AppInfoManager.getSharedPreferencesFiles(packageName)
+            if (files.isEmpty()) {
+                return@doAsync
+            }
+            uiThread {
+                sharedPreferenceContainer.removeAllViews()
+                val params = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                files.forEach {
+                    val textView = AppCompatTextView(context)
+                    textView.text = it.name
+                    textView.textSize = 14F
+                    textView.setTextColor(resources.getColor(R.color.item_content_text))
+                    textView.setPadding(0, UiUtils.dp2px(context, 8F), 0, 0)
+                    textView.tag = it
+                    sharedPreferenceContainer.addView(textView, params)
+                }
+            }
         }
     }
 }
