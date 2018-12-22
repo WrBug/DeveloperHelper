@@ -20,7 +20,7 @@ class LayoutInfoView(context: Context, private val hierarchyNode: HierarchyNode)
     }
 
     private fun initViewpager() {
-        val adapter = ViewPagerAdapter(context,hierarchyNode)
+        val adapter = LayoutInfoViewPagerAdapter(context,hierarchyNode)
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
     }

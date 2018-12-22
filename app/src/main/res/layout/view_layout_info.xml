@@ -8,9 +8,9 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        app:tabBackground="@android:color/darker_gray"
-        app:tabSelectedTextColor="@android:color/white"
-        app:tabTextColor="@android:color/widget_edittext_dark" />
+        app:tabBackground="@color/colorPrimaryDark"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabTextColor="@android:color/white" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"

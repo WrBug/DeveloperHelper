@@ -1,8 +1,16 @@
 package com.wrbug.developerhelper.util
 
+import android.app.Dialog
 import android.content.Context
 import android.util.TypedValue
+import android.view.View
+import androidx.fragment.app.Fragment
 import com.wrbug.developerhelper.basecommon.BaseApp
+
+fun Context.dp2px(dpVal: Float): Int = UiUtils.dp2px(this, dpVal)
+fun Fragment.dp2px(dpVal: Float): Int = UiUtils.dp2px(activity!!, dpVal)
+fun Dialog.dp2px(dpVal: Float): Int = UiUtils.dp2px(context, dpVal)
+fun View.dp2px(dpVal: Float): Int = UiUtils.dp2px(context, dpVal)
 
 object UiUtils {
 
@@ -14,16 +22,16 @@ object UiUtils {
         ).toInt()
     }
 
-    fun sp2px(context: Context = BaseApp.instance,spVal: Float): Int {
+    fun sp2px(context: Context = BaseApp.instance, spVal: Float): Int {
         return TypedValue.applyDimension(2, spVal, context.resources?.displayMetrics).toInt()
     }
 
-    fun px2dp(context: Context = BaseApp.instance,pxVal: Float): Float {
+    fun px2dp(context: Context = BaseApp.instance, pxVal: Float): Float {
         val scale = context.resources?.displayMetrics?.density!!
         return pxVal / scale
     }
 
-    fun px2sp(context: Context = BaseApp.instance,pxVal: Float): Float {
+    fun px2sp(context: Context = BaseApp.instance, pxVal: Float): Float {
         return pxVal / context.resources?.displayMetrics?.scaledDensity!!
     }
 

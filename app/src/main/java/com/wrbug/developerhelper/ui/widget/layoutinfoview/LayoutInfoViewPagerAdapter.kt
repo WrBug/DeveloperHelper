@@ -12,7 +12,7 @@ import com.wrbug.developerhelper.ui.widget.boundsinfoview.BoundsInfoView
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.ItemInfo
 
-class ViewPagerAdapter(
+class LayoutInfoViewPagerAdapter(
     val context: Context,
     private val hierarchyNode: HierarchyNode
 ) : PagerAdapter() {
