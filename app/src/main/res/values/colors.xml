@@ -13,4 +13,5 @@
     <color name="item_title_text">#de000000</color>
     <color name="item_content_text">#8a000000</color>
     <color name="text_color_666666">#666666</color>
+    <color name="divider_color">#eaeaea</color>
 </resources>

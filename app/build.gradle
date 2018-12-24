@@ -58,6 +58,9 @@ dependencies {
     implementation "org.jetbrains.anko:anko-commons:0.10.0"
     //dagger2
     implementation 'com.google.dagger:dagger:2.16'
+    // https://mvnrepository.com/artifact/dom4j/dom4j
+    implementation group: 'dom4j', name: 'dom4j', version: '1.6.1'
+
     kapt 'com.google.dagger:dagger-compiler:2.16'
 }
 kapt {

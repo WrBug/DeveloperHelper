@@ -26,8 +26,8 @@ object JsonHelper {
         } else gson.toJson(o)
     }
 
-    fun fromJson(json: Any): JsonObject? {
-        return fromJson(json, JsonObject::class.java)
+    fun fromJson(json: Any): JsonElement? {
+        return fromJson(json, JsonElement::class.java)
     }
 
     fun <T> fromJson(json: Any, tClass: Class<T>): T? {

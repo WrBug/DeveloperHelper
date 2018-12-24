@@ -27,4 +27,10 @@
     <string name="last_update_time">最后更新时间</string>
     <string name="demon_process">守护进程</string>
     <string name="demon_process_content">易开发守护进程，点击打开易开发</string>
+    <string name="edit">编辑</string>
+    <string name="save">保存</string>
+    <string name="notice">提示</string>
+    <string name="save_and_exit">保存并退出</string>
+    <string name="do_not_save">不保存</string>
+    <string name="input_error">输入有误</string>
 </resources>

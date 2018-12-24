@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:theme="@style/ToolbarTheme"
+    app:navigationIcon="@drawable/ic_navigation_back"
     android:background="@color/colorPrimaryDark"
     app:title="@string/app_name"
     app:titleTextColor="@android:color/white">

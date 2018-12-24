@@ -8,12 +8,14 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatTextView
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.model.entity.ApkInfo
+import com.wrbug.developerhelper.ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity
 import com.wrbug.developerhelper.util.ApkUtils
 import com.wrbug.developerhelper.util.AppInfoManager
 import com.wrbug.developerhelper.util.UiUtils
 import kotlinx.android.synthetic.main.view_app_data_info.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import java.io.File
 
 class AppDataInfoView : FrameLayout {
     var apkInfo: ApkInfo? = null
@@ -62,6 +64,9 @@ class AppDataInfoView : FrameLayout {
                     textView.setPadding(0, UiUtils.dp2px(context, 8F), 0, 0)
                     textView.tag = it
                     sharedPreferenceContainer.addView(textView, params)
+                    textView.setOnClickListener {
+                        SharedPreferenceEditActivity.start(context, (it.tag as File).absolutePath)
+                    }
                 }
             }
         }

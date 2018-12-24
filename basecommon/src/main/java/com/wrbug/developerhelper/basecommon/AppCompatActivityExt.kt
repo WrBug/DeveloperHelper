@@ -32,6 +32,7 @@ import androidx.lifecycle.ViewModelProviders
 fun AppCompatActivity.setupActionBar(@IdRes toolbarId: Int, action: ActionBar.() -> Unit) {
     setSupportActionBar(findViewById(toolbarId))
     supportActionBar?.run {
+        setDisplayHomeAsUpEnabled(false)
         action()
     }
 }

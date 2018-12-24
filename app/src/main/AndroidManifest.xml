@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-
     <application
         android:name=".DeveloperApplication"
         android:allowBackup="true"
@@ -51,7 +50,8 @@
         <activity
             android:name=".ui.activity.guide.GuideActivity"
             android:label="@string/title_activity_guide"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity"></activity>
     </application>
 
 </manifest>

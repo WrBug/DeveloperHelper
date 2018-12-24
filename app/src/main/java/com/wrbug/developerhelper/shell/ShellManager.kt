@@ -151,6 +151,11 @@ object ShellManager {
         })
     }
 
+    fun catFile(filaPath: String): String {
+        val commandResult = ShellUtils.runWithSu("cat $filaPath")
+        return commandResult.getStdout()
+    }
+
     fun getZipFileList(path: String): List<String?> {
         val file = File(BaseApp.instance.cacheDir, "zip.dex")
         if (file.exists()) {
