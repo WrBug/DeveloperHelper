@@ -9,8 +9,8 @@ import java.security.MessageDigest
 object ApkUtils {
 
     fun getApkSignInfo(context: Context, packageName: String): ApkSignInfo {
-        val packageInfo = context.packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
-        val cert = packageInfo.signingInfo.signingCertificateHistory[0].toByteArray()
+        val packageInfo = context.packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+        val cert = packageInfo.signatures[0].toByteArray()
         val apkSignInfo = ApkSignInfo()
         apkSignInfo.sha1 = byte2String(getSha1(cert))
         apkSignInfo.md5 = byte2String(getMd5(cert))
