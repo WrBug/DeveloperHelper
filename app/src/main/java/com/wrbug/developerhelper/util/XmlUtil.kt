@@ -33,8 +33,10 @@ object XmlUtil {
                 info.key = child.attributeValue("name")
                 if (type == "string") {
                     info.value = child.text
+                    info.newValue = child.text
                 } else {
                     info.value = child.attributeValue("value")
+                    info.newValue = child.attributeValue("value")
                 }
                 info.type = type
                 list.add(info)
@@ -115,5 +117,27 @@ object XmlUtil {
         return if (superClass != null) {// 简单的递归一下
             getClassField(superClass, fieldName)
         } else null
+    }
+
+    fun toSharedPreference(list: Array<SharedPreferenceItemInfo>): String {
+        val sb =
+            StringBuilder("<?xml version='1.0' encoding='utf-8' standalone='yes' ?>").append("\n").append("<map>")
+        for (sharedPreferenceItemInfo in list) {
+            if (!sharedPreferenceItemInfo.isValueValid()) {
+                return ""
+            }
+            sb.append("\n").append("<").append(sharedPreferenceItemInfo.type).append(" ").append("name=\"")
+                .append(sharedPreferenceItemInfo.key).append("\"")
+            if (sharedPreferenceItemInfo.type != "string") {
+                sb.append(" ").append("value=\"${sharedPreferenceItemInfo.newValue}\"").append(" />")
+            } else {
+//                .replace("\"", "&quot;")
+                sb.append(">").append(sharedPreferenceItemInfo.newValue)
+                    .append("</string>")
+            }
+        }
+        sb.append("</map>")
+        return sb.toString()
+
     }
 }

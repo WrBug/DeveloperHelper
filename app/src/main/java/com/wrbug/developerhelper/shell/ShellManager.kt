@@ -156,6 +156,16 @@ object ShellManager {
         return commandResult.getStdout()
     }
 
+    fun modifyFile(filaPath: String, content: String): Boolean {
+        val commandResult = ShellUtils.runWithSu("echo $content >> $filaPath")
+        return commandResult.isSuccessful
+    }
+
+    fun mvFile(source: String, dst: String): Boolean {
+        val commandResult = ShellUtils.runWithSu("mv $source   $dst")
+        return commandResult.isSuccessful
+    }
+
     fun getZipFileList(path: String): List<String?> {
         val file = File(BaseApp.instance.cacheDir, "zip.dex")
         if (file.exists()) {

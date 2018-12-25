@@ -5,13 +5,31 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/titleTv"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/item_title_text"
-        android:textSize="16sp"
-        tools:text="标题" />
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/titleTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/item_title_text"
+            android:textSize="16sp"
+            tools:text="标题" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/restoreTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:text="@string/restore"
+            android:textColor="@color/material_color_light_blue_500" />
+    </LinearLayout>
+
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/contentEt"

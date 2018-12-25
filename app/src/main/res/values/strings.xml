@@ -33,4 +33,6 @@
     <string name="save_and_exit">保存并退出</string>
     <string name="do_not_save">不保存</string>
     <string name="input_error">输入有误</string>
+    <string name="restore">恢复</string>
+    <string name="save_shared_preference_failed">保存失败，请按错误提示修改后再提交</string>
 </resources>

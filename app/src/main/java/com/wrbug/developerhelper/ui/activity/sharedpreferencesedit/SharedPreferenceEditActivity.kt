@@ -13,6 +13,7 @@ import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.basecommon.setupActionBar
 import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
+import com.wrbug.developerhelper.util.FileUtils
 import com.wrbug.developerhelper.util.XmlUtil
 import com.wrbug.developerhelper.util.dp2px
 import kotlinx.android.synthetic.main.activity_shared_preference_edit.*
@@ -67,6 +68,7 @@ class SharedPreferenceEditActivity : BaseActivity(), SharedPreferenceListAdapter
             val xml = ShellManager.catFile(filePath)
             val list = XmlUtil.parseSharedPreference(xml)
             uiThread {
+                saveMenuItem?.isVisible = false
                 adapter.setData(list)
             }
         }
@@ -88,6 +90,8 @@ class SharedPreferenceEditActivity : BaseActivity(), SharedPreferenceListAdapter
             .setPositiveButton(R.string.save_and_exit) { _, _ ->
                 if (doSave()) {
                     finish()
+                } else {
+                    showSnack(getString(R.string.save_shared_preference_failed))
                 }
             }
             .setNegativeButton(getString(R.string.do_not_save)) { _, _ ->
@@ -97,10 +101,29 @@ class SharedPreferenceEditActivity : BaseActivity(), SharedPreferenceListAdapter
 
     private fun doSave(): Boolean {
         val data = adapter.getData()
-        for (info in data) {
-
+        val xml = XmlUtil.toSharedPreference(data)
+        if (xml.isEmpty()) {
+            return false
         }
+        val file = File(cacheDir, "${System.currentTimeMillis()}.xml")
+        FileUtils.whiteFile(file, xml)
+        ShellManager.mvFile(file.absolutePath, filePath)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        item?.run {
+            when (itemId) {
+                R.id.save_menu -> {
+                    if (!doSave()) {
+                        showSnack(getString(R.string.save_shared_preference_failed))
+                        return@run
+                    }
+                    parseXml()
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

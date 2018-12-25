@@ -41,6 +41,17 @@ class SharedPreferenceListAdapter(val context: Context) :
         val sharedPreferenceItemInfo = data[position]
         holder.titleTv?.text = sharedPreferenceItemInfo.key
         holder.contentTv?.setText(sharedPreferenceItemInfo.value)
+        holder.restoreTv?.visibility =
+                if (sharedPreferenceItemInfo.value == sharedPreferenceItemInfo.newValue) {
+                    View.INVISIBLE
+                } else {
+                    View.VISIBLE
+                }
+        if (sharedPreferenceItemInfo.isValueValid()) {
+            holder.contentTv?.error = null
+        } else {
+            holder.contentTv?.error = context.getString(R.string.input_error)
+        }
         holder.tag = sharedPreferenceItemInfo
         holder.addTextChangedListener()
     }
@@ -53,8 +64,18 @@ class SharedPreferenceListAdapter(val context: Context) :
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTv: TextView? = itemView.findViewById(R.id.titleTv)
         val contentTv: EditText? = itemView.findViewById(R.id.contentEt)
+        var restoreTv: TextView? = itemView.findViewById(R.id.restoreTv)
         var tag: SharedPreferenceItemInfo? = null
         var textWatcher: TextWatcher? = null
+
+        init {
+            restoreTv?.setOnClickListener {
+                tag?.run {
+                    contentTv?.setText(value)
+                }
+            }
+        }
+
         fun addTextChangedListener() {
             if (textWatcher != null) {
                 return
@@ -81,6 +102,13 @@ class SharedPreferenceListAdapter(val context: Context) :
                         }
                         onValueChangedListener?.onChanged(changedFlag != 0L)
                     }
+
+                    restoreTv?.visibility =
+                            if (tag?.value == tag?.newValue) {
+                                View.INVISIBLE
+                            } else {
+                                View.VISIBLE
+                            }
                 }
 
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {

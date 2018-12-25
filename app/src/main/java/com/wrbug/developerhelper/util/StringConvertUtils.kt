@@ -13,10 +13,16 @@ fun String.isInt(): Boolean {
 }
 
 fun String.isDecimal(): Boolean {
-    val pattern = Pattern.compile("-?([0-9]+\\.)?[1-9][0-9]*$")
+    if (this=="0") {
+        return true
+    }
+    val pattern = Pattern.compile("-?([0-9]+\\.0*)?[1-9][0-9]*$")
     return pattern.matcher(this).find()
 }
 fun String.isNumber(): Boolean {
+    if (this=="0") {
+        return true
+    }
     val pattern = Pattern.compile("-?[1-9][0-9]*$")
     return pattern.matcher(this).find()
 }
