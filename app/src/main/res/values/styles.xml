@@ -34,4 +34,11 @@
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="actionMenuTextColor">@android:color/white</item> <!--  敲定颜色-->
     </style>
+
+    <!--<style name="tabStyle">-->
+        <!--<item name="app:tabBackground">@color/colorPrimaryDark</item>-->
+        <!--<item name="app:tabIndicatorColor">@android:color/transparent</item>-->
+        <!--<item name="app:tabSelectedTextColor">@color/colorAccent</item>-->
+        <!--<item name="app:tabTextColor">@android:color/white</item>-->
+    <!--</style>-->
 </resources>

@@ -56,10 +56,10 @@
             android:layout_height="40dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintTop_toBottomOf="@+id/subTitleTv"
-            app:tabIndicatorColor="@android:color/transparent"
             app:tabBackground="@color/colorPrimaryDark"
-            app:tabSelectedTextColor="@color/colorAccent"
-            app:tabTextColor="@android:color/white" />
+            app:tabIndicatorColor="@android:color/transparent"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="@color/colorPrimary" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.viewpager.widget.ViewPager
