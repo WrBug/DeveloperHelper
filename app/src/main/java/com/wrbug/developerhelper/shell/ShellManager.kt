@@ -3,6 +3,7 @@ package com.wrbug.developerhelper.shell
 import com.jaredrummler.android.shell.CommandResult
 import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.model.entity.FragmentInfo
+import com.wrbug.developerhelper.model.entity.LsFileInfo
 import com.wrbug.developerhelper.model.entity.TopActivityInfo
 import com.wrbug.developerhelper.util.ShellUtils
 import java.io.File
@@ -18,6 +19,7 @@ object ShellManager {
         "settings put secure enabled_accessibility_services com.wrbug.developerhelper/com.wrbug.developerhelper.service.DeveloperHelperAccessibilityService",
         "settings put secure accessibility_enabled 1"
     )
+    private const val SHELL_LS_FILE = "ls -l %1\$s"
     private const val SHELL_GET_ZIP_FILE_LIST =
         "app_process -Djava.class.path=/data/local/tmp/zip.dex /data/local/tmp Zip %s"
 
@@ -124,6 +126,22 @@ object ShellManager {
         return topActivityInfo
     }
 
+    fun lsFile(file: String): LsFileInfo? {
+        val result: CommandResult = ShellUtils.runWithSu(String.format(SHELL_LS_FILE, file))
+        if (result.isSuccessful.not()) {
+            return null
+        }
+        val split = result.getStdout().split(" ")
+        if (split.size <= 4) {
+            return null
+        }
+        val info = LsFileInfo()
+        info.permission = split[0]
+        info.user = split[2]
+        info.group = split[3]
+        return info
+    }
+
     fun getPid(packageName: String): String {
         var result: CommandResult = ShellUtils.runWithSu(String.format(SHELL_PROCESS_PID_1, packageName))
         if (result.isSuccessful) {
@@ -161,8 +179,13 @@ object ShellManager {
         return commandResult.isSuccessful
     }
 
-    fun mvFile(source: String, dst: String): Boolean {
-        val commandResult = ShellUtils.runWithSu("mv $source   $dst")
+    fun catFile(source: String, dst: String, mod: String? = null): Boolean {
+        val cmds = arrayListOf<String>()
+        cmds.add("cat $source  > $dst")
+        if (mod != null) {
+            cmds.add("chmod $mod $dst")
+        }
+        val commandResult = ShellUtils.runWithSu(*(cmds.toTypedArray()))
         return commandResult.isSuccessful
     }
 

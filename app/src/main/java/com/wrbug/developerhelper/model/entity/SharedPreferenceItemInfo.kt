@@ -33,4 +33,12 @@ class SharedPreferenceItemInfo {
         }
 
     }
+
+
+    fun getValidValue(): String {
+        if (isValueValid()) {
+            return newValue
+        }
+        return value
+    }
 }

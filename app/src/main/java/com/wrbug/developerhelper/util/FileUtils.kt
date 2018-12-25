@@ -2,8 +2,13 @@ package com.wrbug.developerhelper.util
 
 import android.media.MediaMetadataRetriever
 import android.os.Environment
+import org.dom4j.Document
+import org.dom4j.io.OutputFormat
+import org.dom4j.io.XMLWriter
 
 import java.io.*
+import org.dom4j.io.OutputFormat.createPrettyPrint
+
 
 /**
  * Created by wrbug on 2017/8/23.
@@ -48,6 +53,21 @@ object FileUtils {
             val fw = FileWriter(file)
             fw.write(data)
             fw.flush()
+        } catch (e: IOException) {
+        }
+
+    }
+
+    fun whiteXml(file: File, document: Document) {
+        try {
+            if (!file.exists()) {
+                file.createNewFile()
+            }
+            val format = OutputFormat.createPrettyPrint()
+            format.encoding = "utf-8"
+            val writer = XMLWriter(OutputStreamWriter(FileOutputStream(file), "utf-8"), format)
+            writer.write(document)
+            writer.close()
         } catch (e: IOException) {
         }
 

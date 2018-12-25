@@ -14,6 +14,7 @@ import com.wrbug.developerhelper.basecommon.setupActionBar
 import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
 import com.wrbug.developerhelper.util.FileUtils
+import com.wrbug.developerhelper.util.OutSharedPreferenceManager
 import com.wrbug.developerhelper.util.XmlUtil
 import com.wrbug.developerhelper.util.dp2px
 import kotlinx.android.synthetic.main.activity_shared_preference_edit.*
@@ -85,10 +86,11 @@ class SharedPreferenceEditActivity : BaseActivity(), SharedPreferenceListAdapter
     }
 
     private fun showSaveDialog() {
-        AlertDialog.Builder(this).setMessage("检测到值有修改，是否保存？")
+        AlertDialog.Builder(this).setMessage(getString(R.string.comfirm_shared_preference_save))
             .setTitle(R.string.notice)
             .setPositiveButton(R.string.save_and_exit) { _, _ ->
                 if (doSave()) {
+                    showSnack(getString(R.string.save_shared_preference_success))
                     finish()
                 } else {
                     showSnack(getString(R.string.save_shared_preference_failed))
@@ -101,14 +103,10 @@ class SharedPreferenceEditActivity : BaseActivity(), SharedPreferenceListAdapter
 
     private fun doSave(): Boolean {
         val data = adapter.getData()
-        val xml = XmlUtil.toSharedPreference(data)
-        if (xml.isEmpty()) {
-            return false
-        }
-        val file = File(cacheDir, "${System.currentTimeMillis()}.xml")
-        FileUtils.whiteFile(file, xml)
-        ShellManager.mvFile(file.absolutePath, filePath)
-        return true
+        val file = OutSharedPreferenceManager.saveToFile(this, data)
+        val success = ShellManager.catFile(file.absolutePath, filePath, "666")
+        file.delete()
+        return success
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -119,6 +117,7 @@ class SharedPreferenceEditActivity : BaseActivity(), SharedPreferenceListAdapter
                         showSnack(getString(R.string.save_shared_preference_failed))
                         return@run
                     }
+                    showSnack(getString(R.string.save_shared_preference_success))
                     parseXml()
                 }
             }

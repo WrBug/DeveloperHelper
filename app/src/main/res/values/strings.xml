@@ -35,4 +35,6 @@
     <string name="input_error">输入有误</string>
     <string name="restore">恢复</string>
     <string name="save_shared_preference_failed">保存失败，请按错误提示修改后再提交</string>
+    <string name="comfirm_shared_preference_save">检测到值有修改，是否保存？</string>
+    <string name="save_shared_preference_success">保存成功，由于缓存原因，新数据重启后才会生效</string>
 </resources>
