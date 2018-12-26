@@ -9,28 +9,29 @@ Android 5.0+
 ### 已支持功能
 
 1. 应用基本信息查看包括：
-    *     versionCode/VersionName
-    *     TopActivity
-    *     加固类型
-    *     Uid
-    *     安装时间/更新时间
-    *     Data目录
+ * versionCode/VersionName
+ * TopActivity
+ * 加固类型
+ * Uid
+ * 安装时间/更新时间
+ * Data目录
 2.  apk信息：
-    *     apk目录
-    *     MD5/Sha1
-    *     sharedPreference查看和编辑
+ * apk目录
+ * MD5/Sha1
+ * sharedPreference查看和编辑
 3.  布局分析
-    *   WidgetClass
-    *   ViewId
-    *   enable/clickable等状态
-    *   View文本内容
-    *   View位置
+ * WidgetClass
+ * ViewId
+ * enable/clickable等状态
+ * View文本内容
+ * View位置
 
 ### TODO
     
 1. 数据库查看与编辑
 2. root功能(adb wifi、重启应用……)
 3. xposed功能（脱壳等）
+4. 应用抓包
     
 ### 下载
 
