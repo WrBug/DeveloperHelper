@@ -23,10 +23,14 @@ object ShellManager {
     private const val SHELL_GET_ZIP_FILE_LIST =
         "app_process -Djava.class.path=/data/local/tmp/zip.dex /data/local/tmp Zip %s"
 
-    fun getTopActivity(callback: Callback<TopActivityInfo>) {
+    fun getTopActivity(callback: Callback<TopActivityInfo?>) {
         ShellUtils.runWithSu(arrayOf(SHELL_TOP_ACTIVITY), object : ShellUtils.ShellResultCallback() {
             override fun onComplete(result: CommandResult) {
                 callback.onSuccess(getTopActivity(result))
+            }
+
+            override fun onError(msg: String) {
+                callback.onSuccess(null)
             }
         })
 
