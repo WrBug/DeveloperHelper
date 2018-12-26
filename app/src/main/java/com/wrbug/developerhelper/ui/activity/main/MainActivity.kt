@@ -20,6 +20,7 @@ import com.wrbug.developerhelper.service.FloatWindowService
 import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.main.viewmodel.MainViewModel
 import com.wrbug.developerhelper.ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity
+import com.wrbug.developerhelper.util.ClipboardUtils
 import com.wrbug.developerhelper.util.DeviceUtils
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -104,18 +105,34 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
                 R.id.about_menu -> {
                     showAboutDialog()
                 }
+                R.id.exit_menu -> {
+                    showExitMenuDialog()
+                }
             }
         }
 
         return super.onOptionsItemSelected(item)
     }
 
-    private fun showAboutDialog() {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.about)
-            .setMessage(getString(R.string.about_content))
-            .create().show()
-    }
+    private fun showExitMenuDialog() = AlertDialog.Builder(this)
+        .setTitle(R.string.notice)
+        .setMessage(getString(R.string.exit_content))
+        .setPositiveButton(getString(R.string.ok)) { _, _ ->
+            FloatWindowService.stop(this)
+            finish()
+        }
+        .setNegativeButton(getString(R.string.cancel), null)
+        .create()
+        .show()
+
+    private fun showAboutDialog() = AlertDialog.Builder(this)
+        .setTitle(R.string.about)
+        .setMessage(getString(R.string.about_content))
+        .setPositiveButton(getString(R.string.copy_group_number)) { _, _ ->
+            ClipboardUtils.saveClipboardText(this, "627962572")
+            showSnack(R.string.copy_success)
+        }
+        .create().show()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 

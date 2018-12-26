@@ -1,7 +1,6 @@
 package com.wrbug.developerhelper.ui.activity.sharedpreferencesedit
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -13,7 +12,6 @@ import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.basecommon.setupActionBar
 import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
-import com.wrbug.developerhelper.util.FileUtils
 import com.wrbug.developerhelper.util.OutSharedPreferenceManager
 import com.wrbug.developerhelper.util.XmlUtil
 import com.wrbug.developerhelper.util.dp2px
@@ -86,7 +84,7 @@ class SharedPreferenceEditActivity : BaseActivity(), SharedPreferenceListAdapter
     }
 
     private fun showSaveDialog() {
-        AlertDialog.Builder(this).setMessage(getString(R.string.comfirm_shared_preference_save))
+        AlertDialog.Builder(this).setMessage(getString(R.string.confirm_shared_preference_save))
             .setTitle(R.string.notice)
             .setPositiveButton(R.string.save_and_exit) { _, _ ->
                 if (doSave()) {

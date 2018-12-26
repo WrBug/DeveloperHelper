@@ -22,6 +22,7 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:textColor="@color/item_content_text"
+        android:textIsSelectable="true"
         android:textSize="14sp"
         tools:text="内容" />
 </LinearLayout>

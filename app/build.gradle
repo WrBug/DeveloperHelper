@@ -17,8 +17,8 @@ android {
         applicationId "com.wrbug.developerhelper"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName "0.0.1"
+        versionCode 100000
+        versionName "1.0.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -49,13 +49,13 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.tencent:mmkv:1.0.14'
-    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation 'com.google.android.material:material:1.1.0-alpha02'
     implementation 'com.github.yhaolpz:FloatWindow:1.0.9'
     implementation 'com.jaredrummler:android-shell:1.0.0'
     implementation project(':basecommon')
     kapt "com.android.databinding:compiler:3.1.4"
     implementation 'com.elvishew:xlog:1.6.1'
-    implementation "org.jetbrains.anko:anko-commons:0.10.0"
+    implementation "org.jetbrains.anko:anko-commons:0.10.8"
     //dagger2
     implementation 'com.google.dagger:dagger:2.16'
     // https://mvnrepository.com/artifact/dom4j/dom4j

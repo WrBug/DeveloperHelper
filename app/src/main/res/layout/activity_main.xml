@@ -86,6 +86,7 @@
                 android:id="@+id/xposedSettingView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:checkable="false"
                 app:checked="@{mainVm.openXposed}"
                 app:src="@drawable/ic_xposed_666666"

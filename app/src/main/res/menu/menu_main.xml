@@ -4,7 +4,10 @@
     tools:context="com.wrbug.developerhelper.ui.activity.guide.GuideActivity">
     <item
         android:id="@+id/about_menu"
-        android:orderInCategory="100"
         android:title="@string/about"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/exit_menu"
+        android:title="@string/exit"
+        app:showAsAction="never" />
 </menu>
