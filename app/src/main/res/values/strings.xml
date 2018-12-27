@@ -43,4 +43,9 @@
     <string name="cancel">取消</string>
     <string name="copy_group_number">复制群号</string>
     <string name="copy_success">复制成功</string>
+    <string name="data_info">数据信息</string>
+    <string name="base_info">基本信息</string>
+    <string name="enforce_type">加固类型</string>
+    <string name="analyzing">正在分析</string>
+    <string name="getting_info">正在获取信息...</string>
 </resources>

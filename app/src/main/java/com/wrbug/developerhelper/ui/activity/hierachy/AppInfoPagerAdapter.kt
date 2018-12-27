@@ -32,7 +32,7 @@ class AppInfoPagerAdapter(
     private val tabList = arrayListOf<String>()
     private val viewList = arrayListOf<View>()
     private val adapter = InfoAdapter(context)
-    private val enforceItem = ItemInfo("加固类型", "正在分析")
+    private val enforceItem = ItemInfo(context.getString(R.string.enforce_type), context.getString(R.string.analyzing))
     var listener: AppInfoDialogEventListener? = null
 
     init {
@@ -41,14 +41,14 @@ class AppInfoPagerAdapter(
     }
 
     private fun initAppDataInfoTab() {
-        tabList.add("数据信息")
+        tabList.add(context.getString(R.string.data_info))
         val appDataInfoView = AppDataInfoView(context)
         viewList.add(appDataInfoView)
         appDataInfoView.apkInfo = apkInfo
     }
 
     private fun initAppInfoTab() {
-        tabList.add("基本信息")
+        tabList.add(context.getString(R.string.base_info))
         val rv = RecyclerView(context)
         viewList.add(rv)
         rv.layoutManager = LinearLayoutManager(context)

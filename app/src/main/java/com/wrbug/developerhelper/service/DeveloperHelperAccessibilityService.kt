@@ -189,14 +189,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
                 override fun onSuccess(data: TopActivityInfo?) {
                     topActivity = data
                     val hierarchyNodes = readNode()
-                    val intent = Intent(context, HierarchyActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    val bundle = Bundle()
-                    bundle.putParcelable("apkInfo", currentAppInfo)
-                    bundle.putParcelableArrayList("node", hierarchyNodes)
-                    bundle.putParcelable("topActivity", topActivity)
-                    intent.putExtras(bundle)
-                    startActivity(intent)
+                    HierarchyActivity.start(context,currentAppInfo,hierarchyNodes,topActivity)
                 }
             })
 

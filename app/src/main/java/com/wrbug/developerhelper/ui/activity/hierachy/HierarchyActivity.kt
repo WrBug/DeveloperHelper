@@ -1,5 +1,6 @@
 package com.wrbug.developerhelper.ui.activity.hierachy
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -19,14 +20,33 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
     private var nodeList: List<HierarchyNode>? = null
     private var showHierachyView = false
     private var topActivity: TopActivityInfo? = null
+
+    companion object {
+        fun start(
+            context: Context?,
+            apkInfo: ApkInfo?,
+            node: ArrayList<HierarchyNode>?,
+            topActivity: TopActivityInfo?
+        ) {
+            val intent = Intent(context, HierarchyActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            val bundle = Bundle()
+            bundle.putParcelable("apkInfo", apkInfo)
+            bundle.putParcelableArrayList("node", node)
+            bundle.putParcelable("topActivity", topActivity)
+            intent.putExtras(bundle)
+            context?.startActivity(intent)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hierarchy)
         apkInfo = intent.getParcelableExtra("apkInfo")
         nodeList = intent.getParcelableArrayListExtra("node")
-        topActivity = intent.getParcelableExtra<TopActivityInfo>("topActivity")
-        setFloatButtonVisible(false)
+        topActivity = intent.getParcelableExtra("topActivity")
         showAppInfoDialog()
+        setFloatButtonVisible(false)
     }
 
     private fun showAppInfoDialog() {
