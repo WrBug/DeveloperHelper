@@ -6,6 +6,12 @@
 
 Android 5.0+
 
+### 截图
+
+![](https://i.loli.net/2018/12/26/5c23070b18e43.png)![](https://i.loli.net/2018/12/26/5c23070c02a3a.png)
+
+![](https://i.loli.net/2018/12/26/5c23070cda923.png)![](https://i.loli.net/2018/12/26/5c23070d9bd25.png)
+
 ### 已支持功能
 
 1. 应用基本信息查看包括：
@@ -37,11 +43,8 @@ Android 5.0+
 
 [https://github.com/WrBug/DeveloperHelper/releases](https://github.com/WrBug/DeveloperHelper/releases)
 
-### 截图
-
-![](https://i.loli.net/2018/12/26/5c23070b18e43.png)![](https://i.loli.net/2018/12/26/5c23070c02a3a.png)
-
-![](https://i.loli.net/2018/12/26/5c23070cda923.png)![](https://i.loli.net/2018/12/26/5c23070d9bd25.png)
+酷安市场：
+[https://www.coolapk.com/apk/com.wrbug.developerhelper](https://www.coolapk.com/apk/com.wrbug.developerhelper)
 
 ### 帮助支持
 
