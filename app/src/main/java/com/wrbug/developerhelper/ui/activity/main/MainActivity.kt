@@ -72,6 +72,7 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
     inner class Presenter {
         fun onAccessibilityClick() {
             if (!accessibilitySettingView.checked) {
+                showSnack(getString(R.string.waiting))
                 AccessibilityManager.startService(context)
             } else {
                 showSnack(getString(R.string.accessibility_service_opened))

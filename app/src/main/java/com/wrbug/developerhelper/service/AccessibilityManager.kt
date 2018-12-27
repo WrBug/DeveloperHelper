@@ -19,6 +19,10 @@ object AccessibilityManager {
                     callback?.onSuccess(data)
                 }
 
+                override fun onFailed(msg: String) {
+                    callback?.onFailed(msg)
+                }
+
             })
         }
     }

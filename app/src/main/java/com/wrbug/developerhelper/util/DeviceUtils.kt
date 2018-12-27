@@ -4,13 +4,13 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
+import com.jaredrummler.android.shell.Shell
 import com.wrbug.developerhelper.basecommon.BaseApp
 
 
 object DeviceUtils {
     fun isRoot(): Boolean {
-        val id = ShellUtils.runWithSuIgnoreSetting("id")
-        return !TextUtils.isEmpty(id.getStdout())
+        return Shell.SU.available()
     }
 
     fun isFloatWindowOpened(): Boolean {
