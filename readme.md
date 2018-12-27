@@ -43,6 +43,8 @@ Android 5.0+
 
 [https://github.com/WrBug/DeveloperHelper/releases](https://github.com/WrBug/DeveloperHelper/releases)
 
+酷安市场：
+[https://www.coolapk.com/apk/com.wrbug.developerhelper](https://www.coolapk.com/apk/com.wrbug.developerhelper)
 
 ### 帮助支持
 
