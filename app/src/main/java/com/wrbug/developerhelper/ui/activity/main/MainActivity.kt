@@ -32,7 +32,9 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FloatWindowService.start(this)
+        if (DeviceUtils.isFloatWindowOpened()) {
+            FloatWindowService.start(this)
+        }
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.presenter = Presenter()
         binding.mainVm = vm

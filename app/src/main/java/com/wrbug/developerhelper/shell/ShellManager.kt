@@ -6,6 +6,7 @@ import com.wrbug.developerhelper.model.entity.FragmentInfo
 import com.wrbug.developerhelper.model.entity.LsFileInfo
 import com.wrbug.developerhelper.model.entity.TopActivityInfo
 import com.wrbug.developerhelper.util.ShellUtils
+import com.yhao.floatwindow.FloatActivity
 import java.io.File
 import java.util.regex.Pattern
 

@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.IBinder
 import android.view.LayoutInflater
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.constant.ReceiverConstant
@@ -111,9 +112,14 @@ class FloatWindowService : Service() {
     }
 
     override fun onDestroy() {
-        FloatWindow.destroy(FLOAT_BUTTON)
-        unregisterReceiver(receiver)
-        stopForeground(true)
+        try {
+            FloatWindow.destroy(FLOAT_BUTTON)
+            unregisterReceiver(receiver)
+            stopForeground(true)
+        } catch (th: Throwable) {
+
+        }
+
         super.onDestroy()
     }
 

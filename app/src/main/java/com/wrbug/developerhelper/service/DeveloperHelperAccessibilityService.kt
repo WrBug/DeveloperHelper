@@ -12,6 +12,7 @@ import android.text.TextUtils
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.wrbug.developerhelper.basecommon.BaseApp
+import com.wrbug.developerhelper.basecommon.showToast
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.model.entity.ApkInfo
 import com.wrbug.developerhelper.model.entity.HierarchyNode
@@ -21,6 +22,7 @@ import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.hierachy.HierarchyActivity
 import com.wrbug.developerhelper.util.AppInfoManager
 import com.wrbug.developerhelper.util.UiUtils
+import org.jetbrains.anko.runOnUiThread
 
 
 class DeveloperHelperAccessibilityService : AccessibilityService() {
@@ -186,7 +188,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
                 override fun onSuccess(data: TopActivityInfo?) {
                     topActivity = data
                     val hierarchyNodes = readNode()
-                    HierarchyActivity.start(context,currentAppInfo,hierarchyNodes,topActivity)
+                    HierarchyActivity.start(context, currentAppInfo, hierarchyNodes, topActivity)
                 }
             })
 
