@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatTextView
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.model.entity.ApkInfo
+import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity
 import com.wrbug.developerhelper.util.ApkUtils
 import com.wrbug.developerhelper.util.AppInfoManager
@@ -44,6 +45,30 @@ class AppDataInfoView : FrameLayout {
             apkSha1Tv.text = apkSignInfo.sha1
             apkMd5Tv.text = apkSignInfo.md5
             getSharedPreferencesFiles(applicationInfo.packageName)
+            getDatabaseFiles(applicationInfo.packageName)
+        }
+    }
+
+    private fun getDatabaseFiles(packageName: String) {
+        doAsync {
+            val sqliteFiles = ShellManager.getSqliteFiles(packageName)
+            uiThread {
+                if (sqliteFiles.isNotEmpty()) {
+                    databaseContainer.removeAllViews()
+                }
+                val params = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                for (sqliteFile in sqliteFiles) {
+                    val textView = AppCompatTextView(context)
+                    textView.text = sqliteFile.name
+                    textView.textSize = 14F
+                    textView.setTextColor(resources.getColor(R.color.item_content_text))
+                    textView.setPadding(0, UiUtils.dp2px(context, 8F), 0, 0)
+                    textView.tag = sqliteFile
+                    databaseContainer.addView(textView, params)
+
+                }
+            }
+
         }
     }
 

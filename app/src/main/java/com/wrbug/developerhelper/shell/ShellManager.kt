@@ -22,7 +22,7 @@ object ShellManager {
     private const val SHELL_LS_FILE = "ls -l %1\$s"
     private const val SHELL_GET_ZIP_FILE_LIST =
         "app_process -Djava.class.path=/data/local/tmp/zip.dex /data/local/tmp Zip %s"
-
+    private const val SHELL_CHECK_IS_SQLITE = "od -An -tx %1\$s  |grep '694c5153' "
     fun getTopActivity(callback: Callback<TopActivityInfo?>) {
         ShellUtils.runWithSu(arrayOf(SHELL_TOP_ACTIVITY), object : ShellUtils.ShellResultCallback() {
             override fun onComplete(result: CommandResult) {
@@ -159,6 +159,27 @@ object ShellManager {
             return ""
         }
         return result.getStdout().trim().split(" ")[0]
+    }
+
+    fun getSqliteFiles(packageName: String): Array<File> {
+        val dbPath = "/data/data/$packageName/databases"
+        val list = lsDir(dbPath)
+        val files = ArrayList<File>()
+        val cmds = arrayListOf<String>()
+        for (file in list) {
+            file?.run {
+                cmds.add(String.format(SHELL_CHECK_IS_SQLITE, "$dbPath/$file"))
+            }
+        }
+        val result = ShellUtils.runWithSu(*cmds.toTypedArray())
+        if (result.isSuccessful && result.getStdout().isNullOrEmpty().not()) {
+            for (index in result.stdout.indices) {
+                if (result.stdout[index].isNullOrBlank().not()) {
+                    files.add(File(dbPath, list[index]))
+                }
+            }
+        }
+        return files.toTypedArray()
     }
 
     fun openAccessibilityService(callback: Callback<Boolean>? = null) {

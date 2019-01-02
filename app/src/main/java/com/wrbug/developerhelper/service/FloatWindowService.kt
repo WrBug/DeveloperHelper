@@ -1,6 +1,5 @@
 package com.wrbug.developerhelper.service
 
-import android.annotation.SuppressLint
 import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -8,13 +7,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.IBinder
-import android.os.PowerManager
 import android.view.LayoutInflater
-import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-import androidx.annotation.UiThread
 import androidx.core.app.NotificationCompat
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.shell.Callback
 import com.wrbug.developerhelper.ui.activity.main.MainActivity
@@ -66,6 +61,8 @@ class FloatWindowService : Service() {
                 .setTag(FLOAT_BUTTON)
                 .setDesktopShow(true)                        //桌面显示
                 .build()
+
+
         }
     }
 
@@ -88,7 +85,6 @@ class FloatWindowService : Service() {
             .setContentText(getString(R.string.demon_process_content))
             .setSmallIcon(R.drawable.ic_launcher_notify)
             .setVibrate(null)
-            .setDefaults(Notification.DEFAULT_ALL)
         val notification = builder.build()
         notification.flags = Notification.FLAG_ONGOING_EVENT or Notification.FLAG_NO_CLEAR or
                 Notification.FLAG_FOREGROUND_SERVICE
