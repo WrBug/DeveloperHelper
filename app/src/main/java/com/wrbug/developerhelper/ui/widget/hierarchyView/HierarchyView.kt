@@ -21,7 +21,7 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
         strokePaint.style = Paint.Style.STROKE
         strokePaint.strokeWidth = 2F
         strokePaint.color = Color.GREEN
-        contentPaint.color = Color.argb(20, 0, 0, 0)
+        contentPaint.color = Color.argb(15, 0, 0, 0)
     }
 
     fun setHierarchyNodes(hierarchyNodes: List<HierarchyNode>?) {

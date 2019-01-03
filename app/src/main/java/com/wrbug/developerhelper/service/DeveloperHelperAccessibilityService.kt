@@ -83,9 +83,24 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             rootInActiveWindow.packageName?.run {
                 currentAppInfo = AppInfoManager.getAppByPackageName(toString())
             }
-            readNodeInfo(hierarchyNodes, rootInActiveWindow, null)
+            val node = getDecorViewNode(rootInActiveWindow)
+            readNodeInfo(hierarchyNodes, node ?: rootInActiveWindow, null)
         }
         return hierarchyNodes
+    }
+
+    private fun getDecorViewNode(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+        for (index in 0 until node.childCount) {
+            val child = node.getChild(index)
+            if (child.viewIdResourceName == "android:id/content") {
+                return child
+            }
+            val decorViewNode = getDecorViewNode(child)
+            if (decorViewNode != null) {
+                return decorViewNode
+            }
+        }
+        return null
     }
 
     override fun onCreate() {
@@ -125,6 +140,9 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
         }
         for (index in 0 until accessibilityNodeInfo.childCount) {
             val child = accessibilityNodeInfo.getChild(index)
+            if (child.isVisibleToUser.not()) {
+                continue
+            }
             val screenRect = Rect()
             val parentRect = Rect()
             child.getBoundsInScreen(screenRect)
