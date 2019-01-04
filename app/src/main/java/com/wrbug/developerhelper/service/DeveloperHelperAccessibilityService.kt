@@ -11,6 +11,8 @@ import android.provider.Settings
 import android.text.TextUtils
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import com.wrbug.developerhelper.DeveloperApplication
+import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.basecommon.showToast
 import com.wrbug.developerhelper.constant.ReceiverConstant
@@ -205,6 +207,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
 
     inner class DeveloperHelperAccessibilityReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, data: Intent?) {
+            DeveloperApplication.getInstance().showToast(getString(R.string.geting_app_info))
             ShellManager.getTopActivity(object : Callback<TopActivityInfo?> {
 
                 override fun onSuccess(data: TopActivityInfo?) {

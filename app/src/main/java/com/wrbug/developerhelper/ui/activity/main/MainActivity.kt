@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.widget.CompoundButton
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import com.wrbug.developerhelper.DeveloperApplication
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseVMActivity
 import com.wrbug.developerhelper.basecommon.obtainViewModel
