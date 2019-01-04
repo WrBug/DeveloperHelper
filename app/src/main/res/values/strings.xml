@@ -47,7 +47,7 @@
     <string name="base_info">基本信息</string>
     <string name="enforce_type">加固类型</string>
     <string name="analyzing">正在分析</string>
-    <string name="getting_info">正在获取信息...</string>
     <string name="waiting">请稍后...</string>
-    <string name="geting_app_info">正在获取应用信息</string>
+    <string name="getting_app_info">正在获取应用信息</string>
+    <string name="please_open_accessbility_service">请开启无障碍功能</string>
 </resources>

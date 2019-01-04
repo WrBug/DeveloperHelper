@@ -61,7 +61,7 @@ class DeveloperApplication : BaseApp() {
         }
     }
 
-    fun showToast(msg: String) {
+    override fun showToast(msg: String) {
         builder.setSecondText(msg)
         showToast(builder)
     }

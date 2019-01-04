@@ -6,12 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Rect
-import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import com.wrbug.developerhelper.DeveloperApplication
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.basecommon.showToast
@@ -19,13 +17,11 @@ import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.model.entity.ApkInfo
 import com.wrbug.developerhelper.model.entity.HierarchyNode
 import com.wrbug.developerhelper.model.entity.TopActivityInfo
-import com.wrbug.developerhelper.model.mmkv.manager.MMKVManager.map
 import com.wrbug.developerhelper.shell.Callback
 import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.hierachy.HierarchyActivity
 import com.wrbug.developerhelper.util.AppInfoManager
 import com.wrbug.developerhelper.util.UiUtils
-import org.jetbrains.anko.runOnUiThread
 
 
 class DeveloperHelperAccessibilityService : AccessibilityService() {
@@ -207,7 +203,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
 
     inner class DeveloperHelperAccessibilityReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, data: Intent?) {
-            DeveloperApplication.getInstance().showToast(getString(R.string.geting_app_info))
+            showToast(getString(R.string.getting_app_info))
             ShellManager.getTopActivity(object : Callback<TopActivityInfo?> {
 
                 override fun onSuccess(data: TopActivityInfo?) {
