@@ -78,10 +78,11 @@
             android:paddingBottom="8dp">
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/defaultSpTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
-                android:text="无"
+                android:text="@string/getting"
                 android:textColor="@color/item_content_text"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -89,7 +90,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="数据库列表"
+            android:text="@string/database_list"
             android:textColor="@color/item_title_text"
             android:textSize="16sp" />
 
@@ -101,10 +102,11 @@
             android:paddingBottom="8dp">
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/defaultDbTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
-                android:text="无"
+                android:text="@string/getting"
                 android:textColor="@color/item_content_text"
                 android:textSize="14sp" />
         </LinearLayout>

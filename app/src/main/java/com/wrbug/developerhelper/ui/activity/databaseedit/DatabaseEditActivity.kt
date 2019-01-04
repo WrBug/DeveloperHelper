@@ -3,6 +3,7 @@ package com.wrbug.developerhelper.ui.activity.databaseedit
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -32,7 +33,11 @@ class DatabaseEditActivity : BaseActivity() {
     private val adapter = DatabaseTableAdapter(this)
     private var selectedIndex = 0
     private val dstDir: File by lazy {
-        File(cacheDir, "db")
+        val file = File(externalCacheDir, "db")
+        if (file.exists()) {
+            file.mkdir()
+        }
+        file
     }
 
     companion object {
@@ -102,6 +107,7 @@ class DatabaseEditActivity : BaseActivity() {
             }
             val file = File(dstDir, dbPath.name)
             dbMap = DatabaseUtils.getDatabase(file.absolutePath)
+            file.delete()
             tableNames.addAll(dbMap.keys)
             uiThread {
                 setTableContainer()
@@ -110,12 +116,6 @@ class DatabaseEditActivity : BaseActivity() {
         }
     }
 
-    override fun onDestroy() {
-        doAsync {
-            ShellManager.rmFile(dstDir.absolutePath)
-        }
-        super.onDestroy()
-    }
 
     private fun setTableContainer() {
         tableNameContainer.removeAllViews()

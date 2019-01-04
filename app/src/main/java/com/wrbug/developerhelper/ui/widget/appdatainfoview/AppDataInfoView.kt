@@ -54,9 +54,11 @@ class AppDataInfoView : FrameLayout {
         doAsync {
             val sqliteFiles = ShellManager.getSqliteFiles(packageName)
             uiThread {
-                if (sqliteFiles.isNotEmpty()) {
-                    databaseContainer.removeAllViews()
+                if (sqliteFiles.isEmpty()) {
+                    defaultDbTv.setText(R.string.none)
+                    return@uiThread
                 }
+                databaseContainer.removeAllViews()
                 val params = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
                 for (sqliteFile in sqliteFiles) {
                     val textView = AppCompatTextView(context)
@@ -78,10 +80,11 @@ class AppDataInfoView : FrameLayout {
     private fun getSharedPreferencesFiles(packageName: String) {
         doAsync {
             val files = AppInfoManager.getSharedPreferencesFiles(packageName)
-            if (files.isEmpty()) {
-                return@doAsync
-            }
             uiThread {
+                if (files.isEmpty()) {
+                    defaultSpTv.setText(R.string.none)
+                    return@uiThread
+                }
                 sharedPreferenceContainer.removeAllViews()
                 val params = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
                 files.forEach {
