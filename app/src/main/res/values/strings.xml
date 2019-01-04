@@ -52,4 +52,5 @@
     <string name="please_open_accessbility_service">请开启无障碍功能</string>
     <string name="table">表</string>
     <string name="table_data_is_empty">该表数据为空</string>
+    <string name="get_database_failed">获取数据库信息失败</string>
 </resources>

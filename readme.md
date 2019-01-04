@@ -25,6 +25,7 @@ Android 5.0+
  * apk目录
  * MD5/Sha1
  * sharedPreference查看和编辑
+ * 数据库查看
 3.  布局分析
  * WidgetClass
  * ViewId
@@ -33,11 +34,10 @@ Android 5.0+
  * View位置
 
 ### TODO
-    
-1. 数据库查看与编辑
-2. root功能(adb wifi、重启应用……)
-3. xposed功能（脱壳等）
-4. 应用抓包
+
+1. root功能(adb wifi、重启应用……)
+2. xposed功能（脱壳等）
+3. 应用抓包
     
 ### 下载
 

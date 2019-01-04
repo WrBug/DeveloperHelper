@@ -196,6 +196,11 @@ object ShellManager {
         return commandResult.getStdout()
     }
 
+    fun rmFile(file: String): Boolean {
+        val commandResult = ShellUtils.runWithSu("rm -rf $file")
+        return commandResult.isSuccessful
+    }
+
     fun modifyFile(filaPath: String, content: String): Boolean {
         val commandResult = ShellUtils.runWithSu("echo $content >> $filaPath")
         return commandResult.isSuccessful

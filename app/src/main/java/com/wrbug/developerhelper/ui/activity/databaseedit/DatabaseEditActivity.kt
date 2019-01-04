@@ -31,6 +31,9 @@ class DatabaseEditActivity : BaseActivity() {
     private var dbMap: Map<String, DatabaseTableInfo> = TreeMap()
     private val adapter = DatabaseTableAdapter(this)
     private var selectedIndex = 0
+    private val dstDir: File by lazy {
+        File(cacheDir, "db")
+    }
 
     companion object {
         fun start(context: Context, filePath: String) {
@@ -47,7 +50,7 @@ class DatabaseEditActivity : BaseActivity() {
             filePath = getStringExtra("filePath")
         }
         if (filePath.isNullOrEmpty()) {
-            showToast("获取数据库信息失败")
+            showToast(getString(R.string.get_database_failed))
             finish()
             return
         }
@@ -86,14 +89,13 @@ class DatabaseEditActivity : BaseActivity() {
 
     private fun readDatabase() {
         doAsync {
-            val dstDir = File(cacheDir, "db")
             if (dstDir.exists().not()) {
                 dstDir.mkdir()
             }
             val success = ShellManager.cpFile(dbPath.absolutePath, "${dstDir.absolutePath}/${dbPath.name}")
             if (!success) {
                 uiThread {
-                    showToast("获取数据库信息失败")
+                    showToast(getString(R.string.get_database_failed))
                     finish()
                 }
                 return@doAsync
@@ -106,6 +108,13 @@ class DatabaseEditActivity : BaseActivity() {
             }
             selectTable(0)
         }
+    }
+
+    override fun onDestroy() {
+        doAsync {
+            ShellManager.rmFile(dstDir.absolutePath)
+        }
+        super.onDestroy()
     }
 
     private fun setTableContainer() {
