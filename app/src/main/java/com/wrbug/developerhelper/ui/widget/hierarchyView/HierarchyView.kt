@@ -8,11 +8,13 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.wrbug.developerhelper.model.entity.HierarchyNode
+import com.wrbug.developerhelper.service.DeveloperHelperAccessibilityService
 
 class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private val strokePaint = Paint()
     private val contentPaint = Paint()
     private var mHierarchyNodes = arrayListOf<HierarchyNode>()
+    private val nodeMap = hashMapOf<Long, HierarchyNode>()
     private var onHierarchyNodeClickListener: OnHierarchyNodeClickListener? = null
 
     constructor(context: Context) : this(context, null)
@@ -24,11 +26,14 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
         contentPaint.color = Color.argb(15, 0, 0, 0)
     }
 
-    fun setHierarchyNodes(hierarchyNodes: List<HierarchyNode>?) {
+    fun setHierarchyNodes(
+        hierarchyNodes: List<HierarchyNode>?
+    ) {
         mHierarchyNodes.clear()
         hierarchyNodes?.let {
             mHierarchyNodes.addAll(it)
         }
+        nodeMap.putAll(DeveloperHelperAccessibilityService.nodeMap)
         invalidate()
     }
 
@@ -67,30 +72,43 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
 
     }
 
-    fun getNode(x: Float, y: Float): SelectedNodeInfo? {
+    private fun getNode(x: Float, y: Float): SelectedNodeInfo? {
+        val list = ArrayList<SelectedNodeInfo>()
         for (hierarchyNode in mHierarchyNodes) {
-            val node = getNode(x, y, hierarchyNode)
-            if (node != null) {
-                return node
+            getNode(x, y, hierarchyNode, list)
+        }
+        if (list.size == 1) {
+            return list[0]
+        }
+        var info = list[0]
+        for (index in 1 until list.size) {
+            if (info.contains(list[index])) {
+                info = list[index]
+            } else {
+                var left = info.selectedNode.screenBounds?.left ?: 0
+                var top = info.selectedNode.screenBounds?.top ?: 0
+                val len = Math.pow(x.toDouble() - left, 2.0) + Math.pow(y.toDouble() - top, 2.0)
+                left = list[index].selectedNode.screenBounds?.left ?: 0
+                top = list[index].selectedNode.screenBounds?.top ?: 0
+                val len1 = Math.pow(x.toDouble() - left, 2.0) + Math.pow(y.toDouble() - top, 2.0)
+                if (len1 < len) {
+                    info = list[index]
+                }
             }
         }
-        return null
+        return info
     }
 
-    private fun getNode(x: Float, y: Float, hierarchyNode: HierarchyNode): SelectedNodeInfo? {
-        val rect = hierarchyNode.screenBounds ?: return null
+    private fun getNode(x: Float, y: Float, hierarchyNode: HierarchyNode, list: ArrayList<SelectedNodeInfo>) {
+        val rect = hierarchyNode.screenBounds ?: return
         if (rect.contains(x.toInt(), y.toInt())) {
             if (!hierarchyNode.childId.isEmpty()) {
                 for (child in hierarchyNode.childId.reversed()) {
-                    val node = getNode(x, y, child)
-                    if (node != null) {
-                        return SelectedNodeInfo(node.selectedNode, hierarchyNode)
-                    }
+                    getNode(x, y, child, list)
                 }
             }
-            return SelectedNodeInfo(hierarchyNode, null)
+            list.add(SelectedNodeInfo(hierarchyNode, nodeMap[hierarchyNode.parentId]))
         }
-        return null
     }
 
     interface OnHierarchyNodeClickListener {

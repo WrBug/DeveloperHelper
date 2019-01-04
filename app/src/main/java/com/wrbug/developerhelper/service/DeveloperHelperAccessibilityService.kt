@@ -17,6 +17,7 @@ import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.model.entity.ApkInfo
 import com.wrbug.developerhelper.model.entity.HierarchyNode
 import com.wrbug.developerhelper.model.entity.TopActivityInfo
+import com.wrbug.developerhelper.model.mmkv.manager.MMKVManager.map
 import com.wrbug.developerhelper.shell.Callback
 import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.hierachy.HierarchyActivity
@@ -63,6 +64,9 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             }
             return false
         }
+
+        //todo java.lang.RuntimeException:android.os.TransactionTooLargeException
+        val nodeMap: HashMap<Long, HierarchyNode> = hashMapOf()
     }
 
     override fun onInterrupt() {
@@ -72,13 +76,9 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
 
     }
 
-    override fun onServiceConnected() {
-        super.onServiceConnected()
-
-    }
-
     fun readNode(): ArrayList<HierarchyNode> {
         val hierarchyNodes = arrayListOf<HierarchyNode>()
+        nodeMap.clear()
         if (rootInActiveWindow != null) {
             rootInActiveWindow.packageName?.run {
                 currentAppInfo = AppInfoManager.getAppByPackageName(toString())
@@ -110,10 +110,12 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
         registerReceiver(receiver, filter)
         sendStatusBroadcast(true)
         serviceRunning = true
+        nodeMap.clear()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        nodeMap.clear()
         serviceRunning = false
         unregisterReceiver(receiver)
         sendStatusBroadcast(false)
@@ -152,9 +154,11 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             setNodeId(node)
             if (parentNode != null) {
                 parentNode.childId.add(node)
+                nodeMap[node.id] = node
                 node.parentId = parentNode.id
             } else {
                 hierarchyNodes.add(node)
+                nodeMap[node.id] = node
             }
             child.viewIdResourceName?.let {
                 node.resourceId = it
@@ -205,11 +209,12 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
 
                 override fun onSuccess(data: TopActivityInfo?) {
                     topActivity = data
-                    val hierarchyNodes = readNode()
-                    HierarchyActivity.start(context, currentAppInfo, hierarchyNodes, topActivity)
+                    val nodesInfo = readNode()
+                    HierarchyActivity.start(context, currentAppInfo, nodesInfo, topActivity)
                 }
             })
 
         }
     }
+
 }

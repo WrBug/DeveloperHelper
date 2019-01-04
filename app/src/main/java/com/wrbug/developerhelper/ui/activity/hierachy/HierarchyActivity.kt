@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.google.gson.reflect.TypeToken
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.constant.ReceiverConstant
@@ -11,6 +12,7 @@ import com.wrbug.developerhelper.model.entity.ApkInfo
 import com.wrbug.developerhelper.model.entity.HierarchyNode
 import com.wrbug.developerhelper.model.entity.TopActivityInfo
 import com.wrbug.developerhelper.ui.widget.hierarchyView.HierarchyView
+import com.wrbug.developerhelper.util.JsonHelper
 import kotlinx.android.synthetic.main.activity_hierarchy.*
 
 class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
@@ -18,6 +20,7 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
 
     private var apkInfo: ApkInfo? = null
     private var nodeList: List<HierarchyNode>? = null
+    private var nodeMap: HashMap<Long, HierarchyNode>? = null
     private var showHierachyView = false
     private var topActivity: TopActivityInfo? = null
 
@@ -42,9 +45,14 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hierarchy)
-        apkInfo = intent.getParcelableExtra("apkInfo")
-        nodeList = intent.getParcelableArrayListExtra("node")
-        topActivity = intent.getParcelableExtra("topActivity")
+        intent?.run {
+            apkInfo = getParcelableExtra("apkInfo")
+            nodeList = getParcelableArrayListExtra("node")
+            topActivity = getParcelableExtra("topActivity")
+            val json = getStringExtra("nodeMap")
+            nodeMap = JsonHelper.fromJson(json, object : TypeToken<HashMap<Long, HierarchyNode>>() {}.type)
+        }
+
         showAppInfoDialog()
         setFloatButtonVisible(false)
     }
