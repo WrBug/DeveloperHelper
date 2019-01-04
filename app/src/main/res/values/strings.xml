@@ -50,4 +50,6 @@
     <string name="waiting">请稍后...</string>
     <string name="getting_app_info">正在获取应用信息</string>
     <string name="please_open_accessbility_service">请开启无障碍功能</string>
+    <string name="table">表</string>
+    <string name="table_data_is_empty">该表数据为空</string>
 </resources>

@@ -51,7 +51,8 @@
             android:name=".ui.activity.guide.GuideActivity"
             android:label="@string/title_activity_guide"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity"></activity>
+        <activity android:name=".ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity" />
+        <activity android:name=".ui.activity.databaseedit.DatabaseEditActivity"></activity>
     </application>
 
 </manifest>

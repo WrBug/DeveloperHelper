@@ -60,7 +60,7 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.16'
     // https://mvnrepository.com/artifact/dom4j/dom4j
     implementation group: 'dom4j', name: 'dom4j', version: '1.6.1'
-
+    implementation 'com.evrencoskun.library:tableview:0.8.8'
     kapt 'com.google.dagger:dagger-compiler:2.16'
 }
 kapt {

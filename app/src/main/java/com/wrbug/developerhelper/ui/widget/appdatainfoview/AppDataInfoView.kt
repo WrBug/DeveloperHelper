@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.model.entity.ApkInfo
 import com.wrbug.developerhelper.shell.ShellManager
+import com.wrbug.developerhelper.ui.activity.databaseedit.DatabaseEditActivity
 import com.wrbug.developerhelper.ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity
 import com.wrbug.developerhelper.util.ApkUtils
 import com.wrbug.developerhelper.util.AppInfoManager
@@ -65,7 +66,9 @@ class AppDataInfoView : FrameLayout {
                     textView.setPadding(0, UiUtils.dp2px(context, 8F), 0, 0)
                     textView.tag = sqliteFile
                     databaseContainer.addView(textView, params)
-
+                    textView.setOnClickListener {
+                        DatabaseEditActivity.start(context, (it.tag as File).absolutePath)
+                    }
                 }
             }
 

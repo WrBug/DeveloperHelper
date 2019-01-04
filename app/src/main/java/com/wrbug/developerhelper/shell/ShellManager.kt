@@ -201,6 +201,16 @@ object ShellManager {
         return commandResult.isSuccessful
     }
 
+    fun cpFile(source: String, dst: String, mod: String = "666"): Boolean {
+        val dir = dst.substring(0, dst.lastIndexOf("/"))
+        var commandResult = ShellUtils.runWithSu("mkdir -p $dir")
+        if (commandResult.isSuccessful.not()) {
+            return false
+        }
+        commandResult = ShellUtils.runWithSu("cp $source $dst && chmod $mod $dst")
+        return commandResult.isSuccessful
+    }
+
     fun catFile(source: String, dst: String, mod: String? = null): Boolean {
         val cmds = arrayListOf<String>()
         cmds.add("cat $source  > $dst")

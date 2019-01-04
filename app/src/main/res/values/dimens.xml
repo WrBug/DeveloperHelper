@@ -5,4 +5,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="activity_margin_half">8dp</dimen>
+    <dimen name="cell_height">36dp</dimen>
+    <dimen name="row_header_width">55dp</dimen>
 </resources>
