@@ -6,8 +6,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseViewModel
-import com.wrbug.developerhelper.model.mmkv.ConfigKv
-import com.wrbug.developerhelper.model.mmkv.manager.MMKVManager
+import com.wrbug.developerhelper.mmkv.ConfigKv
+import com.wrbug.developerhelper.mmkv.manager.MMKVManager
 import com.wrbug.developerhelper.service.DeveloperHelperAccessibilityService
 import com.wrbug.developerhelper.service.FloatWindowService
 import com.wrbug.developerhelper.util.DeviceUtils

@@ -4,13 +4,13 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
-import com.jaredrummler.android.shell.Shell
 import com.wrbug.developerhelper.basecommon.BaseApp
+import com.wrbug.developerhelper.commonutil.ShellUtils
 
 
 object DeviceUtils {
     fun isRoot(): Boolean {
-        return Shell.SU.available()
+        return ShellUtils.isRoot()
     }
 
     fun isFloatWindowOpened(): Boolean {

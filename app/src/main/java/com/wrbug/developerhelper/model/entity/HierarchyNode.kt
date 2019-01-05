@@ -4,7 +4,7 @@ import android.graphics.Rect
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.reflect.TypeToken
-import com.wrbug.developerhelper.util.JsonHelper
+import com.wrbug.developerhelper.commonutil.JsonHelper
 import java.io.Serializable
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")

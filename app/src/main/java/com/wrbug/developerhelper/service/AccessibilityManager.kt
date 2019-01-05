@@ -5,8 +5,8 @@ import android.content.Intent
 import android.provider.Settings
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.showToast
-import com.wrbug.developerhelper.shell.Callback
-import com.wrbug.developerhelper.shell.ShellManager
+import com.wrbug.developerhelper.commonutil.shell.Callback
+import com.wrbug.developerhelper.commonutil.shell.ShellManager
 
 object AccessibilityManager {
     fun startService(context: Context?, callback: Callback<Boolean>? = null) {

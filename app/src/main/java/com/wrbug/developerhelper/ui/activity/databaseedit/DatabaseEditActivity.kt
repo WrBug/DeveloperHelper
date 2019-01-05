@@ -3,7 +3,6 @@ package com.wrbug.developerhelper.ui.activity.databaseedit
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -15,9 +14,9 @@ import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.basecommon.setupActionBar
 import com.wrbug.developerhelper.basecommon.showToast
 import com.wrbug.developerhelper.model.entity.DatabaseTableInfo
-import com.wrbug.developerhelper.shell.ShellManager
+import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.util.DatabaseUtils
-import com.wrbug.developerhelper.util.dp2px
+import com.wrbug.developerhelper.commonutil.dp2px
 import kotlinx.android.synthetic.main.activity_database_edit.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread

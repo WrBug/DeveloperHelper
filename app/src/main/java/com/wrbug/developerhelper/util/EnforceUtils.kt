@@ -1,10 +1,9 @@
 package com.wrbug.developerhelper.util
-
-import com.wrbug.developerhelper.shell.ShellManager
+import com.wrbug.developerhelper.commonutil.shell.ShellManager
 
 object EnforceUtils {
     fun getEnforceType(packageName: String): EnforceType {
-        val files = ShellManager.getZipFileList(findApkDir(packageName)).toString().trim()
+        val files = ShellManager.getZipFileList(ShellManager.findApkDir(packageName)).toString().trim()
         return when {
             isIjiaMi(files) -> EnforceType.I_JIA_MI
             is360(files) -> EnforceType.QI_HOO
@@ -29,12 +28,6 @@ object EnforceUtils {
 
     private fun isBangcle(files: String): Boolean {
         return files.contains("bangcle")
-    }
-
-    private fun findApkDir(packageName: String): String {
-        val cmd = "ls /data/app/|grep $packageName"
-        val dir = ShellUtils.runWithSu(cmd).getStdout()
-        return "/data/app/$dir/base.apk"
     }
 
 

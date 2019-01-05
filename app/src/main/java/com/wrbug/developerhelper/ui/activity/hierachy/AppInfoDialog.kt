@@ -8,11 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.model.entity.ApkInfo
-import com.wrbug.developerhelper.model.entity.TopActivityInfo
-import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
-import com.wrbug.developerhelper.util.UiUtils
-import com.wrbug.developerhelper.util.dp2px
+import com.wrbug.developerhelper.commonutil.entity.ApkInfo
+import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
+import com.wrbug.developerhelper.commonutil.UiUtils
+import com.wrbug.developerhelper.commonutil.dp2px
 import kotlinx.android.synthetic.main.dialog_apk_info.*
 
 class AppInfoDialog : DialogFragment() {

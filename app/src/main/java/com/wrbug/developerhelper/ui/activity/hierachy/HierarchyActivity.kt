@@ -8,11 +8,11 @@ import com.google.gson.reflect.TypeToken
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.constant.ReceiverConstant
-import com.wrbug.developerhelper.model.entity.ApkInfo
+import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.model.entity.HierarchyNode
-import com.wrbug.developerhelper.model.entity.TopActivityInfo
+import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
 import com.wrbug.developerhelper.ui.widget.hierarchyView.HierarchyView
-import com.wrbug.developerhelper.util.JsonHelper
+import com.wrbug.developerhelper.commonutil.JsonHelper
 import kotlinx.android.synthetic.main.activity_hierarchy.*
 
 class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {

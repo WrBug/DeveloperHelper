@@ -9,7 +9,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.ui.widget.helper.CanvasHelper
-import com.wrbug.developerhelper.util.UiUtils
+import com.wrbug.developerhelper.commonutil.UiUtils
 
 class BoundsInfoView : View {
     var bounds: Rect? = null

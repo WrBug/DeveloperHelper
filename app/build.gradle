@@ -48,20 +48,20 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'com.tencent:mmkv:1.0.14'
     implementation 'com.google.android.material:material:1.1.0-alpha02'
     implementation 'com.github.yhaolpz:FloatWindow:1.0.9'
-    implementation 'com.jaredrummler:android-shell:1.0.0'
     implementation project(':basecommon')
     kapt "com.android.databinding:compiler:3.1.4"
     implementation 'com.elvishew:xlog:1.6.1'
-    implementation "org.jetbrains.anko:anko-commons:0.10.8"
+    implementation 'org.jetbrains.anko:anko-commons:0.10.8'
     //dagger2
     implementation 'com.google.dagger:dagger:2.16'
     // https://mvnrepository.com/artifact/dom4j/dom4j
-    implementation group: 'dom4j', name: 'dom4j', version: '1.6.1'
+    implementation 'dom4j:dom4j:1.6.1'
     implementation 'com.evrencoskun.library:tableview:0.8.8'
     kapt 'com.google.dagger:dagger-compiler:2.16'
+    implementation project(':commonutil')
+    implementation project(':mmkv')
 }
 kapt {
     generateStubs = true

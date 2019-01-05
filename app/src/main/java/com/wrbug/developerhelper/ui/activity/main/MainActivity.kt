@@ -9,19 +9,17 @@ import android.view.MenuItem
 import android.widget.CompoundButton
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
-import com.wrbug.developerhelper.DeveloperApplication
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseVMActivity
 import com.wrbug.developerhelper.basecommon.obtainViewModel
 import com.wrbug.developerhelper.basecommon.setupActionBar
+import com.wrbug.developerhelper.commonutil.ClipboardUtils
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.databinding.ActivityMainBinding
 import com.wrbug.developerhelper.service.AccessibilityManager
 import com.wrbug.developerhelper.service.FloatWindowService
-import com.wrbug.developerhelper.shell.ShellManager
+import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.main.viewmodel.MainViewModel
-import com.wrbug.developerhelper.ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity
-import com.wrbug.developerhelper.util.ClipboardUtils
 import com.wrbug.developerhelper.util.DeviceUtils
 import kotlinx.android.synthetic.main.activity_main.*
 

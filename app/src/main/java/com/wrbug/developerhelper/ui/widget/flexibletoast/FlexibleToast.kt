@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.util.UiUtils
+import com.wrbug.developerhelper.commonutil.UiUtils
 
 class FlexibleToast(private val mContext: Context) {
 

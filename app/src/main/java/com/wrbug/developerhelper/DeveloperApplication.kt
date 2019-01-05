@@ -4,8 +4,9 @@ import android.os.Handler
 import android.os.Looper
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
-import com.tencent.mmkv.MMKV
 import com.wrbug.developerhelper.basecommon.BaseApp
+import com.wrbug.developerhelper.commonutil.CommonUtils
+import com.wrbug.developerhelper.mmkv.manager.MMKVManager
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.concurrent.thread
@@ -32,10 +33,15 @@ class DeveloperApplication : BaseApp() {
 
     override fun onCreate() {
         super.onCreate()
+        registerModule()
         instance = this
         XLog.init(LogLevel.ALL)
-        MMKV.initialize(this)
         releaseAssetsFile()
+    }
+
+    private fun registerModule() {
+        MMKVManager.register(this)
+        CommonUtils.register(this)
     }
 
     private fun releaseAssetsFile() {

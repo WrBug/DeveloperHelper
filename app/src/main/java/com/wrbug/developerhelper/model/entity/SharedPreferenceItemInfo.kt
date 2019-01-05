@@ -1,5 +1,6 @@
 package com.wrbug.developerhelper.model.entity
 
+import com.wrbug.developerhelper.commonutil.JsonHelper
 import com.wrbug.developerhelper.util.*
 
 class SharedPreferenceItemInfo {

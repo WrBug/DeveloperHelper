@@ -13,15 +13,15 @@ import android.view.accessibility.AccessibilityNodeInfo
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.basecommon.showToast
+import com.wrbug.developerhelper.commonutil.AppInfoManager
+import com.wrbug.developerhelper.commonutil.entity.ApkInfo
+import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
 import com.wrbug.developerhelper.constant.ReceiverConstant
-import com.wrbug.developerhelper.model.entity.ApkInfo
 import com.wrbug.developerhelper.model.entity.HierarchyNode
-import com.wrbug.developerhelper.model.entity.TopActivityInfo
-import com.wrbug.developerhelper.shell.Callback
-import com.wrbug.developerhelper.shell.ShellManager
+import com.wrbug.developerhelper.commonutil.shell.Callback
+import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.hierachy.HierarchyActivity
-import com.wrbug.developerhelper.util.AppInfoManager
-import com.wrbug.developerhelper.util.UiUtils
+import com.wrbug.developerhelper.commonutil.UiUtils
 
 
 class DeveloperHelperAccessibilityService : AccessibilityService() {

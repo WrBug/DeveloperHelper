@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.model.entity.HierarchyNode
-import com.wrbug.developerhelper.util.UiUtils
+import com.wrbug.developerhelper.commonutil.UiUtils
 import kotlinx.android.synthetic.main.view_layout_info.*
 
 

@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.basecommon.setupActionBar
-import com.wrbug.developerhelper.shell.ShellManager
+import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
 import com.wrbug.developerhelper.util.OutSharedPreferenceManager
 import com.wrbug.developerhelper.util.XmlUtil
-import com.wrbug.developerhelper.util.dp2px
+import com.wrbug.developerhelper.commonutil.dp2px
 import kotlinx.android.synthetic.main.activity_shared_preference_edit.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread

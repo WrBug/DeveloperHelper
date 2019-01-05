@@ -10,7 +10,7 @@ import com.wrbug.developerhelper.model.entity.HierarchyNode
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.ui.widget.helper.CanvasHelper
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.LayoutInfoView
-import com.wrbug.developerhelper.util.UiUtils
+import com.wrbug.developerhelper.commonutil.UiUtils
 
 class HierarchyDetailView : FrameLayout {
     private val paint: Paint by lazy {

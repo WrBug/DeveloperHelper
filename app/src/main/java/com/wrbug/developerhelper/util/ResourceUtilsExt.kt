@@ -7,6 +7,6 @@ fun Int.toResString(context: Context = BaseApp.instance): String {
     return context.getString(this)
 }
 
-fun Any.getString(resId: Int): String {
+fun getString(resId: Int): String {
     return BaseApp.instance.getString(resId)
 }
