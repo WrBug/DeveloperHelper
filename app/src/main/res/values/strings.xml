@@ -56,4 +56,11 @@
     <string name="getting">获取中...</string>
     <string name="database_list">数据库列表</string>
     <string name="none">无</string>
+    <string name="app_setting">应用设置</string>
+    <string name="backup_apk_file">备份Apk文件</string>
+    <string name="backup_data_dir">备份data目录</string>
+    <string name="restart_app">重启应用</string>
+    <string name="stop_app">停止应用</string>
+    <string name="delete_app_data">清理应用数据</string>
+    <string name="uninstall_app">卸载应用</string>
 </resources>

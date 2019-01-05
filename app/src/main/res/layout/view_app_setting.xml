@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/backupApkBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/backup_apk_file"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/backupApkDataDirBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="24dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/backup_data_dir"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/backupApkBtn" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/restartAppBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/restart_app"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="@+id/backupApkBtn"
+        app:layout_constraintStart_toStartOf="@+id/backupApkBtn"
+        app:layout_constraintTop_toBottomOf="@+id/backupApkBtn" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/stopAppBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="@string/stop_app"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="@+id/backupApkDataDirBtn"
+        app:layout_constraintStart_toStartOf="@+id/backupApkDataDirBtn"
+        app:layout_constraintTop_toTopOf="@+id/restartAppBtn" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/deleteAppDataBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/delete_app_data"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="@+id/restartAppBtn"
+        app:layout_constraintStart_toStartOf="@+id/restartAppBtn"
+        app:layout_constraintTop_toBottomOf="@+id/restartAppBtn" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/uninstallAppBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="@string/uninstall_app"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="@+id/backupApkDataDirBtn"
+        app:layout_constraintStart_toStartOf="@+id/backupApkDataDirBtn"
+        app:layout_constraintTop_toTopOf="@+id/deleteAppDataBtn" />
+</androidx.constraintlayout.widget.ConstraintLayout>

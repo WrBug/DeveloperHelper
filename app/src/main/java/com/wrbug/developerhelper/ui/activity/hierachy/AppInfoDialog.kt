@@ -16,9 +16,9 @@ import com.wrbug.developerhelper.util.dp2px
 import kotlinx.android.synthetic.main.dialog_apk_info.*
 
 class AppInfoDialog : DialogFragment() {
-    var apkInfo: ApkInfo? = null
-    var topActivity: TopActivityInfo? = null
-    var listener: AppInfoDialogEventListener? = null
+    private var apkInfo: ApkInfo? = null
+    private var topActivity: TopActivityInfo? = null
+    private var listener: AppInfoDialogEventListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog)

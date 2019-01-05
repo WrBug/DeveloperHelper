@@ -12,6 +12,7 @@ import com.wrbug.developerhelper.model.entity.TopActivityInfo
 import com.wrbug.developerhelper.shell.ShellManager
 import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
 import com.wrbug.developerhelper.ui.widget.appdatainfoview.AppDataInfoView
+import com.wrbug.developerhelper.ui.widget.appsettingview.AppSettingView
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.ItemInfo
 import com.wrbug.developerhelper.util.EnforceUtils
@@ -38,6 +39,13 @@ class AppInfoPagerAdapter(
     init {
         initAppInfoTab()
         initAppDataInfoTab()
+        initAppSettingTab()
+    }
+
+    private fun initAppSettingTab() {
+        tabList.add(context.getString(R.string.app_setting))
+        val view = AppSettingView(context)
+        viewList.add(view)
     }
 
     private fun initAppDataInfoTab() {
