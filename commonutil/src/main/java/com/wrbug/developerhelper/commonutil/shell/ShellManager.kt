@@ -215,9 +215,7 @@ object ShellManager {
             return false
         }
         commandResult = ShellUtils.runWithSu("cp -R $source $dst && chmod $mod $dst")
-        if (commandResult.isSuccessful.not()) {
-        }
-        return commandResult.isSuccessful
+        return commandResult.isSuccessful || commandResult.getStderr()?.contains("Operation not permitted") ?: false
     }
 
     fun catFile(source: String, dst: String, mod: String? = null): Boolean {

@@ -13,6 +13,7 @@ import com.wrbug.developerhelper.model.entity.HierarchyNode
 import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
 import com.wrbug.developerhelper.ui.widget.hierarchyView.HierarchyView
 import com.wrbug.developerhelper.commonutil.JsonHelper
+import com.wrbug.developerhelper.service.FloatWindowService
 import kotlinx.android.synthetic.main.activity_hierarchy.*
 
 class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
@@ -54,7 +55,7 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
         }
 
         showAppInfoDialog()
-        setFloatButtonVisible(false)
+        FloatWindowService.setFloatButtonVisible(this, false)
     }
 
     private fun showAppInfoDialog() {
@@ -79,7 +80,7 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
     }
 
     override fun onDestroy() {
-        setFloatButtonVisible(true)
+        FloatWindowService.setFloatButtonVisible(this, true)
         super.onDestroy()
     }
 
@@ -98,9 +99,4 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
     }
 
 
-    private fun setFloatButtonVisible(visible: Boolean) {
-        val intent = Intent(ReceiverConstant.ACTION_SET_FLOAT_BUTTON_VISIBLE)
-        intent.putExtra("visible", visible)
-        sendBroadcast(intent)
-    }
 }

@@ -17,7 +17,6 @@ import com.wrbug.developerhelper.mmkv.manager.MMKVManager
 import kotlinx.android.synthetic.main.view_app_setting.view.*
 import android.content.Intent
 import android.net.Uri
-import android.os.Environment
 import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.commonutil.zip
 import com.wrbug.developerhelper.util.BackupUtils
@@ -85,6 +84,7 @@ class AppSettingView : ScrollView {
         apkInfo?.apply {
             showNotice(context.getString(R.string.confirm_delete_app_data), DialogInterface.OnClickListener { _, _ ->
                 if (AppManagerUtils.clearAppData(applicationInfo.packageName)) {
+                    activityFinish()
                     showToast(context.getString(R.string.clear_complete))
                 }
             })
@@ -98,7 +98,9 @@ class AppSettingView : ScrollView {
         }
         apkInfo?.apply {
             showNotice(context.getString(R.string.confirm_stop_app), DialogInterface.OnClickListener { _, _ ->
-                AppManagerUtils.forceStopApp(applicationInfo.packageName)
+                if (AppManagerUtils.forceStopApp(applicationInfo.packageName)) {
+                    activityFinish()
+                }
             })
         }
     }
@@ -113,6 +115,7 @@ class AppSettingView : ScrollView {
                     showToast(context.getString(R.string.restart_failed))
                     return@OnClickListener
                 }
+                activityFinish()
                 val intent = context.packageManager.getLaunchIntentForPackage(applicationInfo.packageName)
                 intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
@@ -152,6 +155,7 @@ class AppSettingView : ScrollView {
                                 showToast(context.getString(R.string.share_failed))
                                 return
                             }
+                            activityFinish()
                             Share2.Builder(context as Activity)
                                 .setContentType(ShareContentType.FILE)
                                 .setShareFileUri(uri)
@@ -198,6 +202,7 @@ class AppSettingView : ScrollView {
                 ),
                     object : BaseActivity.PermissionCallback() {
                         override fun granted() {
+                            activityFinish()
                             Share2.Builder(context as Activity)
                                 .setContentType(ShareContentType.FILE)
                                 .setShareFileUri(uri)
@@ -219,6 +224,11 @@ class AppSettingView : ScrollView {
         return true
     }
 
+    fun activityFinish(){
+        if (context is Activity) {
+            (context as Activity).finish()
+        }
+    }
     private fun showNotice(msg: String, listener: DialogInterface.OnClickListener) {
         AlertDialog.Builder(context)
             .setTitle(R.string.notice)

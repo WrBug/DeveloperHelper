@@ -28,6 +28,12 @@ class FloatWindowService : Service() {
         fun stop(context: Context) {
             context.stopService(Intent(context, FloatWindowService::class.java))
         }
+
+        fun setFloatButtonVisible(context: Context, visible: Boolean) {
+            val intent = Intent(ReceiverConstant.ACTION_SET_FLOAT_BUTTON_VISIBLE)
+            intent.putExtra("visible", visible)
+            context.sendBroadcast(intent)
+        }
     }
 
 
