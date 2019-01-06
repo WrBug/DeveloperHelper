@@ -1,13 +1,15 @@
 package com.wrbug.developerhelper.util
 
 import android.media.MediaMetadataRetriever
-import android.os.Environment
+import android.net.Uri
+import android.os.Build
+import androidx.core.content.FileProvider
+import com.wrbug.developerhelper.basecommon.BaseApp
 import org.dom4j.Document
 import org.dom4j.io.OutputFormat
 import org.dom4j.io.XMLWriter
 
 import java.io.*
-import org.dom4j.io.OutputFormat.createPrettyPrint
 
 
 /**
@@ -110,4 +112,12 @@ object FileUtils {
         return mime
     }
 
+}
+
+fun File.toUri(): Uri? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        FileProvider.getUriForFile(BaseApp.instance, "com.wrbug.developerhelper.fileprovider", this)
+    } else {
+        Uri.fromFile(this)
+    }
 }

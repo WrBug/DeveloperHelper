@@ -14,4 +14,9 @@ abstract class BaseApp : Application() {
 
 
     abstract fun showToast(msg: String)
+
+    fun showToast(id: Int){
+        showToast(getString(id))
+    }
+
 }

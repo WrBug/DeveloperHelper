@@ -1,4 +1,5 @@
 package com.wrbug.developerhelper.commonutil.shell
+
 import com.jaredrummler.android.shell.CommandResult
 import com.wrbug.developerhelper.commonutil.CommonUtils
 import com.wrbug.developerhelper.commonutil.ShellUtils
@@ -22,6 +23,9 @@ object ShellManager {
     private const val SHELL_GET_ZIP_FILE_LIST =
         "app_process -Djava.class.path=/data/local/tmp/zip.dex /data/local/tmp Zip %s"
     private const val SHELL_CHECK_IS_SQLITE = "od -An -tx %1\$s  |grep '694c5153'"
+    private const val SHELL_UNINSTALL_APP = "pm uninstall %1\$s"
+    private const val SHELL_CLEAR_APP_DATA = "pm clear %1\$s"
+    private const val SHELL_FORCE_STOP_APP = "am force-stop %1\$s"
     fun getTopActivity(callback: Callback<TopActivityInfo?>) {
         ShellUtils.runWithSu(arrayOf(SHELL_TOP_ACTIVITY), object : ShellUtils.ShellResultCallback() {
             override fun onComplete(result: CommandResult) {
@@ -243,6 +247,21 @@ object ShellManager {
         val cmd = "ls /data/app/|grep $packageName"
         val dir = ShellUtils.runWithSu(cmd).getStdout()
         return "/data/app/$dir/base.apk"
+    }
+
+    fun uninstallApp(packageName: String): Boolean {
+        val commandResult = ShellUtils.runWithSu(String.format(SHELL_UNINSTALL_APP, packageName))
+        return commandResult.isSuccessful
+    }
+
+    fun clearAppData(packageName: String): Boolean {
+        val commandResult = ShellUtils.runWithSu(String.format(SHELL_CLEAR_APP_DATA, packageName))
+        return commandResult.isSuccessful
+    }
+
+    fun forceStopApp(packageName: String): Boolean {
+        val commandResult = ShellUtils.runWithSu(String.format(SHELL_FORCE_STOP_APP, packageName))
+        return commandResult.isSuccessful
     }
 
 }

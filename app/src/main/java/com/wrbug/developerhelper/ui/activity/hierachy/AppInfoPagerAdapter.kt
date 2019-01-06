@@ -45,6 +45,7 @@ class AppInfoPagerAdapter(
     private fun initAppSettingTab() {
         tabList.add(context.getString(R.string.app_setting))
         val view = AppSettingView(context)
+        view.apkInfo=apkInfo
         viewList.add(view)
     }
 

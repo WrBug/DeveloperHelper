@@ -13,6 +13,7 @@ import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseVMActivity
 import com.wrbug.developerhelper.basecommon.obtainViewModel
 import com.wrbug.developerhelper.basecommon.setupActionBar
+import com.wrbug.developerhelper.commonutil.AppManagerUtils
 import com.wrbug.developerhelper.commonutil.ClipboardUtils
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.databinding.ActivityMainBinding

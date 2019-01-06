@@ -12,14 +12,16 @@ class MMKVInvocationHandler(clazz: Class<*>) : InvocationHandler {
             if (it.name.startsWith("set") && args != null && args.size == 1) {
                 setValue(it.name, args[0])
             } else if (it.name.startsWith("get")) {
-                return getValue(it)
+                return getValue(it, 3)
+            } else if (it.name.startsWith("is")) {
+                return getValue(it, 2)
             }
         }
         return null
     }
 
-    private fun getValue(method: Method): Any? = with(method) {
-        val key = name.substring(3)
+    private fun getValue(method: Method, prefixLen: Int): Any? = with(method) {
+        val key = name.substring(prefixLen)
         return when (returnType) {
             Boolean::class.java -> mmkv.decodeBool(key)
             Int::class.java -> mmkv.decodeInt(key)

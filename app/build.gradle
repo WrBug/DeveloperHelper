@@ -59,6 +59,7 @@ dependencies {
     // https://mvnrepository.com/artifact/dom4j/dom4j
     implementation 'dom4j:dom4j:1.6.1'
     implementation 'com.evrencoskun.library:tableview:0.8.8'
+    implementation 'gdut.bsx:share2:0.9.3'
     kapt 'com.google.dagger:dagger-compiler:2.16'
     implementation project(':commonutil')
     implementation project(':mmkv')

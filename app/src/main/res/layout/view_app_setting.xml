@@ -13,73 +13,67 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/backupApkBtn"
+        style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:background="@color/colorPrimary"
         android:text="@string/backup_apk_file"
-        android:textColor="@android:color/white"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/backupApkDataDirBtn"
+        style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="24dp"
-        android:background="@color/colorPrimary"
         android:text="@string/backup_data_dir"
-        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="@+id/backupApkBtn" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/restartAppBtn"
+        style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@color/colorPrimary"
         android:text="@string/restart_app"
-        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="@+id/backupApkBtn"
         app:layout_constraintStart_toStartOf="@+id/backupApkBtn"
         app:layout_constraintTop_toBottomOf="@+id/backupApkBtn" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/stopAppBtn"
+        style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
         android:text="@string/stop_app"
-        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="@+id/backupApkDataDirBtn"
         app:layout_constraintStart_toStartOf="@+id/backupApkDataDirBtn"
         app:layout_constraintTop_toTopOf="@+id/restartAppBtn" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/deleteAppDataBtn"
+        style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@color/colorPrimary"
         android:text="@string/delete_app_data"
-        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="@+id/restartAppBtn"
         app:layout_constraintStart_toStartOf="@+id/restartAppBtn"
         app:layout_constraintTop_toBottomOf="@+id/restartAppBtn" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/uninstallAppBtn"
+        style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
         android:text="@string/uninstall_app"
-        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="@+id/backupApkDataDirBtn"
         app:layout_constraintStart_toStartOf="@+id/backupApkDataDirBtn"
         app:layout_constraintTop_toTopOf="@+id/deleteAppDataBtn" />

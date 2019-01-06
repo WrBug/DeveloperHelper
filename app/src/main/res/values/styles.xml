@@ -11,7 +11,7 @@
     <!-- item name="android:windowBackground"         设置背景透明度及其颜色值 -->
     <!-- item name="android:windowIsTranslucent"      设置当前Activity是否透明-->
     <!-- item name="android:windowAnimationStyle"     设置当前Activity进出方式-->
-    <style name="translucent" parent="Theme.AppCompat.NoActionBar">
+    <style name="translucent" parent="AppTheme">
         <item name="android:windowBackground">@color/hierachyBgColor</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
@@ -31,6 +31,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="PrimaryButtonStyle">
+        <item name="android:background">@drawable/bg_primary_button</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 
     <!--<style name="tabStyle">-->
     <!--<item name="app:tabBackground">@color/colorPrimaryDark</item>-->

@@ -63,4 +63,14 @@
     <string name="stop_app">停止应用</string>
     <string name="delete_app_data">清理应用数据</string>
     <string name="uninstall_app">卸载应用</string>
+    <string name="please_open_root">请开启root权限</string>
+    <string name="open_root_notice">部分功能需要root权限，请打开后使用！</string>
+    <string name="confirm_delete_app_data">是否清除数据和缓存?</string>
+    <string name="clear_complete">清理完成</string>
+    <string name="confirm_stop_app">是否停止该应用？</string>
+    <string name="confirm_restart_app">是否重启该应用？</string>
+    <string name="restart_failed">重启失败</string>
+    <string name="backup_success_msg">备份成功，文件已备份到内部存储下com.wrbug.developerHelper目录中</string>
+    <string name="backup_failed">备份失败</string>
+    <string name="backup_success_and_share_msg">备份成功，文件已备份到内部存储下com.wrbug.developerHelper目录中，是否立即分享给好友？</string>
 </resources>
