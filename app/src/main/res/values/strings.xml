@@ -73,4 +73,5 @@
     <string name="backup_success_msg">备份成功，文件已备份到内部存储下com.wrbug.developerHelper目录中</string>
     <string name="backup_failed">备份失败</string>
     <string name="backup_success_and_share_msg">备份成功，文件已备份到内部存储下com.wrbug.developerHelper目录中，是否立即分享给好友？</string>
+    <string name="share_failed">分享失败</string>
 </resources>

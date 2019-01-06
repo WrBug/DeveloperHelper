@@ -3,6 +3,7 @@ package com.wrbug.developerhelper.util
 import android.net.Uri
 import android.os.Environment
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
+import com.wrbug.developerhelper.commonutil.zip
 import java.io.File
 
 object BackupUtils {
@@ -18,6 +19,15 @@ object BackupUtils {
         val apkDir = File(backupDir, "apks/$packageName/$fileName")
         if (ShellManager.cpFile(apkPath, apkDir.absolutePath)) {
             return apkDir.toUri()
+        }
+        return null
+    }
+
+    fun backupAppData(packageName: String, dataDir: String): File? {
+        val backupDataDir =
+            File(backupDir, "datas/$packageName/${System.currentTimeMillis().format("yyyy-MM-dd-HH_mm_ss")}")
+        if (ShellManager.cpFile(dataDir, backupDataDir.absolutePath)) {
+            return backupDataDir
         }
         return null
     }

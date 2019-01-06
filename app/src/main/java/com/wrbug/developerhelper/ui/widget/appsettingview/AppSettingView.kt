@@ -17,11 +17,14 @@ import com.wrbug.developerhelper.mmkv.manager.MMKVManager
 import kotlinx.android.synthetic.main.view_app_setting.view.*
 import android.content.Intent
 import android.net.Uri
+import android.os.Environment
 import com.wrbug.developerhelper.basecommon.BaseActivity
+import com.wrbug.developerhelper.commonutil.zip
 import com.wrbug.developerhelper.util.BackupUtils
-import com.wrbug.developerhelper.util.DeviceUtils
+import com.wrbug.developerhelper.util.toUri
 import gdut.bsx.share2.Share2
 import gdut.bsx.share2.ShareContentType
+import java.io.File
 
 
 class AppSettingView : ScrollView {
@@ -70,7 +73,7 @@ class AppSettingView : ScrollView {
     }
 
     private fun doUninstallApp() {
-        apkInfo?.run {
+        apkInfo?.apply {
             AppManagerUtils.uninstallApp(context, applicationInfo.packageName)
         }
     }
@@ -79,7 +82,7 @@ class AppSettingView : ScrollView {
         if (checkRoot().not()) {
             return
         }
-        apkInfo?.run {
+        apkInfo?.apply {
             showNotice(context.getString(R.string.confirm_delete_app_data), DialogInterface.OnClickListener { _, _ ->
                 if (AppManagerUtils.clearAppData(applicationInfo.packageName)) {
                     showToast(context.getString(R.string.clear_complete))
@@ -93,7 +96,7 @@ class AppSettingView : ScrollView {
         if (checkRoot().not()) {
             return
         }
-        apkInfo?.run {
+        apkInfo?.apply {
             showNotice(context.getString(R.string.confirm_stop_app), DialogInterface.OnClickListener { _, _ ->
                 AppManagerUtils.forceStopApp(applicationInfo.packageName)
             })
@@ -104,7 +107,7 @@ class AppSettingView : ScrollView {
         if (checkRoot().not()) {
             return
         }
-        apkInfo?.run {
+        apkInfo?.apply {
             showNotice(context.getString(R.string.confirm_restart_app), DialogInterface.OnClickListener { _, _ ->
                 if (!AppManagerUtils.forceStopApp(applicationInfo.packageName)) {
                     showToast(context.getString(R.string.restart_failed))
@@ -121,16 +124,52 @@ class AppSettingView : ScrollView {
         if (checkRoot().not()) {
             return
         }
-        apkInfo?.run {
-
+        apkInfo?.apply {
+            val backupAppData = BackupUtils.backupAppData(applicationInfo.packageName, applicationInfo.dataDir)
+            if (backupAppData == null) {
+                showToast(context.getString(R.string.backup_failed))
+                return
+            }
+            if (context !is BaseActivity) {
+                showToast(context.getString(R.string.backup_success_msg))
+                return
+            }
+            showShareDataNotice(backupAppData)
         }
+    }
+
+    private fun showShareDataNotice(backupAppData: File) {
+        showNotice(
+            context.getString(R.string.backup_success_and_share_msg),
+            DialogInterface.OnClickListener { _, _ ->
+                (context as BaseActivity).requestPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    object : BaseActivity.PermissionCallback() {
+                        override fun granted() {
+                            val zipFile = File(context.externalCacheDir, "${apkInfo?.getAppName() ?: ""}-data.zip")
+                            backupAppData.zip(zipFile)
+                            val uri = zipFile.toUri()
+                            if (uri == null) {
+                                showToast(context.getString(R.string.share_failed))
+                                return
+                            }
+                            Share2.Builder(context as Activity)
+                                .setContentType(ShareContentType.FILE)
+                                .setShareFileUri(uri)
+                                .setOnActivityResult(10)
+                                .build()
+                                .shareBySystem()
+                        }
+
+                    })
+
+            })
     }
 
     private fun doBackupApk() {
         if (checkRoot().not()) {
             return
         }
-        apkInfo?.run {
+        apkInfo?.apply {
             val uri = BackupUtils.backupApk(
                 applicationInfo.packageName,
                 applicationInfo.publicSourceDir,
@@ -153,7 +192,10 @@ class AppSettingView : ScrollView {
         showNotice(
             context.getString(R.string.backup_success_and_share_msg),
             DialogInterface.OnClickListener { _, _ ->
-                (context as BaseActivity).requestPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                (context as BaseActivity).requestPermission(arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ),
                     object : BaseActivity.PermissionCallback() {
                         override fun granted() {
                             Share2.Builder(context as Activity)

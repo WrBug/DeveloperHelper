@@ -214,7 +214,9 @@ object ShellManager {
         if (commandResult.isSuccessful.not()) {
             return false
         }
-        commandResult = ShellUtils.runWithSu("cp $source $dst && chmod $mod $dst")
+        commandResult = ShellUtils.runWithSu("cp -R $source $dst && chmod $mod $dst")
+        if (commandResult.isSuccessful.not()) {
+        }
         return commandResult.isSuccessful
     }
 

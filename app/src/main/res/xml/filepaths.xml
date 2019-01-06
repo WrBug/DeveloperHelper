@@ -3,4 +3,7 @@
     <external-path
         name="file"
         path="com.wrbug.developerHelper" />
+    <external-cache-path
+        name="ext_cache"
+        path="/" />
 </paths>
