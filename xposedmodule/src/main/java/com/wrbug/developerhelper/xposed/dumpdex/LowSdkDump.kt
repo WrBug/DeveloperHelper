@@ -7,6 +7,7 @@ import com.wrbug.developerhelper.xposed.dumpdex.DeviceUtils
 import com.wrbug.developerhelper.xposed.util.FileUtils
 import com.wrbug.developerhelper.xposed.dumpdex.Native
 import com.wrbug.developerhelper.xposed.dumpdex.PackerInfo
+import com.wrbug.developerhelper.xposed.xposedLog
 
 import java.io.File
 
@@ -23,8 +24,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  */
 object LowSdkDump {
     fun log(txt: String) {
-
-        XposedBridge.log("dumpdex.LowSdkDump-> $txt")
+        txt.xposedLog("developerhelper.LowSdkDump-->")
     }
 
     fun init(lpparam: XC_LoadPackage.LoadPackageParam, type: PackerInfo.Type) {

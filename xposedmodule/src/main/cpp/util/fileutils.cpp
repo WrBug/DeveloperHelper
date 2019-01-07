@@ -5,7 +5,7 @@
 
 #include "fileutils.h"
 
-#define TAG "dumpDex->"
+#define TAG "developerhelper.native-->"
 
 static char pname[256];
 

@@ -6,7 +6,7 @@
 #include "deviceutils.h"
 #include "fileutils.h"
 
-#define TAG "dumpDex->"
+#define TAG "developerhelper.native-->"
 
 const static long DEX_MIN_LEN = 102400L;
 static int sdk_int = 0;
@@ -72,15 +72,17 @@ static void *new_arm64_open_common(uint8_t *base, size_t size, void *location,
                                    bool verify,
                                    bool verify_checksum,
                                    void *error_meessage, void *verify_result) {
+    __android_log_print(ANDROID_LOG_ERROR, TAG, "new_arm64_open_common");
     if (size < DEX_MIN_LEN) {
         __android_log_print(ANDROID_LOG_ERROR, TAG, "size =%u", size);
-        return nullptr;
+    } else {
+        __android_log_print(ANDROID_LOG_INFO, TAG, "保存64位apk dex文件：%p", base);
+        save_dex_file(base, size);
     }
-    save_dex_file(base, size);
     void *result = old_arm64_open_common(base, size, location, location_checksum,
-                                        oat_dex_file, verify, verify_checksum,
-                                        error_meessage,
-                                        verify_result);
+                                         oat_dex_file, verify, verify_checksum,
+                                         error_meessage,
+                                         verify_result);
     return result;
 }
 /////////////////////
@@ -89,21 +91,24 @@ static void *new_arm64_open_common(uint8_t *base, size_t size, void *location,
 
 /////////////////////
 static void *(*old_arm64_open_memory)(uint8_t *base,
-                                             size_t size, void *location,
-                                             uint32_t location_checksum,
-                                             void *mem_map,
-                                             void *oat_dex_file, void *error_msg);
+                                      size_t size, void *location,
+                                      uint32_t location_checksum,
+                                      void *mem_map,
+                                      void *oat_dex_file, void *error_msg);
 
 static void *
 (new_arm64_open_memory)(uint8_t *base, size_t size, void *location,
                         uint32_t location_checksum, void *mem_map,
                         void *oat_dex_file, void *error_msg) {
+    __android_log_print(ANDROID_LOG_INFO, TAG, "new_arm64_open_memory");
+
     if (size < DEX_MIN_LEN) {
-        return nullptr;
+        __android_log_print(ANDROID_LOG_INFO, TAG, "size < DEX_MIN_LEN");
+    } else {
+        save_dex_file(base, size);
     }
-    save_dex_file(base, size);
     return (*old_arm64_open_memory)(base, size, location, location_checksum, mem_map,
-                                           oat_dex_file, error_msg);
+                                    oat_dex_file, error_msg);
 }
 /////////////////////
 
@@ -120,10 +125,14 @@ static void *
 (new_nougat_open_memory)(void *DexFile_thiz, uint8_t *base, size_t size, void *location,
                          uint32_t location_checksum, void *mem_map,
                          void *oat_dex_file, void *error_msg) {
+    __android_log_print(ANDROID_LOG_INFO, TAG, "new_nougat_open_memory");
+
     if (size < DEX_MIN_LEN) {
-        return nullptr;
+        __android_log_print(ANDROID_LOG_INFO, TAG, "size < DEX_MIN_LEN");
+    } else {
+        __android_log_print(ANDROID_LOG_INFO, TAG, "保存64位nougat apk dex文件：%p", base);
+        save_dex_file(base, size);
     }
-    save_dex_file(base, size);
     return (*old_nougat_open_memory)(DexFile_thiz, base, size, location, location_checksum, mem_map,
                                      oat_dex_file, error_msg);
 }
@@ -140,10 +149,12 @@ static void *new_opencommon(void *DexFile_thiz, uint8_t *base, size_t size, void
                             uint32_t location_checksum, void *oat_dex_file, bool verify,
                             bool verify_checksum,
                             void *error_meessage, void *verify_result) {
+    __android_log_print(ANDROID_LOG_INFO, TAG, "new_opencommon");
     if (size < DEX_MIN_LEN) {
-        return nullptr;
+        __android_log_print(ANDROID_LOG_INFO, TAG, "size < DEX_MIN_LEN");
+    } else {
+        save_dex_file(base, size);
     }
-    save_dex_file(base, size);
     return (*old_opencommon)(DexFile_thiz, base, size, location, location_checksum,
                              oat_dex_file, verify, verify_checksum, error_meessage,
                              verify_result);

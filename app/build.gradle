@@ -94,3 +94,5 @@ if (propFile.canRead()) {
     println 'release build not found signing file'
     android.buildTypes.release.signingConfig = null
 }
+
+

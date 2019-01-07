@@ -4,7 +4,7 @@
 #include "native.h"
 #include "inlineHook.h"
 
-#define TAG "dumpDex->"
+#define TAG "developerhelper.native-->"
 
 
 JNIEXPORT void JNICALL Java_com_wrbug_developerhelper_xposed_dumpdex_Native_dump

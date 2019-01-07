@@ -1,7 +1,6 @@
 package com.wrbug.developerhelper.xposed.dumpdex
 
 import com.wrbug.developerhelper.xposed.xposedLog
-import de.robv.android.xposed.XposedBridge
 
 /**
  * Native

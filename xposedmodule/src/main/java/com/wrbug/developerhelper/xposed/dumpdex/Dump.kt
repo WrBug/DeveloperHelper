@@ -11,7 +11,7 @@ import java.io.File
 object Dump {
     fun log(txt: String) {
 
-        XposedBridge.log("dumpdex-> $txt")
+        XposedBridge.log("developerhelper.native--> $txt")
     }
 
     fun start(lpparam: XC_LoadPackage.LoadPackageParam) {

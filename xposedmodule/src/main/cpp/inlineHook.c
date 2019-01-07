@@ -25,7 +25,7 @@ created time: 2015-11-30
 #ifndef PAGE_SIZE
 #define PAGE_SIZE 4096
 #endif
-#define TAG "dumpDex->"
+#define TAG "developerhelper.native-->"
 
 #define PAGE_START(addr)    (~(PAGE_SIZE - 1) & (addr))
 #define SET_BIT0(addr)        (addr | 1)
