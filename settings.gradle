@@ -1,1 +1,1 @@
-include ':app', ':basecommon', ':commonutil', ':mmkv'
+include ':app', ':basecommon', ':commonutil', ':mmkv', ':xposedmodule'

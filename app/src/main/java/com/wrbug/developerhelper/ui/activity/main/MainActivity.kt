@@ -3,7 +3,10 @@ package com.wrbug.developerhelper.ui.activity.main
 import android.content.*
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.CompoundButton
@@ -21,6 +24,7 @@ import com.wrbug.developerhelper.service.AccessibilityManager
 import com.wrbug.developerhelper.service.FloatWindowService
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.main.viewmodel.MainViewModel
+import com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
 import com.wrbug.developerhelper.util.DeviceUtils
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -29,7 +33,7 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
 
 
     lateinit var binding: ActivityMainBinding
-
+    lateinit var xposedSettingView: SettingItemView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (DeviceUtils.isFloatWindowOpened()) {
@@ -37,6 +41,7 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
         }
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.presenter = Presenter()
+        xposedSettingView = binding.xposedSettingView
         binding.mainVm = vm
         setupActionBar(R.id.toolbar) {
 

@@ -22,7 +22,14 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
     fun checkStatus() {
         openAccessibility.set(DeveloperHelperAccessibilityService.serviceRunning)
         openFloatWindow.set(DeviceUtils.isFloatWindowOpened())
-        openRoot.set(configKv.isOpenRoot())
+        if (configKv.isOpenRoot()) {
+            if (DeviceUtils.isRoot()) {
+                openRoot.set(true)
+            } else {
+                openRoot.set(false)
+                configKv.setOpenRoot(false)
+            }
+        }
         openXposed.set(configKv.isOpenXposed())
         if (DeviceUtils.isFloatWindowOpened()) {
             FloatWindowService.start(application)

@@ -20,6 +20,9 @@ android {
         versionCode 100010
         versionName "1.0.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a","arm64-v8a"
+        }
     }
     buildTypes {
         debug {
@@ -36,6 +39,7 @@ android {
     dataBinding {
         enabled = true
     }
+
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -63,6 +67,7 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.16'
     implementation project(':commonutil')
     implementation project(':mmkv')
+    implementation project(':xposedmodule')
 }
 kapt {
     generateStubs = true
