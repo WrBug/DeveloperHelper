@@ -17,8 +17,8 @@ android {
         applicationId "com.wrbug.developerhelper"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 100010
-        versionName "1.0.1.0"
+        versionCode 100020
+        versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi", "armeabi-v7a","arm64-v8a"
