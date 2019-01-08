@@ -27,7 +27,6 @@ object Native {
         true
     } catch (t: Throwable) {
         "load $file failed".xposedLog()
-        t.xposedLog()
         false
     }
 

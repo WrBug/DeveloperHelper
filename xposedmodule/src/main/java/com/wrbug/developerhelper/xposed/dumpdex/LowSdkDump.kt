@@ -24,7 +24,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  */
 object LowSdkDump {
     fun log(txt: String) {
-        txt.xposedLog("developerhelper.LowSdkDump-->")
+        txt.xposedLog("developerhelper.xposed.LowSdkDump-->")
     }
 
     fun init(lpparam: XC_LoadPackage.LoadPackageParam, type: PackerInfo.Type) {

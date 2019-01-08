@@ -10,7 +10,7 @@ fun Throwable.xposedLog() {
 }
 
 
-fun String.xposedLog(tag: String = "developerhelper--> ") {
+fun String.xposedLog(tag: String = "developerhelper.xposed--> ") {
     XposedBridge.log(tag + this)
 }
 

@@ -5,7 +5,7 @@
 
 #include "fileutils.h"
 
-#define TAG "developerhelper.native-->"
+#define TAG "developerhelper.xposed.fileutils.native-->"
 
 static char pname[256];
 

@@ -18,7 +18,7 @@ object OreoDump {
         if (!BuildConfig.DEBUG) {
             return
         }
-        XposedBridge.log("developerhelper.native--> $txt")
+        XposedBridge.log("developerhelper.xposed.native--> $txt")
     }
 
     fun init(lpparam: XC_LoadPackage.LoadPackageParam) {

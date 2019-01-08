@@ -6,6 +6,8 @@ import android.view.View
 import com.jaredrummler.android.shell.Shell
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.xposed.dumpdex.Native
+import com.wrbug.developerhelper.xposed.processshare.DumpDexListProcessData
+import com.wrbug.developerhelper.xposed.processshare.ProcessDataManager
 import com.wrbug.developerhelper.xposed.saveToFile
 import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XC_MethodHook
@@ -52,6 +54,7 @@ object DeveloperHelper {
                     if (result) {
                         "设备已root,开始释放so文件".xposedLog()
                         doAsync {
+                            initProcessDataDir()
                             saveSo(activity, Native.SO_FILE)
                             saveSo(activity, Native.SO_FILE_V7a)
                             saveSo(activity, Native.SO_FILE_V8a)
@@ -60,6 +63,19 @@ object DeveloperHelper {
                     }
                 }
             })
+    }
+
+    private fun initProcessDataDir() {
+        "创建processdata目录".xposedLog()
+        val dir = "/data/local/tmp/developerHelper"
+        val commandResult = Shell.SU.run("mkdir -p $dir && chmod -R 777 $dir")
+        if (commandResult.isSuccessful) {
+            "processdata目录创建成功".xposedLog()
+        } else {
+            "processdata目录创建失败：${commandResult.getStderr()}".xposedLog()
+        }
+        val data = ProcessDataManager.get(DumpDexListProcessData::class.java)
+        data.setData(listOf("com.qihoo.yunzuanbao"))
     }
 
 
@@ -71,6 +87,14 @@ object DeveloperHelper {
         "已获取asset".xposedLog()
         val tmpFile = File(activity.cacheDir, fileName)
         inputStream.saveToFile(tmpFile)
-        Shell.SU.run("mv ${tmpFile.absolutePath} ${soFile.absolutePath}", "chmod 777 ${soFile.absolutePath}")
+        val commandResult =
+            Shell.SU.run("mv ${tmpFile.absolutePath} ${soFile.absolutePath}", "chmod 777 ${soFile.absolutePath}")
+        if (commandResult.isSuccessful) {
+            "$fileName 释放成功".xposedLog()
+        } else {
+            "$fileName 释放失败：${commandResult.getStderr()}".xposedLog()
+
+        }
+
     }
 }

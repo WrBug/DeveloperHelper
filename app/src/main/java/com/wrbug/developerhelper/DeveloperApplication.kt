@@ -2,8 +2,10 @@ package com.wrbug.developerhelper
 
 import android.os.Handler
 import android.os.Looper
+import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
+import com.elvishew.xlog.internal.DefaultsFactory
 import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.commonutil.CommonUtils
 import com.wrbug.developerhelper.mmkv.manager.MMKVManager
@@ -35,7 +37,10 @@ class DeveloperApplication : BaseApp() {
         super.onCreate()
         registerModule()
         instance = this
-        XLog.init(LogLevel.ALL)
+        XLog.init(
+            LogConfiguration.Builder().logLevel(LogLevel.ALL).tag("developerHelper-->").build(),
+            DefaultsFactory.createPrinter()
+        )
         releaseAssetsFile()
     }
 
