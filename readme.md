@@ -21,6 +21,7 @@ Android 5.0+
  * Uid
  * 安装时间/更新时间
  * Data目录
+ * 应用脱壳（xposed）
 2.  apk信息：
  * apk目录
  * MD5/Sha1
@@ -36,8 +37,7 @@ Android 5.0+
 ### TODO
 
 1. root功能(adb wifi、重启应用……)
-2. xposed功能（脱壳等）
-3. 应用抓包
+2. 应用抓包
     
 ### 下载
 
