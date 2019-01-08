@@ -12,7 +12,7 @@ import com.wrbug.developerhelper.mmkv.manager.MMKVManager
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.concurrent.thread
-import com.wrbug.developerhelper.ui.widget.flexibletoast.FlexibleToast
+import com.wrbug.developerhelper.commonwidget.flexibletoast.FlexibleToast
 
 
 class DeveloperApplication : BaseApp() {

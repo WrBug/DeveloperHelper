@@ -1,11 +1,14 @@
 package com.wrbug.developerhelper.xposed.developerhelper
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.Toast
 import com.jaredrummler.android.shell.Shell
+import com.wrbug.developerhelper.basecommon.showToast
 import com.wrbug.developerhelper.xposed.processshare.DumpDexListProcessData
 import com.wrbug.developerhelper.xposed.processshare.ProcessDataManager
 import com.wrbug.developerhelper.xposed.xposedLog
@@ -34,28 +37,55 @@ object EnforceMod {
                     if (name == "UN_KNOWN") {
                         return
                     }
+                    val apkInfo = XposedHelpers.getObjectField(thisObject, "apkInfo")
+                    val applicationInfo = XposedHelpers.getObjectField(apkInfo, "applicationInfo")
+                    val packageName = XposedHelpers.getObjectField(applicationInfo, "packageName") as String
                     "加固类型：$name 添加脱壳按钮".xposedLog()
+                    val data = ProcessDataManager.get(DumpDexListProcessData::class.java)
+                    val list = data.getData()
+                    val open = list?.contains(packageName) ?: false
+                    val str = if (open) "关闭脱壳" else "点击脱壳"
                     val item = enforceItem.javaClass.getConstructor(String::class.java, Any::class.java)
-                        .newInstance("脱壳(Xposed)", "点击脱壳")
+                        .newInstance("脱壳(Xposed)", str)
                     XposedHelpers.callMethod(item, "setOnClickListener", View.OnClickListener { v ->
-                        showDumpDialog(thisObject, v?.context)
+                        val data = ProcessDataManager.get(DumpDexListProcessData::class.java)
+                        val list = data.getData()
+                        val open = list?.contains(packageName) ?: false
+                        if (open.not()) {
+                            showDumpDialog(packageName, v?.context)
+                        } else {
+                            list?.remove(packageName)
+                            data.setData(list ?: arrayListOf())
+                            v.context.sendBroadcast(Intent("ACTION_FINISH_HIERACHY_Activity"))
+                            Toast.makeText(v.context, "已关闭", Toast.LENGTH_SHORT).show()
+                        }
                     })
                     val adapter = XposedHelpers.getObjectField(thisObject, "adapter")
                     XposedHelpers.callMethod(adapter, "addItem", index + 1, item)
                 }
             })
+
+        XposedHelpers.findAndHookMethod(
+            "com.wrbug.developerhelper.ui.widget.appsettingview.AppSettingView",
+            lpparam.classLoader,
+            "initView",
+            object : XC_MethodHook() {
+                override fun afterHookedMethod(param: MethodHookParam?) {
+                    val view = XposedHelpers.getObjectField(param?.thisObject, "exportDexBtn") as View?
+                    view?.run {
+                        visibility = View.VISIBLE
+                    }
+                }
+            })
     }
 
-    private fun showDumpDialog(thisObject: Any, context: Context?) {
+    private fun showDumpDialog(packageName: String, context: Context?) {
         context?.apply {
             AlertDialog.Builder(this)
                 .setTitle("提示")
                 .setMessage("脱壳需要重新启动应用，是否继续")
                 .setNegativeButton("取消", null)
                 .setPositiveButton("确定") { _, _ ->
-                    val apkInfo = XposedHelpers.getObjectField(thisObject, "apkInfo")
-                    val applicationInfo = XposedHelpers.getObjectField(apkInfo, "applicationInfo")
-                    val packageName = XposedHelpers.getObjectField(applicationInfo, "packageName") as String
                     val data = ProcessDataManager.get(DumpDexListProcessData::class.java)
                     val list = data.getData() ?: arrayListOf()
                     if (list.contains(packageName).not()) {
@@ -72,6 +102,7 @@ object EnforceMod {
                     val intent = packageManager.getLaunchIntentForPackage(packageName)
                     intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
+                    sendBroadcast(Intent("ACTION_FINISH_HIERACHY_Activity"))
                 }.show()
         }
     }

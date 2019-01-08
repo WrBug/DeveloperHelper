@@ -68,6 +68,7 @@ dependencies {
     implementation project(':commonutil')
     implementation project(':mmkv')
     implementation project(':xposedmodule')
+    implementation project(':commonwidget')
 }
 kapt {
     generateStubs = true

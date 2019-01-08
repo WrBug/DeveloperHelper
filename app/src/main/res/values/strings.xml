@@ -74,4 +74,8 @@
     <string name="backup_failed">备份失败</string>
     <string name="backup_success_and_share_msg">备份成功，文件已备份到内部存储下com.wrbug.developerHelper目录中，是否立即分享给好友？</string>
     <string name="share_failed">分享失败</string>
+    <string name="export_dex_data">导出脱壳数据</string>
+    <string name="packing_files">正在打包文件</string>
+    <string name="export_failed">导出失败！</string>
+    <string name="no_dex_files">无脱壳文件</string>
 </resources>

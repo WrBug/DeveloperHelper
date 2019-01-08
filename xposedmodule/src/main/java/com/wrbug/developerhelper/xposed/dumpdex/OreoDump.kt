@@ -1,8 +1,6 @@
 package com.wrbug.developerhelper.xposed.dumpdex
 
 import com.wrbug.developerhelper.xposed.BuildConfig
-import com.wrbug.developerhelper.xposed.dumpdex.Native
-
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 

@@ -1,4 +1,4 @@
-package com.wrbug.developerhelper.ui.widget.flexibletoast
+package com.wrbug.developerhelper.commonwidget.flexibletoast
 
 import android.content.Context
 import android.view.Gravity
@@ -7,8 +7,8 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.commonutil.UiUtils
+import com.wrbug.developerhelper.commonwidget.R
 
 class FlexibleToast(private val mContext: Context) {
 

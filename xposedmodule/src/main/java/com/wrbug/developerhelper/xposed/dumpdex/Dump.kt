@@ -1,21 +1,19 @@
 package com.wrbug.developerhelper.xposed.dumpdex
 
 import android.os.Build
-import com.wrbug.developerhelper.xposed.dumpdex.DeviceUtils
-import com.wrbug.developerhelper.xposed.dumpdex.PackerInfo
 import com.wrbug.developerhelper.xposed.processshare.DumpDexListProcessData
 import com.wrbug.developerhelper.xposed.processshare.ProcessDataManager
 import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-
 import java.io.File
 
 object Dump {
     fun log(txt: String) {
-
         XposedBridge.log("developerhelper.xposed.Dump--> $txt")
     }
+
+
 
     fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         val type = PackerInfo.find(lpparam) ?: return

@@ -2,6 +2,7 @@ package com.wrbug.developerhelper.xposed.dumpdex
 
 import android.app.Application
 import android.content.Context
+import com.wrbug.developerhelper.basecommon.showToast
 
 import com.wrbug.developerhelper.xposed.dumpdex.DeviceUtils
 import com.wrbug.developerhelper.xposed.util.FileUtils
@@ -27,6 +28,7 @@ object LowSdkDump {
         txt.xposedLog("developerhelper.xposed.LowSdkDump-->")
     }
 
+
     fun init(lpparam: XC_LoadPackage.LoadPackageParam, type: PackerInfo.Type) {
         log("start hook Instrumentation#newApplication")
         if (DeviceUtils.supportNativeHook()) {
@@ -45,9 +47,11 @@ object LowSdkDump {
             object : XC_MethodHook() {
                 @Throws(Throwable::class)
                 override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam?) {
-                    log("Application=" + param!!.result)
-                    dump(lpparam.packageName, param.result.javaClass)
-                    attachBaseContextHook(lpparam, param.result as Application)
+                    param?.apply {
+                        log("Application=$result")
+                        dump(lpparam.packageName, result.javaClass)
+                        attachBaseContextHook(lpparam, result as Application)
+                    }
                 }
             })
     }

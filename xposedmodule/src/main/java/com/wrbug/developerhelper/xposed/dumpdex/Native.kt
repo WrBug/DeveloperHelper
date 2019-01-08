@@ -18,7 +18,6 @@ object Native {
         if (loadLib(SO_FILE_V7a) || loadLib(SO_FILE) || loadLib(SO_FILE_V8a)) {
             "动态库加载成功".xposedLog()
         }
-
     }
 
     private fun loadLib(file: String) = try {
