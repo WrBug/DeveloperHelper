@@ -5,7 +5,7 @@ import android.os.Environment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.jaredrummler.android.shell.Shell
-import com.wrbug.developerhelper.commonutil.Base64
+import com.wrbug.developerhelper.commonutil.*
 import com.wrbug.developerhelper.xposed.util.FileUtils
 import com.wrbug.developerhelper.xposed.xposedLog
 import java.io.File
@@ -33,9 +33,9 @@ class ProcessDataInvocationHandler(val clazz: Class<*>) : InvocationHandler {
     private fun getValue(method: Method, prefixLen: Int): Any? = with(method) {
         val key = name.substring(prefixLen)
         "开始获取${clazz.name}.json".xposedLog()
-        val data: Any = getDataFromFile()[key] ?: return null
+        val data: Any = getDataFromFile()[key] ?: return defaultValue(method)
         "获取成功: $data".xposedLog()
-        return when (method.returnType) {
+        val value = when (method.returnType) {
             Boolean::class.java,
             Int::class.java,
             Long::class.java,
@@ -44,6 +44,28 @@ class ProcessDataInvocationHandler(val clazz: Class<*>) : InvocationHandler {
             Double::class.java -> data
             else -> gson.fromJson(data.toString(), method.returnType)
         }
+        if (value != null) {
+            return value
+        }
+        return defaultValue(method)
+    }
+
+    private fun defaultValue(method: Method): Any? {
+        "defaultValue ${method.name}".xposedLog()
+        val annotation = method.getAnnotation(DefaultValue::class.java) ?: return null
+        "value= ${annotation.value}".xposedLog()
+        if (method.returnType == String::class.java) {
+            return annotation.value
+        }
+        return when (method.returnType) {
+            Boolean::class.java -> annotation.value.toBoolean()
+            Int::class.java -> annotation.value.toInt()
+            Long::class.java -> annotation.value.toLong()
+            Float::class.java -> annotation.value.toFloat()
+            Double::class.java -> annotation.value.toDouble()
+            else -> null
+        }
+
     }
 
     private fun setValue(name: String, data: Any) {

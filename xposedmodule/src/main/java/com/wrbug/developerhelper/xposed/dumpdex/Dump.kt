@@ -17,7 +17,7 @@ object Dump {
         XposedBridge.log("developerhelper.xposed.Dump--> $txt")
     }
 
-    fun start(lpparam: XC_LoadPackage.LoadPackageParam) {
+    fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         val type = PackerInfo.find(lpparam) ?: return
         val data = ProcessDataManager.get(DumpDexListProcessData::class.java)
         val packageNames = data.getData() ?: return

@@ -3,10 +3,7 @@ package com.wrbug.developerhelper.ui.activity.main
 import android.content.*
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.os.Looper
 import android.provider.Settings
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.CompoundButton
@@ -16,7 +13,6 @@ import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseVMActivity
 import com.wrbug.developerhelper.basecommon.obtainViewModel
 import com.wrbug.developerhelper.basecommon.setupActionBar
-import com.wrbug.developerhelper.commonutil.AppManagerUtils
 import com.wrbug.developerhelper.commonutil.ClipboardUtils
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.databinding.ActivityMainBinding
@@ -26,6 +22,7 @@ import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.main.viewmodel.MainViewModel
 import com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
 import com.wrbug.developerhelper.util.DeviceUtils
+import com.wrbug.developerhelper.commonutil.toInt
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -38,6 +35,7 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
         super.onCreate(savedInstanceState)
         if (DeviceUtils.isFloatWindowOpened()) {
             FloatWindowService.start(this)
+            "".toInt()
         }
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.presenter = Presenter()
@@ -62,6 +60,10 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
             }
         })
         rootSettingView.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
+
+        })
+
+        xposedSettingView.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
 
         })
 

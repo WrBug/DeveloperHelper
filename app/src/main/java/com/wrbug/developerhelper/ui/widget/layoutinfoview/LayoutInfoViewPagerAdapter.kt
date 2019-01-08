@@ -27,6 +27,7 @@ class LayoutInfoViewPagerAdapter(
 
     private fun initLayoutTable() {
         tabList.add("Layout")
+
         val boundsInfoView = BoundsInfoView(context)
         boundsInfoView.bounds = hierarchyNode.screenBounds
         viewList.add(boundsInfoView)

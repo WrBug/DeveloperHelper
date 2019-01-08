@@ -35,6 +35,7 @@ class AppInfoPagerAdapter(
     private val adapter = InfoAdapter(context)
     private val enforceItem = ItemInfo(context.getString(R.string.enforce_type), context.getString(R.string.analyzing))
     var listener: AppInfoDialogEventListener? = null
+    private val itemInfos = ArrayList<ItemInfo>()
 
     init {
         initAppInfoTab()
@@ -45,7 +46,7 @@ class AppInfoPagerAdapter(
     private fun initAppSettingTab() {
         tabList.add(context.getString(R.string.app_setting))
         val view = AppSettingView(context)
-        view.apkInfo=apkInfo
+        view.apkInfo = apkInfo
         viewList.add(view)
     }
 
@@ -67,7 +68,6 @@ class AppInfoPagerAdapter(
         itemDecoration.setFirstTopPadding(UiUtils.dp2px(context, 10F))
         rv.addItemDecoration(itemDecoration)
         apkInfo?.let { it ->
-            val itemInfos = ArrayList<ItemInfo>()
             val item = ItemInfo(getString(R.string.page_analyze), getString(R.string.click_to_analyze))
             item.setOnClickListener(View.OnClickListener {
                 listener?.showHierachyView()
@@ -114,11 +114,15 @@ class AppInfoPagerAdapter(
         }
     }
 
+    private fun setEnforceType(type: EnforceUtils.EnforceType) {
+        enforceItem.content = type.type
+    }
+
     private fun getEnforce(packageName: String) {
         doAsync {
             val type = EnforceUtils.getEnforceType(packageName)
-            enforceItem.content = type.type
             uiThread {
+                setEnforceType(type)
                 adapter.notifyItemChanged(enforceItem)
             }
 

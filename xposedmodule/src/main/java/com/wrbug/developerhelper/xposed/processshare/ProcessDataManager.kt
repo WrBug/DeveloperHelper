@@ -2,7 +2,7 @@
 
 package com.wrbug.developerhelper.xposed.processshare
 
-import androidx.collection.ArrayMap
+import android.util.ArrayMap
 import java.lang.reflect.Proxy
 
 object ProcessDataManager {

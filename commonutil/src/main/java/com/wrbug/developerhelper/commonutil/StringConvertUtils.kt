@@ -1,5 +1,6 @@
-package com.wrbug.developerhelper.util
+package com.wrbug.developerhelper.commonutil
 
+import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.regex.Pattern
 
@@ -12,19 +13,21 @@ fun String.isInt(): Boolean {
 }
 
 fun String.isDecimal(): Boolean {
-    if (this=="0") {
+    if (this == "0") {
         return true
     }
     val pattern = Pattern.compile("-?([0-9]+\\.0*)?[1-9][0-9]*$")
     return pattern.matcher(this).find()
 }
+
 fun String.isNumber(): Boolean {
-    if (this=="0") {
+    if (this == "0") {
         return true
     }
     val pattern = Pattern.compile("-?[1-9][0-9]*$")
     return pattern.matcher(this).find()
 }
+
 fun String.isBoolean(): Boolean {
     return this.toLowerCase() == "true" || this.toLowerCase() == "false"
 }
@@ -51,3 +54,17 @@ fun String.toLong(): Long {
     return 0L
 }
 
+
+fun String.toFloat(): Float {
+    if (isDecimal()) {
+        return BigDecimal(this).toFloat()
+    }
+    return 0F
+}
+
+fun String.toDouble(): Double {
+    if (isDecimal()) {
+        return BigDecimal(this).toDouble()
+    }
+    return 0.0
+}

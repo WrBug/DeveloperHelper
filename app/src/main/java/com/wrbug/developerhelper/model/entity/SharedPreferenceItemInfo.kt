@@ -1,7 +1,6 @@
 package com.wrbug.developerhelper.model.entity
 
-import com.wrbug.developerhelper.commonutil.JsonHelper
-import com.wrbug.developerhelper.util.*
+import com.wrbug.developerhelper.commonutil.*
 
 class SharedPreferenceItemInfo {
     var key: String = ""

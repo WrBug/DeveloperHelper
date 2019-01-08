@@ -1,6 +1,9 @@
 package com.wrbug.developerhelper.util
 
 import android.content.Context
+import com.wrbug.developerhelper.commonutil.toBoolean
+import com.wrbug.developerhelper.commonutil.toInt
+import com.wrbug.developerhelper.commonutil.toLong
 import com.wrbug.developerhelper.model.entity.SharedPreferenceItemInfo
 import java.io.File
 

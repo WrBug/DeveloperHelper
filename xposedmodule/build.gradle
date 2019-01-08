@@ -39,10 +39,9 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.0.0-alpha1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'org.jetbrains.anko:anko-commons:0.10.8'
     implementation project(':commonutil')
     implementation 'com.jaredrummler:android-shell:1.0.0'
@@ -50,7 +49,6 @@ dependencies {
     compileOnly 'de.robv.android.xposed:api:82'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.code.gson:gson:2.8.5'
-
 }
 repositories {
     mavenCentral()

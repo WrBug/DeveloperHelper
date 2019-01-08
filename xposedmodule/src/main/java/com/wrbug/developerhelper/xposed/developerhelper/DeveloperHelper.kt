@@ -3,10 +3,10 @@ package com.wrbug.developerhelper.xposed.developerhelper
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import android.widget.CompoundButton
 import com.jaredrummler.android.shell.Shell
-import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.xposed.dumpdex.Native
-import com.wrbug.developerhelper.xposed.processshare.DumpDexListProcessData
+import com.wrbug.developerhelper.xposed.processshare.GlobalConfigProcessData
 import com.wrbug.developerhelper.xposed.processshare.ProcessDataManager
 import com.wrbug.developerhelper.xposed.saveToFile
 import com.wrbug.developerhelper.xposed.xposedLog
@@ -17,7 +17,7 @@ import org.jetbrains.anko.doAsync
 import java.io.File
 
 object DeveloperHelper {
-    fun start(lpparam: XC_LoadPackage.LoadPackageParam) {
+    fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         XposedHelpers.findAndHookMethod(
             "com.wrbug.developerhelper.ui.activity.main.MainActivity",
             lpparam.classLoader,
@@ -35,10 +35,19 @@ object DeveloperHelper {
                     val xposedSettingView = XposedHelpers.getObjectField(activity, "xposedSettingView") as View?
                     xposedSettingView?.apply {
                         visibility = View.VISIBLE
+                        val configData = ProcessDataManager.get(GlobalConfigProcessData::class.java)
+                        XposedHelpers.callMethod(this, "setChecked", configData.isXposedOpen())
+                        XposedHelpers.callMethod(
+                            this,
+                            "setOnCheckedChangeListener",
+                            CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+                                configData.setXposedOpen(isChecked)
+                            })
                     }
 
                 }
             })
+        EnforceMod.start(lpparam)
     }
 
     private fun tryReleaseSo(lpparam: XC_LoadPackage.LoadPackageParam, activity: Activity) {
@@ -74,8 +83,6 @@ object DeveloperHelper {
         } else {
             "processdata目录创建失败：${commandResult.getStderr()}".xposedLog()
         }
-        val data = ProcessDataManager.get(DumpDexListProcessData::class.java)
-        data.setData(listOf("com.qihoo.yunzuanbao"))
     }
 
 

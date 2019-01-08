@@ -4,5 +4,5 @@ interface DumpDexListProcessData : ProcessData {
 
     fun setData(list: List<String>)
 
-    fun getData(): List<String>?
+    fun getData(): ArrayList<String>?
 }

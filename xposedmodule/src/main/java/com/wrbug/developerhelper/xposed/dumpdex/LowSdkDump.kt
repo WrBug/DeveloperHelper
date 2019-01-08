@@ -79,9 +79,7 @@ object LowSdkDump {
                 override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam?) {
                     log("loadClass->" + param!!.args[0])
                     val result = param.result as Class<*>
-                    if (result != null) {
-                        dump(lpparam.packageName, result)
-                    }
+                    dump(lpparam.packageName, result)
                 }
             })
         XposedHelpers.findAndHookMethod(
@@ -95,9 +93,7 @@ object LowSdkDump {
                 override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam?) {
                     log("loadClassWithclassLoader->" + param!!.args[0])
                     val result = param.result as Class<*>
-                    if (result != null) {
-                        dump(lpparam.packageName, result)
-                    }
+                    dump(lpparam.packageName, result)
                 }
             })
     }

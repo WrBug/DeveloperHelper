@@ -27,6 +27,14 @@ class InfoAdapter(val context: Context) : RecyclerView.Adapter<InfoAdapter.ViewH
         notifyDataSetChanged()
     }
 
+    fun addItem(index: Int, item: ItemInfo) {
+        if (this.list.size < index) {
+            return
+        }
+        list.add(index, item)
+        notifyItemInserted(index)
+    }
+
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         val itemInfo = list[p1]
         p0.itemView.titleTv.text = itemInfo.title
@@ -45,7 +53,6 @@ class InfoAdapter(val context: Context) : RecyclerView.Adapter<InfoAdapter.ViewH
             notifyItemChanged(index)
         }
     }
-
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

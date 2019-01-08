@@ -38,7 +38,7 @@ class DeveloperApplication : BaseApp() {
         registerModule()
         instance = this
         XLog.init(
-            LogConfiguration.Builder().logLevel(LogLevel.ALL).tag("developerHelper-->").build(),
+            LogConfiguration.Builder().logLevel(LogLevel.ALL).tag("developerHelper.print-->").build(),
             DefaultsFactory.createPrinter()
         )
         releaseAssetsFile()
