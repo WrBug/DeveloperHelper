@@ -21,10 +21,11 @@ object Native {
     }
 
     private fun loadLib(file: String) = try {
-        System.load("/data/local/tmp/$file")
+        System.load("/data/data/${OreoDump.packageName}/cache/$file")
         "loaded $file".xposedLog()
         true
     } catch (t: Throwable) {
+        t.xposedLog()
         "load $file failed".xposedLog()
         false
     }

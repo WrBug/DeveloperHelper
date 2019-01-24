@@ -64,9 +64,9 @@ object DeveloperHelper {
                         "设备已root,开始释放so文件".xposedLog()
                         doAsync {
                             initProcessDataDir()
-                            saveSo(activity, Native.SO_FILE)
-                            saveSo(activity, Native.SO_FILE_V7a)
-                            saveSo(activity, Native.SO_FILE_V8a)
+                            saveSo(activity, "armeabi", Native.SO_FILE)
+                            saveSo(activity, "armeabi-v7a", Native.SO_FILE_V7a)
+                            saveSo(activity, "arm64-v8a", Native.SO_FILE_V8a)
                         }
 
                     }
@@ -86,22 +86,25 @@ object DeveloperHelper {
     }
 
 
-    private fun saveSo(activity: Activity, fileName: String) {
+    private fun saveSo(activity: Activity, libPath: String, fileName: String) {
         "正在释放$fileName".xposedLog()
         val tmpDir = File("/data/local/tmp")
         val soFile = File(tmpDir, fileName)
-        val inputStream = activity.assets.open(fileName)
+        val inputStream = activity.classLoader.getResource("lib/$libPath/libnativeDump.so").openStream()
+        if (inputStream == null) {
+            "$libPath/libnativeDump.so 不存在".xposedLog()
+            return
+        }
         "已获取asset".xposedLog()
         val tmpFile = File(activity.cacheDir, fileName)
         inputStream.saveToFile(tmpFile)
         val commandResult =
-            Shell.SU.run("mv ${tmpFile.absolutePath} ${soFile.absolutePath}", "chmod 777 ${soFile.absolutePath}")
+            Shell.SU.run("cp ${tmpFile.absolutePath} ${soFile.absolutePath}", "chmod 777 ${soFile.absolutePath}")
         if (commandResult.isSuccessful) {
             "$fileName 释放成功".xposedLog()
         } else {
             "$fileName 释放失败：${commandResult.getStderr()}".xposedLog()
-
         }
-
+        tmpFile.delete()
     }
 }

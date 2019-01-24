@@ -50,6 +50,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation project(':basecommon')
+    implementation 'com.wrbug:jsposed:0.0.2'
 }
 repositories {
     mavenCentral()

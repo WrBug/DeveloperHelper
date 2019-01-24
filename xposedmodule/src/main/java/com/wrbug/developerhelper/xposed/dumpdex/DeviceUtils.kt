@@ -17,6 +17,8 @@ object DeviceUtils {
     val isOreo: Boolean
         get() = sdkInit == 26 || sdkInit == 27
 
+    val isPie: Boolean
+        get() = sdkInit == 28
     val isMarshmallow: Boolean
         get() = sdkInit == 23
 
@@ -25,6 +27,6 @@ object DeviceUtils {
     }
 
     fun supportNativeHook(): Boolean {
-        return isNougat || isMarshmallow || isOreo
+        return isNougat || isMarshmallow || isOreo || isPie
     }
 }

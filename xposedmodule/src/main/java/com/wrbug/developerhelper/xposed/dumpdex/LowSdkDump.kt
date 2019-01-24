@@ -1,6 +1,7 @@
 package com.wrbug.developerhelper.xposed.dumpdex
 
 import android.app.Application
+import android.app.Instrumentation
 import android.content.Context
 import com.wrbug.developerhelper.basecommon.showToast
 
@@ -16,6 +17,7 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import java.util.ArrayList
 
 /**
  * LowSdkDump
@@ -54,6 +56,34 @@ object LowSdkDump {
                     }
                 }
             })
+
+        XposedHelpers.findClassIfExists(type.application, lpparam.classLoader)?.apply {
+            var list = ArrayList<String>()
+            for (method in methods) {
+                list.add(method.name)
+            }
+            for (method in declaredMethods) {
+                list.add(method.name)
+            }
+            "开始hook application ${list.size} 方法".xposedLog()
+            list.forEach {
+                XposedBridge.hookAllMethods(this, it, object : XC_MethodHook() {
+                    override fun beforeHookedMethod(param: MethodHookParam?) {
+                        param?.args?.apply {
+                            if (this.isEmpty().not()) {
+                                this.forEach { arg ->
+                                    if (arg is Context) {
+                                        "hook $arg".xposedLog()
+                                        dump(lpparam.packageName, arg.javaClass)
+                                        attachBaseContextHook(lpparam, arg)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        }
     }
 
     private fun dump(packageName: String, aClass: Class<*>?) {
@@ -71,8 +101,8 @@ object LowSdkDump {
     }
 
 
-    private fun attachBaseContextHook(lpparam: XC_LoadPackage.LoadPackageParam, application: Application) {
-        val classLoader = application.classLoader
+    private fun attachBaseContextHook(lpparam: XC_LoadPackage.LoadPackageParam, context: Context) {
+        val classLoader = context.classLoader
         XposedHelpers.findAndHookMethod(
             ClassLoader::class.java,
             "loadClass",

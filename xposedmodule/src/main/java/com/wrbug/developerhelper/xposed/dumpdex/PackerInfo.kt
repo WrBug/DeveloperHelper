@@ -85,6 +85,7 @@ object PackerInfo {
                 log("find class:$s")
                 val type = getType(s)
                 log("find packerType :" + type!!.name)
+                type.application = s
                 return type
             }
         }
@@ -103,6 +104,10 @@ object PackerInfo {
         BANG_BANG("梆梆加固"),
         TENCENT("腾讯加固"),
         BAI_DU("百度加固");
+
+        var application: String = ""
+
+
     }
 
 }

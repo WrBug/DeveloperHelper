@@ -11,7 +11,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  * @since 2018/3/23
  */
 object OreoDump {
-
+    var packageName = ""
     fun log(txt: String) {
         if (!BuildConfig.DEBUG) {
             return
@@ -19,7 +19,11 @@ object OreoDump {
         XposedBridge.log("developerhelper.xposed.native--> $txt")
     }
 
-    fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
+    fun init(
+        lpparam: XC_LoadPackage.LoadPackageParam,
+        type: PackerInfo.Type
+    ) {
+        packageName = lpparam.packageName
         Native.dump(lpparam.packageName)
     }
 }
