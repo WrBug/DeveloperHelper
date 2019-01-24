@@ -57,11 +57,18 @@ class SettingItemView : FrameLayout {
 
     }
 
+    override fun setOnClickListener(l: OnClickListener?) {
+        super.setOnClickListener(l)
+        switcherMaskView.setOnClickListener(l)
+    }
+
     private fun setSwitchCheckable() {
         if (checkable) {
-            switcher.setOnTouchListener(null)
+//            switcher.setOnTouchListener(null)
+            switcherMaskView.visibility = View.GONE
         } else {
-            switcher.setOnTouchListener { _, _ -> true }
+//            switcher.setOnTouchListener { _, _ -> true }
+            switcherMaskView.visibility = View.VISIBLE
         }
     }
 

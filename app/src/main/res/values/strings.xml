@@ -14,7 +14,7 @@
     <string name="advance_setting">高级功能设置</string>
     <string name="open_accessibility_service">开启无障碍辅助</string>
     <string name="open_float_window">开启悬浮窗权限</string>
-    <string name="open_root_permission_summary">推荐开启，用于获取应用数据库等信息，不开启部分信息无法显示</string>
+    <string name="open_root_permission_summary">推荐开启，用于获取应用数据库等信息，不开启部分信息无法显示，Xposed无法使用</string>
     <string name="open_root_permission_title">开启root权限</string>
     <string name="open_xposed_title">启用xposed特性</string>
     <string name="open_xposed_summary">开发中</string>
