@@ -14,11 +14,10 @@ object AppManagerUtils {
     }
 
     fun clearAppData(packageName: String): Boolean {
-      return  ShellManager.clearAppData(packageName)
+        return ShellManager.clearAppData(packageName)
     }
 
     fun forceStopApp(packageName: String): Boolean {
-        return  ShellManager.forceStopApp(packageName)
-
+        return ShellManager.forceStopApp(packageName)
     }
 }

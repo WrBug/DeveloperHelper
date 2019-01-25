@@ -25,9 +25,9 @@
             android:layout_marginTop="10dp"
             app:checkable="false"
             app:src="@drawable/ic_shield_666666"
-            app:summary="管理、移除需要脱壳的应用"
+            app:summary="@string/shell_app_manager_summary"
             app:switchVisible="false"
-            app:title="脱壳应用管理" />
+            app:title="@string/shell_app_manager" />
 
         <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
             android:layout_width="match_parent"

@@ -45,4 +45,6 @@ object AppInfoManager {
         }
         return files.toTypedArray()
     }
+
+
 }

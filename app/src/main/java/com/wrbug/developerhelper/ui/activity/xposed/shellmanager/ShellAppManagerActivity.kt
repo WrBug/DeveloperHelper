@@ -7,6 +7,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity
+import com.wrbug.developerhelper.basecommon.setupActionBar
 import com.wrbug.developerhelper.commonutil.AppInfoManager
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.xposed.processshare.DumpDexListProcessData
@@ -30,6 +31,9 @@ class ShellAppManagerActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shell_app_manager)
+        setupActionBar(R.id.toolbar) {
+            title = getString(R.string.shell_app_manager)
+        }
         swipeLayout.setOnRefreshListener {
             getShellApp()
         }
@@ -47,7 +51,7 @@ class ShellAppManagerActivity : BaseActivity() {
         doAsync {
             val dexListProcessData = ProcessDataManager.get(DumpDexListProcessData::class.java)
             val packageNames = dexListProcessData.getData()
-            if (packageNames == null) {
+            if (packageNames == null || packageNames.isEmpty()) {
                 uiThread {
                     swipeLayout.isRefreshing = false
                     emptyView.visibility = View.VISIBLE

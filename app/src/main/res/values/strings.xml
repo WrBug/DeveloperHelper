@@ -79,4 +79,7 @@
     <string name="export_failed">导出失败！</string>
     <string name="no_dex_files">无脱壳文件</string>
     <string name="xposed_setting">Xposed设置</string>
+    <string name="shell_app_manager_summary">管理、移除需要脱壳的应用</string>
+    <string name="shell_app_manager">脱壳应用管理</string>
+    <string name="remove_item">移除该项</string>
 </resources>
