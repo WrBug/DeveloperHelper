@@ -64,6 +64,10 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
 
         })
         xposedSettingView.setOnClickListener {
+            if (xposedSettingView.isChecked().not()) {
+                showSnack(getString(R.string.open_xposed_first))
+                return@setOnClickListener
+            }
             startActivity(Intent(this, XposedSettingActivity::class.java))
         }
     }

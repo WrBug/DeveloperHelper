@@ -12,6 +12,13 @@ Android 5.0+
 
 ![](https://i.loli.net/2018/12/26/5c23070cda923.png)![](https://i.loli.net/2018/12/26/5c23070d9bd25.png)
 
+
+
+### 新版本功能 v1.0.3
+
+* 新增Android Pie (sdk28) [EdXposed](https://github.com/solohsu/EdXposed)支持
+* 新增脱壳应用管理
+
 ### 已支持功能
 
 1. 应用基本信息查看包括：

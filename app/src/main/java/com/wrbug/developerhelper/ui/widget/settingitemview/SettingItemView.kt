@@ -62,6 +62,8 @@ class SettingItemView : FrameLayout {
         switcherMaskView.setOnClickListener(l)
     }
 
+    fun isChecked() = switcher.isChecked
+
     private fun setSwitchCheckable() {
         if (checkable) {
 //            switcher.setOnTouchListener(null)

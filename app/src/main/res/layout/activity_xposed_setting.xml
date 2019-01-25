@@ -36,6 +36,6 @@
             app:src="@drawable/ic_xposed_custom_666666"
             app:summary="开发中，支持自定义模块加载"
             app:switchVisible="false"
-            app:title="自定义功能" />
+            app:title="自定义模块管理" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
