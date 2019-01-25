@@ -56,7 +56,7 @@
             android:label="@string/title_activity_guide"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity" />
-        <activity android:name=".ui.activity.databaseedit.DatabaseEditActivity"></activity>
+        <activity android:name=".ui.activity.databaseedit.DatabaseEditActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -66,8 +66,10 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
-
         </provider>
+
+        <activity android:name=".ui.activity.xposed.xposedsetting.XposedSettingActivity" />
+        <activity android:name=".ui.activity.xposed.shellmanager.ShellAppManagerActivity"></activity>
     </application>
 
 </manifest>

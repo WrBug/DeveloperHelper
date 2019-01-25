@@ -23,6 +23,7 @@ import com.wrbug.developerhelper.ui.activity.main.viewmodel.MainViewModel
 import com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
 import com.wrbug.developerhelper.util.DeviceUtils
 import com.wrbug.developerhelper.commonutil.toInt
+import com.wrbug.developerhelper.ui.activity.xposed.xposedsetting.XposedSettingActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -62,11 +63,9 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
         rootSettingView.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
 
         })
-
-        xposedSettingView.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
-
-        })
-
+        xposedSettingView.setOnClickListener {
+            startActivity(Intent(this, XposedSettingActivity::class.java))
+        }
     }
 
     override fun getViewModel(): MainViewModel {

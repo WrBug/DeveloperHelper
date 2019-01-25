@@ -78,4 +78,5 @@
     <string name="packing_files">正在打包文件</string>
     <string name="export_failed">导出失败！</string>
     <string name="no_dex_files">无脱壳文件</string>
+    <string name="xposed_setting">Xposed设置</string>
 </resources>

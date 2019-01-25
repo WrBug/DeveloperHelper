@@ -21,7 +21,7 @@ android {
         versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
-            abiFilters "armeabi", "armeabi-v7a","arm64-v8a"
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
         }
     }
     buildTypes {
@@ -95,5 +95,3 @@ if (propFile.canRead()) {
     println 'release build not found signing file'
     android.buildTypes.release.signingConfig = null
 }
-
-
