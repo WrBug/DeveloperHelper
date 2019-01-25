@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/icoIv"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@color/material_color_red_500" />
+
+    <TextView
+        android:id="@+id/appNameTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/icoIv"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:textColor="@color/item_title_text"
+        android:textSize="16sp"
+        tools:text="易开发" />
+
+    <TextView
+        android:id="@+id/packageNameTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appNameTv"
+        android:layout_toEndOf="@+id/icoIv"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:textColor="@color/item_content_text"
+        tools:text="com.wrbug.developerhelper" />
+</RelativeLayout>

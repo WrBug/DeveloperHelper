@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.basecommon.setupActionBar
+import com.wrbug.developerhelper.ui.activity.xposed.shellmanager.ShellAppManagerActivity
 import kotlinx.android.synthetic.main.activity_xposed_setting.*
 
 class XposedSettingActivity : BaseActivity() {
@@ -15,7 +16,7 @@ class XposedSettingActivity : BaseActivity() {
             title = getString(R.string.xposed_setting)
         }
         shellSettingItemView.setOnClickListener {
-
+            ShellAppManagerActivity.start(this)
         }
     }
 }
