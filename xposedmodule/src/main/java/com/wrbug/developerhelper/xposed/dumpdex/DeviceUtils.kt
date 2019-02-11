@@ -5,7 +5,7 @@ import android.os.Build
 /**
  * DeviceUtils
  *
- * @author suanlafen
+ * @author WrBug
  * @since 2018/4/8
  */
 object DeviceUtils {

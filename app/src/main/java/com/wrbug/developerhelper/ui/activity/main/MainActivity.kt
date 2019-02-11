@@ -9,11 +9,14 @@ import android.view.MenuItem
 import android.widget.CompoundButton
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import com.wrbug.developerhelper.BuildConfig
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseVMActivity
 import com.wrbug.developerhelper.basecommon.obtainViewModel
 import com.wrbug.developerhelper.basecommon.setupActionBar
+import com.wrbug.developerhelper.basecommon.showToast
 import com.wrbug.developerhelper.commonutil.ClipboardUtils
+import com.wrbug.developerhelper.commonutil.shell.Callback
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.databinding.ActivityMainBinding
 import com.wrbug.developerhelper.service.AccessibilityManager
@@ -23,7 +26,9 @@ import com.wrbug.developerhelper.ui.activity.main.viewmodel.MainViewModel
 import com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
 import com.wrbug.developerhelper.util.DeviceUtils
 import com.wrbug.developerhelper.commonutil.toInt
+import com.wrbug.developerhelper.model.entity.VersionInfo
 import com.wrbug.developerhelper.ui.activity.xposed.xposedsetting.XposedSettingActivity
+import com.wrbug.developerhelper.util.UpdateUtils
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -60,7 +65,7 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
                 FloatWindowService.stop(this)
             }
         })
-        rootSettingView.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
+        rootSettingView.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, _ ->
 
         })
         xposedSettingView.setOnClickListener {
@@ -145,11 +150,46 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
             ClipboardUtils.saveClipboardText(this, "627962572")
             showSnack(R.string.copy_success)
         }
+        .setNeutralButton("检查更新") { _, _ ->
+            checkUpdate(true)
+        }
         .create().show()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
     }
+
+    private fun checkUpdate(showSnack: Boolean = false) {
+        if (showSnack) {
+            showSnack("正在检查新版本...")
+        }
+        UpdateUtils.checkUpdate(object : Callback<VersionInfo> {
+            override fun onSuccess(data: VersionInfo) {
+                if (BuildConfig.VERSION_NAME == data.versionName) {
+                    showSnack("暂无新版本")
+                    return
+                }
+                showUpdateDialog(data)
+            }
+
+            override fun onFailed(msg: String) {
+                if (showSnack) {
+                    showSnack("检查失败...")
+                }
+            }
+        })
+    }
+
+    private fun showUpdateDialog(data: VersionInfo) = AlertDialog.Builder(this)
+        .setTitle("发现新版本")
+        .setMessage("版本号:${data.versionName}\n更新时间：${data.updateDate}\n大小：${data.size}\n版本说明：\n${data.feature}")
+        .setPositiveButton("下载") { _, _ ->
+            val intent = Intent(Intent.ACTION_VIEW)
+            val uri = Uri.parse(data.downloadUrl)
+            intent.data = uri
+            startActivity(intent)
+        }
+        .create().show()
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
