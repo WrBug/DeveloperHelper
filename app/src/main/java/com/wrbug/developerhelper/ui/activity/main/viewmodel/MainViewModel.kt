@@ -18,7 +18,7 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
     val openFloatWindow = ObservableBoolean()
     val openRoot = ObservableBoolean()
     private val configKv: ConfigKv = MMKVManager.get(ConfigKv::class.java)
-    fun checkStatus() {
+    private fun checkStatus() {
         openAccessibility.set(DeveloperHelperAccessibilityService.serviceRunning)
         openFloatWindow.set(DeviceUtils.isFloatWindowOpened())
         if (configKv.isOpenRoot()) {

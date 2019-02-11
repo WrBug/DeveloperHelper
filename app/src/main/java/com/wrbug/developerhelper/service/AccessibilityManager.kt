@@ -15,18 +15,23 @@ object AccessibilityManager {
                 override fun onSuccess(data: Boolean) {
                     if (!data) {
                         showToast(getString(R.string.please_open_accessbility_service))
-                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
+                        startAccessibilitySetting(context)
                     }
                     callback?.onSuccess(data)
                 }
 
                 override fun onFailed(msg: String) {
                     callback?.onFailed(msg)
+                    startAccessibilitySetting(context)
                 }
 
             })
         }
+    }
+
+    fun startAccessibilitySetting(context: Context) {
+        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 }
