@@ -26,6 +26,7 @@ object ShellManager {
     private const val SHELL_UNINSTALL_APP = "pm uninstall %1\$s"
     private const val SHELL_CLEAR_APP_DATA = "pm clear %1\$s"
     private const val SHELL_FORCE_STOP_APP = "am force-stop %1\$s"
+    private val SHELL_OPEN_ADB_WIFI = arrayOf("setprop service.adb.tcp.port 5555", "stop adbd", "start adbd")
     fun getTopActivity(callback: Callback<TopActivityInfo?>) {
         ShellUtils.runWithSu(arrayOf(SHELL_TOP_ACTIVITY), object : ShellUtils.ShellResultCallback() {
             override fun onComplete(result: CommandResult) {
@@ -264,4 +265,8 @@ object ShellManager {
         return commandResult.isSuccessful
     }
 
+    fun openAdbWifi(): Boolean {
+        val commandResult = ShellUtils.runWithSu(*SHELL_OPEN_ADB_WIFI)
+        return commandResult.isSuccessful
+    }
 }

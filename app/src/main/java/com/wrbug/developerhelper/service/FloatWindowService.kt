@@ -8,10 +8,13 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.IBinder
 import android.view.LayoutInflater
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.basecommon.showToast
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.commonutil.shell.Callback
+import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.main.MainActivity
 import com.yhao.floatwindow.FloatWindow
 import com.yhao.floatwindow.Screen
@@ -21,6 +24,7 @@ class FloatWindowService : Service() {
 
     companion object {
         const val FLOAT_BUTTON = "floatButton"
+        private const val CHANNEL_ID = "DEMON"
         fun start(context: Context) {
             context.startService(Intent(context, FloatWindowService::class.java))
         }
@@ -36,7 +40,17 @@ class FloatWindowService : Service() {
         }
     }
 
-
+    private val floatCustomView: RemoteViews by lazy {
+        RemoteViews(packageName, R.layout.view_float_custom).apply {
+            setOnClickPendingIntent(
+                R.id.adbWifiContainer, PendingIntent.getBroadcast(
+                    applicationContext, 0,
+                    Intent(ReceiverConstant.ACTION_ADB_WIFI_CLICKED), PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            )
+        }
+    }
+    private lateinit var notification: Notification
     private val receiver = Receiver()
     override fun onCreate() {
         super.onCreate()
@@ -76,7 +90,7 @@ class FloatWindowService : Service() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel =
-                NotificationChannel("channel1", getString(R.string.demon_process), NotificationManager.IMPORTANCE_LOW)
+                NotificationChannel(CHANNEL_ID, getString(R.string.demon_process), NotificationManager.IMPORTANCE_LOW)
             channel.enableLights(true)
             channel.setShowBadge(true)
             notificationManager.createNotificationChannel(channel)
@@ -84,17 +98,32 @@ class FloatWindowService : Service() {
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-        val builder = NotificationCompat.Builder(this, "channel1")
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setAutoCancel(false)
             .setContentIntent(pendingIntent)
             .setContentTitle(getString(R.string.app_name))
             .setContentText(getString(R.string.demon_process_content))
             .setSmallIcon(R.drawable.ic_launcher_notify)
+            .setCustomContentView(floatCustomView)
             .setVibrate(null)
-        val notification = builder.build()
+        notification = builder.build()
         notification.flags = Notification.FLAG_ONGOING_EVENT or Notification.FLAG_NO_CLEAR or
                 Notification.FLAG_FOREGROUND_SERVICE
+        updateNotification()
+    }
+
+    private fun updateNotification() {
         startForeground(0x10000, notification)
+    }
+
+    private fun updateNotificationContent(text: String) {
+        floatCustomView.setTextViewText(R.id.contentTv, text)
+        updateNotification()
+    }
+
+    private fun updateNotificationWifi(id: Int) {
+        floatCustomView.setImageViewResource(R.id.adbWifiIv, id)
+        updateNotification()
     }
 
     private fun showFloatButton() {
@@ -107,6 +136,7 @@ class FloatWindowService : Service() {
 
     private fun initReceiver() {
         val filter = IntentFilter(ReceiverConstant.ACTION_SET_FLOAT_BUTTON_VISIBLE)
+        filter.addAction(ReceiverConstant.ACTION_ADB_WIFI_CLICKED)
         registerReceiver(receiver, filter)
     }
 
@@ -140,6 +170,17 @@ class FloatWindowService : Service() {
                         showFloatButton()
                     } else {
                         hideFloatButton()
+                    }
+                }
+                ReceiverConstant.ACTION_ADB_WIFI_CLICKED -> {
+                    updateNotificationContent("正在开启adb wifi")
+                    val success = ShellManager.openAdbWifi()
+                    if (success) {
+                        updateNotificationContent("adb wifi 已开启")
+                        updateNotificationWifi(R.drawable.ic_wifi_primary)
+                    } else {
+                        updateNotificationContent("adb wifi 开启失败")
+                        updateNotificationWifi(R.drawable.ic_wifi_gray)
                     }
                 }
             }
