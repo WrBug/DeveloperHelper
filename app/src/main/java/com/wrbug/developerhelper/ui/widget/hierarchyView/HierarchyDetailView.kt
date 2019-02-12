@@ -44,7 +44,6 @@ class HierarchyDetailView : FrameLayout {
         this.hierarchyNode = hierarchyNode
         this.parentHierarchyNode = parentHierarchyNode
         invalidate()
-        LayoutInfoView(context, hierarchyNode).show()
     }
 
     private fun initView() {

@@ -16,6 +16,8 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
     private var mHierarchyNodes = arrayListOf<HierarchyNode>()
     private val nodeMap = hashMapOf<Long, HierarchyNode>()
     private var onHierarchyNodeClickListener: OnHierarchyNodeClickListener? = null
+    private var selectedNode: HierarchyNode? = null
+    private var selectedParentNode: HierarchyNode? = null
 
     constructor(context: Context) : this(context, null)
 
@@ -44,13 +46,31 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
-                val hierarchyNode = getNode(event.x, event.y)
-                if (hierarchyNode != null && onHierarchyNodeClickListener != null) {
-                    onHierarchyNodeClickListener?.onClick(hierarchyNode.selectedNode, hierarchyNode.parentNode)
+                getSelectedNode(event.x, event.y)
+                return true
+            }
+            MotionEvent.ACTION_MOVE -> {
+                getSelectedNode(event.x, event.y)
+            }
+            MotionEvent.ACTION_UP -> {
+                selectedNode?.let {
+                    onHierarchyNodeClickListener?.onClick(it, selectedParentNode)
                 }
             }
         }
         return super.onTouchEvent(event)
+    }
+
+    private fun getSelectedNode(x: Float, y: Float) {
+        val hierarchyNode = getNode(x, y)
+        if (hierarchyNode != null && onHierarchyNodeClickListener != null) {
+            if (selectedNode == hierarchyNode.selectedNode) {
+                return
+            }
+            selectedNode = hierarchyNode.selectedNode
+            selectedParentNode = hierarchyNode.parentNode
+            onHierarchyNodeClickListener?.onSelectedNodeChanged(hierarchyNode.selectedNode, hierarchyNode.parentNode)
+        }
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -113,5 +133,6 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
 
     interface OnHierarchyNodeClickListener {
         fun onClick(node: HierarchyNode, parentNode: HierarchyNode?)
+        fun onSelectedNodeChanged(node: HierarchyNode, parentNode: HierarchyNode?)
     }
 }
