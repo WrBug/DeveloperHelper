@@ -104,7 +104,6 @@ class FloatWindowService : Service() {
             .setContentTitle(getString(R.string.app_name))
             .setContentText(getString(R.string.demon_process_content))
             .setSmallIcon(R.drawable.ic_launcher_notify)
-            .setCustomContentView(floatCustomView)
             .setVibrate(null)
         notification = builder.build()
         notification.flags = Notification.FLAG_ONGOING_EVENT or Notification.FLAG_NO_CLEAR or

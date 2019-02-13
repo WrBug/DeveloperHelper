@@ -99,7 +99,7 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
             override fun onClick(node: HierarchyNode, parentNode: HierarchyNode?) {
                 hierarchyDetailView.visibility = View.VISIBLE
                 hierarchyDetailView.setNode(node, parentNode)
-                LayoutInfoView(context, node).show()
+                LayoutInfoView(context,nodeList, node).show()
             }
 
             override fun onSelectedNodeChanged(node: HierarchyNode, parentNode: HierarchyNode?) {

@@ -12,6 +12,10 @@ android {
     signingConfigs {
         releaseConfig
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.wrbug.developerhelper"
@@ -69,6 +73,7 @@ dependencies {
     implementation project(':mmkv')
     implementation project(':xposedmodule')
     implementation project(':commonwidget')
+    implementation 'de.blox:graphview:0.5.0'
 }
 kapt {
     generateStubs = true

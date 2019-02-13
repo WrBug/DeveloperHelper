@@ -8,7 +8,11 @@ import com.wrbug.developerhelper.commonutil.UiUtils
 import kotlinx.android.synthetic.main.view_layout_info.*
 
 
-class LayoutInfoView(context: Context, private val hierarchyNode: HierarchyNode) : BottomSheetDialog(context) {
+class LayoutInfoView(
+    context: Context,
+    private val nodeList: List<HierarchyNode>?,
+    private val hierarchyNode: HierarchyNode
+) : BottomSheetDialog(context) {
 
     init {
         init()
@@ -19,12 +23,12 @@ class LayoutInfoView(context: Context, private val hierarchyNode: HierarchyNode)
         setContentView(R.layout.view_layout_info)
         val layoutParams = layoutInfoContainer.layoutParams
         layoutParams.height = UiUtils.getDeviceHeight(context) / 2
-        layoutInfoContainer.layoutParams=layoutParams
+        layoutInfoContainer.layoutParams = layoutParams
         initViewpager()
     }
 
     private fun initViewpager() {
-        val adapter = LayoutInfoViewPagerAdapter(context, hierarchyNode)
+        val adapter = LayoutInfoViewPagerAdapter(context,nodeList, hierarchyNode)
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
     }
