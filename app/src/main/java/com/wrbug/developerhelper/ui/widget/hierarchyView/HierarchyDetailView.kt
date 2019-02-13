@@ -9,7 +9,6 @@ import android.widget.FrameLayout
 import com.wrbug.developerhelper.model.entity.HierarchyNode
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.ui.widget.helper.CanvasHelper
-import com.wrbug.developerhelper.ui.widget.layoutinfoview.LayoutInfoView
 import com.wrbug.developerhelper.commonutil.UiUtils
 
 class HierarchyDetailView : FrameLayout {

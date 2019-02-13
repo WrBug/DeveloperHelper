@@ -23,26 +23,41 @@ import org.jetbrains.anko.uiThread
 class LayoutInfoViewPagerAdapter(
     val context: Context,
     private val nodeList: List<HierarchyNode>?,
-    private val hierarchyNode: HierarchyNode
+    private var hierarchyNode: HierarchyNode
 ) : PagerAdapter() {
-
     private val tabList = arrayListOf<String>()
     private val viewList = arrayListOf<View>()
     private val infoAdapter: InfoAdapter = InfoAdapter(context)
     private lateinit var graphView: GraphView
+    private val boundsInfoView = BoundsInfoView(context)
+    private var onNodeChangedListener: OnNodeChangedListener? = null
 
     init {
         initInfoTab()
         initLayoutTable()
-        initHierarchyTab()
+        initViewTreeTab()
     }
 
-    private fun initHierarchyTab() {
-        tabList.add("Hierarchy")
+    fun setOnNodeChangedListener(listener: OnNodeChangedListener) {
+        onNodeChangedListener = listener
+    }
+
+    private fun initViewTreeTab() {
+        tabList.add("ViewTree")
         graphView =
                 LayoutInflater.from(context).inflate(R.layout.layout_hierarchy_tree, null) as GraphView
-        val adapter = HierarchyGraphAdapter(context, R.layout.item_tree_node_view)
+        val adapter = ViewTreeGraphAdapter(context, R.layout.item_tree_node_view)
         graphView.adapter = adapter
+        adapter.setOnItemClickListener(object : ViewTreeGraphAdapter.OnItemClickListener {
+            override fun onClick(node: ViewTreeGraphNode, position: Int) {
+                hierarchyNode = node.node
+                resetInfoTab()
+                resetLayoutTable()
+                resetViewTreeTab(node)
+                onNodeChangedListener?.onChanged(node.node, node.parent?.node)
+            }
+
+        })
         val configuration = BuchheimWalkerConfiguration.Builder()
             .setSiblingSeparation(100)
             .setLevelSeparation(300)
@@ -60,31 +75,56 @@ class LayoutInfoViewPagerAdapter(
         }
     }
 
+    private fun resetViewTreeTab(node: ViewTreeGraphNode) {
+        graphView.adapter.graph = graphView.adapter.graph?.apply {
+            for (edge in nodes) {
+                (edge?.data as ViewTreeGraphNode?)?.apply {
+                    selected = this == node
+                    childSelected = false
+                    if (selected) {
+                        parent?.childSelected = true
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun resetInfoTab() {
+        infoAdapter.setItems(setInfo())
+    }
+
+    private fun resetLayoutTable() {
+        boundsInfoView.bounds = hierarchyNode.screenBounds
+    }
 
     private fun initGraph(nodeList: List<HierarchyNode>?, parentNode: Node?, graph: Graph) {
         nodeList?.run {
+            val map = LinkedHashMap<HierarchyNode, Node>()
             for (hNode in this) {
-                val graphNode = HierarchyGraphNode(hNode)
+                val graphNode = ViewTreeGraphNode(hNode)
                 val node = Node(graphNode)
                 if (hNode == hierarchyNode) {
                     graphNode.selected = true
                 }
                 parentNode?.let {
                     graph.addEdge(parentNode, node)
-                    graphNode.parent = (it.data as HierarchyGraphNode?)?.apply {
+                    graphNode.parent = (it.data as ViewTreeGraphNode?)?.apply {
                         if (graphNode.selected) {
                             childSelected = true
                         }
                     }
                 }
-                initGraph(hNode.childId, node, graph)
+                map[hNode] = node
+            }
+            for ((k, v) in map) {
+                initGraph(k.childId, v, graph)
             }
         }
     }
 
     private fun initLayoutTable() {
         tabList.add("Layout")
-        val boundsInfoView = BoundsInfoView(context)
         boundsInfoView.bounds = hierarchyNode.screenBounds
         viewList.add(boundsInfoView)
     }
@@ -93,38 +133,39 @@ class LayoutInfoViewPagerAdapter(
         tabList.add("Info")
         val recyclerView = RecyclerView(context)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val list = with(hierarchyNode) {
-            val list = arrayListOf<ItemInfo>()
-            list.add(ItemInfo("Package", packageName))
-            list.add(ItemInfo("Widget", widget))
-            list.add(
-                ItemInfo(
-                    "Id",
-                    "${resourceId.replace(packageName, "app")}[${idHex?.replace("#", "0x") ?: "NO_ID"}]"
-                )
-            )
-            if (!text.isEmpty()) {
-                list.add(ItemInfo("Text", text))
-            }
-            list.add(ItemInfo("Enable", enabled))
-            list.add(ItemInfo("Clickable", clickable))
-            list.add(ItemInfo("Checkable", checkable))
-            list.add(ItemInfo("Checked", checked))
-
-            list.add(ItemInfo("Focusable", focusable))
-            list.add(ItemInfo("Focused", focused))
-            list.add(ItemInfo("LongClickable", longClickable))
-            list.add(ItemInfo("Bounds", screenBounds ?: ""))
-            list.add(ItemInfo("Password", password))
-            list.add(ItemInfo("Selected", selected))
-            list
-        }
-
+        val list = setInfo()
         recyclerView.adapter = infoAdapter
         val params = ViewPager.LayoutParams()
         infoAdapter.setItems(list)
         recyclerView.layoutParams = params
         viewList.add(recyclerView)
+    }
+
+    private fun setInfo() = with(hierarchyNode) {
+        val list = arrayListOf<ItemInfo>()
+        list.add(ItemInfo("Package", packageName))
+        list.add(ItemInfo("Widget", widget))
+        list.add(
+            ItemInfo(
+                "Id",
+                "${resourceId.replace(packageName, "app")}[${idHex?.replace("#", "0x") ?: "NO_ID"}]"
+            )
+        )
+        if (!text.isEmpty()) {
+            list.add(ItemInfo("Text", text))
+        }
+        list.add(ItemInfo("Enable", enabled))
+        list.add(ItemInfo("Clickable", clickable))
+        list.add(ItemInfo("Checkable", checkable))
+        list.add(ItemInfo("Checked", checked))
+
+        list.add(ItemInfo("Focusable", focusable))
+        list.add(ItemInfo("Focused", focused))
+        list.add(ItemInfo("LongClickable", longClickable))
+        list.add(ItemInfo("Bounds", screenBounds ?: ""))
+        list.add(ItemInfo("Password", password))
+        list.add(ItemInfo("Selected", selected))
+        list
     }
 
 

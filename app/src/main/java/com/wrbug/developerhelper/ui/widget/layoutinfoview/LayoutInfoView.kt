@@ -13,11 +13,15 @@ class LayoutInfoView(
     private val nodeList: List<HierarchyNode>?,
     private val hierarchyNode: HierarchyNode
 ) : BottomSheetDialog(context) {
+    val adapter = LayoutInfoViewPagerAdapter(context, nodeList, hierarchyNode)
 
     init {
         init()
     }
 
+    fun setOnNodeChangedListener(listener: OnNodeChangedListener) {
+        adapter.setOnNodeChangedListener(listener)
+    }
 
     private fun init() {
         setContentView(R.layout.view_layout_info)
@@ -28,7 +32,6 @@ class LayoutInfoView(
     }
 
     private fun initViewpager() {
-        val adapter = LayoutInfoViewPagerAdapter(context,nodeList, hierarchyNode)
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
     }

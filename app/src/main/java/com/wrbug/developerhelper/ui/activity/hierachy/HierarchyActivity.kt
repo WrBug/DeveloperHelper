@@ -19,10 +19,11 @@ import com.wrbug.developerhelper.commonutil.JsonHelper
 import com.wrbug.developerhelper.constant.ReceiverConstant.ACTION_FINISH_HIERACHY_Activity
 import com.wrbug.developerhelper.service.FloatWindowService
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.LayoutInfoView
+import com.wrbug.developerhelper.ui.widget.layoutinfoview.OnNodeChangedListener
 import kotlinx.android.synthetic.main.activity_hierarchy.*
 import java.lang.ref.WeakReference
 
-class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
+class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener, OnNodeChangedListener {
 
 
     private var apkInfo: ApkInfo? = null
@@ -99,7 +100,9 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
             override fun onClick(node: HierarchyNode, parentNode: HierarchyNode?) {
                 hierarchyDetailView.visibility = View.VISIBLE
                 hierarchyDetailView.setNode(node, parentNode)
-                LayoutInfoView(context,nodeList, node).show()
+                val layoutInfoView = LayoutInfoView(context, nodeList, node)
+                layoutInfoView.setOnNodeChangedListener(this@HierarchyActivity)
+                layoutInfoView.show()
             }
 
             override fun onSelectedNodeChanged(node: HierarchyNode, parentNode: HierarchyNode?) {
@@ -107,6 +110,10 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
                 hierarchyDetailView.setNode(node, parentNode)
             }
         })
+    }
+
+    override fun onChanged(node: HierarchyNode, parentNode: HierarchyNode?) {
+        hierarchyDetailView.setNode(node, parentNode)
     }
 
     override fun onDestroy() {
