@@ -18,7 +18,7 @@ class HierarchyGraphView(context: Context, attributes: AttributeSet?) : GraphVie
         parent.requestDisallowInterceptTouchEvent(true)
         if (ev?.action == MotionEvent.ACTION_DOWN) {
             if (System.currentTimeMillis() - clickTime < 200) {
-                zoomIn()
+                zoomBy(1.8F, true)
                 clickTime = 0
             }
             clickTime = System.currentTimeMillis()
