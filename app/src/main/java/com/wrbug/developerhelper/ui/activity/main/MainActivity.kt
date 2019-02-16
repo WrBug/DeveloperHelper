@@ -50,7 +50,6 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
         setupActionBar(R.id.toolbar) {
 
         }
-
         ShellManager.openAccessibilityService()
         initListener()
         val filter = IntentFilter(ReceiverConstant.ACTION_ACCESSIBILITY_SERVICE_STATUS_CHANGED)
@@ -149,7 +148,7 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
             ClipboardUtils.saveClipboardText(this, "627962572")
             showSnack(R.string.copy_success)
         }
-        .setNeutralButton("检查更新") { _, _ ->
+        .setNeutralButton(getString(R.string.check_update)) { _, _ ->
             checkUpdate(true)
         }
         .create().show()
@@ -160,12 +159,12 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
 
     private fun checkUpdate(showSnack: Boolean = false) {
         if (showSnack) {
-            showSnack("正在检查新版本...")
+            showSnack(getString(R.string.checking_update))
         }
         UpdateUtils.checkUpdate(object : Callback<VersionInfo> {
             override fun onSuccess(data: VersionInfo) {
                 if (BuildConfig.VERSION_NAME == data.versionName) {
-                    showSnack("暂无新版本")
+                    showSnack(getString(R.string.no_new_version))
                     return
                 }
                 showUpdateDialog(data)
@@ -173,16 +172,16 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
 
             override fun onFailed(msg: String) {
                 if (showSnack) {
-                    showSnack("检查失败...")
+                    showSnack(getString(R.string.check_update_failed))
                 }
             }
         })
     }
 
     private fun showUpdateDialog(data: VersionInfo) = AlertDialog.Builder(this)
-        .setTitle("发现新版本")
+        .setTitle(getString(R.string.find_new_version))
         .setMessage("版本号:${data.versionName}\n更新时间：${data.updateDate}\n大小：${data.size}\n版本说明：\n${data.feature}")
-        .setPositiveButton("下载") { _, _ ->
+        .setPositiveButton(getString(R.string.download)) { _, _ ->
             val intent = Intent(Intent.ACTION_VIEW)
             val uri = Uri.parse(data.downloadUrl)
             intent.data = uri

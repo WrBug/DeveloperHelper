@@ -1,5 +1,7 @@
 package com.wrbug.developerhelper
 
+import android.app.Activity
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import com.elvishew.xlog.LogConfiguration
@@ -13,6 +15,7 @@ import java.io.File
 import java.io.FileOutputStream
 import kotlin.concurrent.thread
 import com.wrbug.developerhelper.commonwidget.flexibletoast.FlexibleToast
+import com.wrbug.developerhelper.ui.activity.main.MainActivity
 
 
 class DeveloperApplication : BaseApp() {
@@ -42,6 +45,43 @@ class DeveloperApplication : BaseApp() {
             DefaultsFactory.createPrinter()
         )
         releaseAssetsFile()
+        registerLifecycle()
+    }
+
+    private fun registerLifecycle() {
+        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+            private var count = 0
+            override fun onActivityPaused(activity: Activity?) {
+
+            }
+
+            override fun onActivityResumed(activity: Activity?) {
+            }
+
+            override fun onActivityStarted(activity: Activity?) {
+                count++
+            }
+
+            override fun onActivityDestroyed(activity: Activity?) {
+            }
+
+            override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
+            }
+
+            override fun onActivityStopped(activity: Activity?) {
+                count--
+                activity?.let {
+                    if (count == 0 && activity is MainActivity) {
+                        activity.finish()
+                    }
+                }
+
+            }
+
+            override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
+            }
+
+        })
     }
 
     private fun registerModule() {

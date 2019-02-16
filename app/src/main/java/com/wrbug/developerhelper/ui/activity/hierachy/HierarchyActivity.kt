@@ -133,6 +133,12 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener, OnNodeChan
             hierarchyDetailView.visibility = View.GONE
             return
         }
+        if (showHierachyView) {
+            showHierachyView = false
+            hierarchyView.visibility = View.GONE
+            showAppInfoDialog()
+            return
+        }
         super.onBackPressed()
     }
 

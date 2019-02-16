@@ -27,7 +27,7 @@ object EnforceUtils {
     }
 
     private fun isBangcle(files: String): Boolean {
-        return files.contains("bangcle")
+        return files.contains("bangcle") || files.contains("SecShell")
     }
 
 

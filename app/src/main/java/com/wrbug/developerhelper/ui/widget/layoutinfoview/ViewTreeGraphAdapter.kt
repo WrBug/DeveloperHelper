@@ -18,6 +18,7 @@ class ViewTreeGraphAdapter(@NonNull val context: Context, @LayoutRes val layoutR
             val node = data as ViewTreeGraphNode
             widgetTv.text = node.node.widget
             cardView.setOnClickListener {
+                widgetTv.text = node.node.widget
                 listener?.onClick(node, position)
             }
             when {
@@ -27,13 +28,6 @@ class ViewTreeGraphAdapter(@NonNull val context: Context, @LayoutRes val layoutR
                     cardView.setCardBackgroundColor(context.resources.getColor(R.color.colorPrimary))
                     if (node.shortName) {
                         widgetTv.text = toShortName(node.node.widget)
-                        cardView.setOnClickListener {
-                            widgetTv.text = node.node.widget
-                            node.shortName = false
-                            cardView.setOnClickListener{
-                                listener?.onClick(node, position)
-                            }
-                        }
                     } else {
                         widgetTv.text = node.node.widget
                     }

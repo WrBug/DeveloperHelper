@@ -36,6 +36,7 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
             mHierarchyNodes.addAll(it)
         }
         nodeMap.putAll(DeveloperHelperAccessibilityService.nodeMap)
+        visibility=View.VISIBLE
         invalidate()
     }
 

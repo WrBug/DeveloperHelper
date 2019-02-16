@@ -83,4 +83,10 @@
     <string name="shell_app_manager">脱壳应用管理</string>
     <string name="remove_item">移除该项</string>
     <string name="open_xposed_first">请先开启Xposed设置</string>
+    <string name="check_update">检查更新</string>
+    <string name="checking_update">正在检查新版本...</string>
+    <string name="no_new_version">暂无新版本</string>
+    <string name="check_update_failed">检查失败...</string>
+    <string name="find_new_version">发现新版本</string>
+    <string name="download">下载</string>
 </resources>

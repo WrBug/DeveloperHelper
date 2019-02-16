@@ -56,7 +56,6 @@ class LayoutInfoViewPagerAdapter(
                 resetViewTreeTab(node)
                 onNodeChangedListener?.onChanged(node.node, node.parent?.node)
             }
-
         })
         val configuration = BuchheimWalkerConfiguration.Builder()
             .setSiblingSeparation(100)

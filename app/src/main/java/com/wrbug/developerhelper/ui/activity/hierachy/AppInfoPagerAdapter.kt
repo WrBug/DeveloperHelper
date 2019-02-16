@@ -73,6 +73,7 @@ class AppInfoPagerAdapter(
                 listener?.showHierachyView()
                 dialog.dismissAllowingStateLoss()
             })
+            item.textColor = context.resources.getColor(R.color.colorPrimaryDark)
             itemInfos.add(item)
             itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
             itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
