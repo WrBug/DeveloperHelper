@@ -1,6 +1,7 @@
 package com.wrbug.developerhelper
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,6 +10,7 @@ import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
 import com.elvishew.xlog.internal.DefaultsFactory
 import com.wrbug.developerhelper.basecommon.BaseApp
+import com.wrbug.developerhelper.basewidgetimport.BaseWidget
 import com.wrbug.developerhelper.commonutil.CommonUtils
 import com.wrbug.developerhelper.mmkv.manager.MMKVManager
 import java.io.File
@@ -36,9 +38,12 @@ class DeveloperApplication : BaseApp() {
         }
     }
 
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+    }
     override fun onCreate() {
         super.onCreate()
-        registerModule()
+        BaseWidget.init(this)
         instance = this
         XLog.init(
             LogConfiguration.Builder().logLevel(LogLevel.ALL).tag("developerHelper.print-->").build(),
@@ -84,10 +89,7 @@ class DeveloperApplication : BaseApp() {
         })
     }
 
-    private fun registerModule() {
-        MMKVManager.register(this)
-        CommonUtils.register(this)
-    }
+
 
     private fun releaseAssetsFile() {
         thread {

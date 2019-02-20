@@ -48,15 +48,10 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     implementation 'com.google.code.gson:gson:2.8.5'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0-alpha02'
     implementation 'com.github.yhaolpz:FloatWindow:1.0.9'
     implementation project(':basecommon')
     kapt "com.android.databinding:compiler:3.1.4"
@@ -69,11 +64,9 @@ dependencies {
     implementation 'com.evrencoskun.library:tableview:0.8.8'
     implementation 'gdut.bsx:share2:0.9.3'
     kapt 'com.google.dagger:dagger-compiler:2.16'
-    implementation project(':commonutil')
-    implementation project(':mmkv')
     implementation project(':xposedmodule')
-    implementation project(':commonwidget')
     implementation 'de.blox:graphview:0.5.0'
+    implementation project(':basewidgetimport')
 }
 kapt {
     generateStubs = true
