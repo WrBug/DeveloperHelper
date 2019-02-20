@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">NetBare</string>
+
+    <string name="start_netbare">启动服务</string>
+    <string name="stop_netbare">停止服务</string>
+
+</resources>
