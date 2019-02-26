@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.model.entity.HierarchyNode
+import com.wrbug.developerhelper.basecommon.entry.HierarchyNode
 import com.wrbug.developerhelper.ui.widget.boundsinfoview.BoundsInfoView
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.ItemInfo

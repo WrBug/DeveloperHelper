@@ -23,7 +23,7 @@ class SettingItemView : FrameLayout {
             field = value
             switcher.isChecked = checked
         }
-
+    private var switcherMaskViewClicked = false
 
     constructor(context: Context) : super(context) {
         initView()
@@ -59,7 +59,14 @@ class SettingItemView : FrameLayout {
 
     override fun setOnClickListener(l: OnClickListener?) {
         super.setOnClickListener(l)
-        switcherMaskView.setOnClickListener(l)
+        if (switcherMaskViewClicked.not()) {
+            switcherMaskView.setOnClickListener(l)
+        }
+    }
+
+    fun setOnSwitcherClickListener(listener: View.() -> Unit) {
+        switcherMaskViewClicked = true
+        switcherMaskView.setOnClickListener(listener)
     }
 
     fun isChecked() = switcher.isChecked

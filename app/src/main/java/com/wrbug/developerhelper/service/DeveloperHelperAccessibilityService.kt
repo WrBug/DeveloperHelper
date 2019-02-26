@@ -17,7 +17,7 @@ import com.wrbug.developerhelper.commonutil.AppInfoManager
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
 import com.wrbug.developerhelper.constant.ReceiverConstant
-import com.wrbug.developerhelper.model.entity.HierarchyNode
+import com.wrbug.developerhelper.basecommon.entry.HierarchyNode
 import com.wrbug.developerhelper.commonutil.shell.Callback
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.hierachy.HierarchyActivity

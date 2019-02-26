@@ -15,14 +15,16 @@
  */
 package com.wrbug.developerhelper.basecommon
 
+import android.content.Intent
 import androidx.annotation.IdRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
+import com.wrbug.developerhelper.basecommon.activityresultcallback.ActResultRequest
+import com.wrbug.developerhelper.basecommon.activityresultcallback.ActivityResultCallback
 
 /**
  * Various extension functions for AppCompatActivity.
@@ -49,4 +51,17 @@ private inline fun FragmentManager.transact(action: FragmentTransaction.() -> Un
     }.commit()
 }
 
+fun AppCompatActivity.startActivityForResult(intent: Intent, callback: ActivityResultCallback) {
+    ActResultRequest(this).startForResult(intent, callback)
+}
 
+fun AppCompatActivity.startActivityForResultOk(
+    intent: Intent,
+    action: Intent.() -> Unit
+) {
+    ActResultRequest(this).startForResult(intent, object : ActivityResultCallback() {
+        override fun onActivityResultOk(data: Intent) {
+            action(data)
+        }
+    })
+}

@@ -156,7 +156,7 @@ public class JKS {
                     pw.flush();
                     NetBareLog.i("Generate keystore succeed.");
                 } catch (Exception e) {
-                    NetBareLog.e(e.getMessage());
+                    e.printStackTrace();
                 } finally {
                     NetBareUtils.closeQuietly(os);
                     NetBareUtils.closeQuietly(sw);

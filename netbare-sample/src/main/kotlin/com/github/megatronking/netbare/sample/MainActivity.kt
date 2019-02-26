@@ -12,6 +12,7 @@ import com.github.megatronking.netbare.http.HttpInjectInterceptor
 import com.github.megatronking.netbare.http.HttpInterceptorFactory
 import com.github.megatronking.netbare.http.HttpVirtualGatewayFactory
 import com.github.megatronking.netbare.ssl.JKS
+import com.wrbug.developerhelper.basecommon.startActivityForResultOk
 import java.io.IOException
 
 class MainActivity : AppCompatActivity(), NetBareListener {
@@ -71,7 +72,9 @@ class MainActivity : AppCompatActivity(), NetBareListener {
         // 配置VPN
         val intent = NetBare.get().prepare()
         if (intent != null) {
-            startActivityForResult(intent, REQUEST_CODE_PREPARE)
+            startActivityForResultOk(intent){
+                prepareNetBare()
+            }
             return
         }
         // 启动NetBare服务
@@ -79,15 +82,8 @@ class MainActivity : AppCompatActivity(), NetBareListener {
             NetBareConfig.defaultHttpConfig(
                 JKS.getJks(),
                 interceptorFactories()
-            )
+            ).newBuilder().dumpUid(true).build()
         )
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_PREPARE) {
-            prepareNetBare()
-        }
     }
 
     private fun interceptorFactories(): List<HttpInterceptorFactory> {

@@ -9,12 +9,10 @@ import android.view.MenuItem
 import android.widget.CompoundButton
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import com.wrbug.developerhelper.util.NetBarStarter
 import com.wrbug.developerhelper.BuildConfig
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.BaseVMActivity
-import com.wrbug.developerhelper.basecommon.obtainViewModel
-import com.wrbug.developerhelper.basecommon.setupActionBar
-import com.wrbug.developerhelper.basecommon.showToast
+import com.wrbug.developerhelper.basecommon.*
 import com.wrbug.developerhelper.commonutil.ClipboardUtils
 import com.wrbug.developerhelper.commonutil.shell.Callback
 import com.wrbug.developerhelper.constant.ReceiverConstant
@@ -74,6 +72,16 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
             }
             startActivity(Intent(this, XposedSettingActivity::class.java))
         }
+        captureSettingView.setOnSwitcherClickListener {
+            val intent = NetBarStarter.prepareVpn()
+            if (intent == null) {
+                NetBarStarter.toggle(this@MainActivity)
+                return@setOnSwitcherClickListener
+            }
+            startActivityForResultOk(intent) {
+                NetBarStarter.toggle(this@MainActivity)
+            }
+        }
     }
 
     override fun getViewModel(): MainViewModel {
@@ -107,6 +115,10 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
 
         fun onRootClick() {
             vm.toggleRootPermission()
+        }
+
+        fun onCaptureClick() {
+            showSnack("hehehe")
         }
     }
 

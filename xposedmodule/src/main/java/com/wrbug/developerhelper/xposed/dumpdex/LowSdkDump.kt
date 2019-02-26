@@ -9,6 +9,7 @@ import com.wrbug.developerhelper.xposed.dumpdex.DeviceUtils
 import com.wrbug.developerhelper.xposed.util.FileUtils
 import com.wrbug.developerhelper.xposed.dumpdex.Native
 import com.wrbug.developerhelper.xposed.dumpdex.PackerInfo
+import com.wrbug.developerhelper.xposed.util.ApplicationHelper
 import com.wrbug.developerhelper.xposed.xposedLog
 
 import java.io.File
@@ -39,23 +40,10 @@ object LowSdkDump {
         if (type == PackerInfo.Type.BAI_DU) {
             return
         }
-        XposedHelpers.findAndHookMethod(
-            "android.app.Instrumentation",
-            lpparam.classLoader,
-            "newApplication",
-            ClassLoader::class.java,
-            String::class.java,
-            Context::class.java,
-            object : XC_MethodHook() {
-                @Throws(Throwable::class)
-                override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam?) {
-                    param?.apply {
-                        log("Application=$result")
-                        dump(lpparam.packageName, result.javaClass)
-                        attachBaseContextHook(lpparam, result as Application)
-                    }
-                }
-            })
+        ApplicationHelper.hook(lpparam) {
+            dump(lpparam.packageName, this.javaClass)
+            attachBaseContextHook(lpparam, this.classLoader)
+        }
 
         XposedHelpers.findClassIfExists(type.application, lpparam.classLoader)?.apply {
             var list = ArrayList<String>()
@@ -75,7 +63,7 @@ object LowSdkDump {
                                     if (arg is Context) {
                                         "hook $arg".xposedLog()
                                         dump(lpparam.packageName, arg.javaClass)
-                                        attachBaseContextHook(lpparam, arg)
+                                        attachBaseContextHook(lpparam, arg.classLoader)
                                     }
                                 }
                             }
@@ -101,13 +89,10 @@ object LowSdkDump {
     }
 
 
-    private fun attachBaseContextHook(lpparam: XC_LoadPackage.LoadPackageParam, context: Context) {
-        val classLoader = context.classLoader
-        XposedHelpers.findAndHookMethod(
+    private fun attachBaseContextHook(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoader) {
+        XposedBridge.hookAllMethods(
             ClassLoader::class.java,
             "loadClass",
-            String::class.java,
-            Boolean::class.javaPrimitiveType,
             object : XC_MethodHook() {
                 @Throws(Throwable::class)
                 override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam?) {
@@ -120,8 +105,6 @@ object LowSdkDump {
             "java.lang.ClassLoader",
             classLoader,
             "loadClass",
-            String::class.java,
-            Boolean::class.javaPrimitiveType,
             object : XC_MethodHook() {
                 @Throws(Throwable::class)
                 override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam?) {

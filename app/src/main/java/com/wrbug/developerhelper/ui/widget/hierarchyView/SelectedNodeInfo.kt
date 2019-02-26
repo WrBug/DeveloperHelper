@@ -1,7 +1,6 @@
 package com.wrbug.developerhelper.ui.widget.hierarchyView
 
-import android.graphics.Rect
-import com.wrbug.developerhelper.model.entity.HierarchyNode
+import com.wrbug.developerhelper.basecommon.entry.HierarchyNode
 
 class SelectedNodeInfo(var selectedNode: HierarchyNode, var parentNode: HierarchyNode?) {
 
