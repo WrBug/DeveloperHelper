@@ -11,10 +11,12 @@ import com.wrbug.developerhelper.ipc.processshare.ProcessDataManager
 import com.wrbug.developerhelper.xposed.saveToFile
 import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import org.jetbrains.anko.doAsync
 import java.io.File
+import java.lang.Exception
 
 object DeveloperHelper {
     fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
@@ -63,10 +65,14 @@ object DeveloperHelper {
                     if (result) {
                         "设备已root,开始释放so文件".xposedLog()
                         doAsync {
-                            initProcessDataDir()
-                            saveSo(activity, "armeabi", Native.SO_FILE)
-                            saveSo(activity, "armeabi-v7a", Native.SO_FILE_V7a)
-                            saveSo(activity, "arm64-v8a", Native.SO_FILE_V8a)
+                            try {
+                                initProcessDataDir()
+                                saveSo(activity, "armeabi", Native.SO_FILE)
+                                saveSo(activity, "armeabi-v7a", Native.SO_FILE_V7a)
+                                saveSo(activity, "arm64-v8a", Native.SO_FILE_V8a)
+                            } catch (e: Exception) {
+                                XposedBridge.log(e)
+                            }
                         }
 
                     }

@@ -57,50 +57,28 @@ object FileUtils {
     }
 
 
-    // 根据文件后缀名获得对应的MIME类型。
-    private fun getMimeType(filePath: String?): String {
-        val mmr = MediaMetadataRetriever()
-        var mime = "*/*"
-        if (filePath != null) {
-            try {
-                mmr.setDataSource(filePath)
-                mime = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE)
-            } catch (e: IllegalStateException) {
-                return mime
-            } catch (e: IllegalArgumentException) {
-                return mime
-            } catch (e: RuntimeException) {
-                return mime
-            }
-
-        }
-        return mime
-    }
-
     fun readFile(file: File): String {
-        val builder = StringBuilder()
+        var inputStream: FileInputStream? = null
         try {
-            val fr = FileReader(file)
-            var ch = fr.read()
-            while (ch != -1) {
-                builder.append(ch.toChar())
-                ch = fr.read()
-            }
+            inputStream = FileInputStream(file)
+            val bytes = ByteArray(inputStream.available())
+            inputStream.read(bytes)
+            return String(bytes)
         } catch (e: IOException) {
+        } finally {
+            inputStream?.close()
         }
-
-        return builder.toString()
+        return ""
     }
 
     fun whiteFile(file: File, data: String) {
+        var outputStream: FileOutputStream? = null
         try {
-            if (!file.exists()) {
-                file.createNewFile()
-            }
-            val fw = FileWriter(file)
-            fw.write(data)
-            fw.flush()
+            outputStream = FileOutputStream(file)
+            outputStream.write(data.toByteArray())
         } catch (e: IOException) {
+        }finally {
+            outputStream?.close()
         }
 
     }
