@@ -1,10 +1,10 @@
-package com.wrbug.developerhelper.xposed.processshare
+package com.wrbug.developerhelper.ipc.processshare
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.jaredrummler.android.shell.Shell
-import com.wrbug.developerhelper.commonutil.*
-import com.wrbug.developerhelper.xposed.util.FileUtils
+import com.wrbug.developerhelper.commonutil.Base64
+import com.wrbug.developerhelper.commonutil.FileUtils
 import java.io.File
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method

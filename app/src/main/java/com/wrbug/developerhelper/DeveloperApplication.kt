@@ -10,9 +10,7 @@ import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
 import com.elvishew.xlog.internal.DefaultsFactory
 import com.wrbug.developerhelper.basecommon.BaseApp
-import com.wrbug.developerhelper.basewidgetimport.BaseWidget
-import com.wrbug.developerhelper.commonutil.CommonUtils
-import com.wrbug.developerhelper.mmkv.manager.MMKVManager
+import com.wrbug.developerhelper.basewidgetimport.BaseModule
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.concurrent.thread
@@ -43,7 +41,7 @@ class DeveloperApplication : BaseApp() {
     }
     override fun onCreate() {
         super.onCreate()
-        BaseWidget.init(this)
+        BaseModule.init(this)
         instance = this
         XLog.init(
             LogConfiguration.Builder().logLevel(LogLevel.ALL).tag("developerHelper.print-->").build(),

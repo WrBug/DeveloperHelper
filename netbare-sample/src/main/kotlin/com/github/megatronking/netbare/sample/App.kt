@@ -1,9 +1,7 @@
 package com.github.megatronking.netbare.sample
 
 import android.app.Application
-import com.github.megatronking.netbare.NetBare
-import com.github.megatronking.netbare.ssl.JKS
-import com.wrbug.developerhelper.basewidgetimport.BaseWidget
+import com.wrbug.developerhelper.basewidgetimport.BaseModule
 
 class App : Application() {
 
@@ -20,7 +18,7 @@ class App : Application() {
         super.onCreate()
         sInstance = this
         // 创建自签证书
-        BaseWidget.init(this)
+        BaseModule.init(this)
     }
 
 

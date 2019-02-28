@@ -1,4 +1,4 @@
-package com.wrbug.developerhelper.xposed.processshare
+package com.wrbug.developerhelper.ipc.processshare
 
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy

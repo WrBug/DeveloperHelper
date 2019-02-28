@@ -1,16 +1,13 @@
 package com.wrbug.developerhelper.xposed.developerhelper
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.Toast
 import com.jaredrummler.android.shell.Shell
-import com.wrbug.developerhelper.basecommon.showToast
-import com.wrbug.developerhelper.xposed.processshare.DumpDexListProcessData
-import com.wrbug.developerhelper.xposed.processshare.ProcessDataManager
+import com.wrbug.developerhelper.ipc.processshare.DumpDexListProcessData
+import com.wrbug.developerhelper.ipc.processshare.ProcessDataManager
 import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge

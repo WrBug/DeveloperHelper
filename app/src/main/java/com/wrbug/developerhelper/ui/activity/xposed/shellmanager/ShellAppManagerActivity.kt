@@ -10,8 +10,8 @@ import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.basecommon.setupActionBar
 import com.wrbug.developerhelper.commonutil.AppInfoManager
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
-import com.wrbug.developerhelper.xposed.processshare.DumpDexListProcessData
-import com.wrbug.developerhelper.xposed.processshare.ProcessDataManager
+import com.wrbug.developerhelper.ipc.processshare.DumpDexListProcessData
+import com.wrbug.developerhelper.ipc.processshare.ProcessDataManager
 import kotlinx.android.synthetic.main.activity_shell_app_manager.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread

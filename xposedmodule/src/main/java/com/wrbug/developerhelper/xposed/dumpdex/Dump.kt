@@ -2,8 +2,8 @@ package com.wrbug.developerhelper.xposed.dumpdex
 
 import android.os.Build
 import android.os.Process
-import com.wrbug.developerhelper.xposed.processshare.DumpDexListProcessData
-import com.wrbug.developerhelper.xposed.processshare.ProcessDataManager
+import com.wrbug.developerhelper.ipc.processshare.DumpDexListProcessData
+import com.wrbug.developerhelper.ipc.processshare.ProcessDataManager
 import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage

@@ -2,8 +2,10 @@ package com.wrbug.developerhelper.util
 
 import android.net.Uri
 import android.os.Environment
+import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
-import com.wrbug.developerhelper.commonutil.zip
+import com.wrbug.developerhelper.commonutil.toUri
+import com.wrbug.developerhelper.xposed.developerhelper.DeveloperHelper
 import java.io.File
 
 object BackupUtils {
@@ -18,7 +20,7 @@ object BackupUtils {
     fun backupApk(packageName: String, apkPath: String, fileName: String): Uri? {
         val apkDir = File(backupDir, "apks/$packageName/$fileName")
         if (ShellManager.cpFile(apkPath, apkDir.absolutePath)) {
-            return apkDir.toUri()
+            return apkDir.toUri(BaseApp.instance)
         }
         return null
     }

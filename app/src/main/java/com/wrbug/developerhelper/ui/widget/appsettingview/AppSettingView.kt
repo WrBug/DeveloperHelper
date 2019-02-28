@@ -22,7 +22,7 @@ import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.commonutil.zip
 import com.wrbug.developerhelper.util.BackupUtils
-import com.wrbug.developerhelper.util.toUri
+import com.wrbug.developerhelper.commonutil.toUri
 import gdut.bsx.share2.Share2
 import gdut.bsx.share2.ShareContentType
 import org.jetbrains.anko.doAsync
@@ -102,7 +102,7 @@ class AppSettingView : ScrollView {
                 if (ShellManager.cpFile(dexDir, dir.absolutePath)) {
                     val zipFile = File(context.externalCacheDir, "${apkInfo?.getAppName() ?: ""}-dex.zip")
                     dir.zip(zipFile)
-                    val uri = zipFile.toUri()
+                    val uri = zipFile.toUri(context)
                     if (uri == null) {
                         showToast(R.string.export_failed)
                         return@doAsync
@@ -209,7 +209,7 @@ class AppSettingView : ScrollView {
                         override fun granted() {
                             val zipFile = File(context.externalCacheDir, "${apkInfo?.getAppName() ?: ""}-data.zip")
                             backupAppData.zip(zipFile)
-                            val uri = zipFile.toUri()
+                            val uri = zipFile.toUri(context)
                             if (uri == null) {
                                 showToast(context.getString(R.string.share_failed))
                                 return

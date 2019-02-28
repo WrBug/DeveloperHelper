@@ -11,8 +11,8 @@ import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.ui.widget.bottommenu.BottomMenu
 import com.wrbug.developerhelper.ui.widget.bottommenu.OnItemClickListener
-import com.wrbug.developerhelper.xposed.processshare.DumpDexListProcessData
-import com.wrbug.developerhelper.xposed.processshare.ProcessDataManager
+import com.wrbug.developerhelper.ipc.processshare.DumpDexListProcessData
+import com.wrbug.developerhelper.ipc.processshare.ProcessDataManager
 
 class ShellAppListAdapter(val context: Context) : RecyclerView.Adapter<ShellAppListAdapter.ViewHolder>() {
     private val list = ArrayList<ApkInfo>()

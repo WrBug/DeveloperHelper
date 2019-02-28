@@ -1,4 +1,4 @@
-package com.wrbug.developerhelper.xposed.processshare
+package com.wrbug.developerhelper.ipc.processshare
 
 interface GlobalConfigProcessData : ProcessData {
     @DefaultValue("true")

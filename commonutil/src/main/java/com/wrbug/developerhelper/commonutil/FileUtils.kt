@@ -1,14 +1,10 @@
-package com.wrbug.developerhelper.util
+package com.wrbug.developerhelper.commonutil
 
+import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import androidx.core.content.FileProvider
-import com.wrbug.developerhelper.basecommon.BaseApp
-import org.dom4j.Document
-import org.dom4j.io.OutputFormat
-import org.dom4j.io.XMLWriter
-
 import java.io.*
 
 
@@ -16,6 +12,17 @@ import java.io.*
  * Created by wrbug on 2017/8/23.
  */
 object FileUtils {
+
+
+    fun writeByteToFile(data: ByteArray, path: String) {
+        try {
+            val localFileOutputStream = FileOutputStream(path)
+            localFileOutputStream.write(data)
+            localFileOutputStream.close()
+        } catch (e: Exception) {
+        }
+    }
+
 
     fun inputstreamtofile(ins: InputStream, file: File) {
         try {
@@ -32,21 +39,6 @@ object FileUtils {
 
     }
 
-
-    fun whiteXml(file: File, document: Document) {
-        try {
-            if (!file.exists()) {
-                file.createNewFile()
-            }
-            val format = OutputFormat.createPrettyPrint()
-            format.encoding = "utf-8"
-            val writer = XMLWriter(OutputStreamWriter(FileOutputStream(file), "utf-8"), format)
-            writer.write(document)
-            writer.close()
-        } catch (e: IOException) {
-        }
-
-    }
 
     fun inputStream2String(ins: InputStream): String {
         val out = StringBuffer()
@@ -85,11 +77,39 @@ object FileUtils {
         return mime
     }
 
+    fun readFile(file: File): String {
+        val builder = StringBuilder()
+        try {
+            val fr = FileReader(file)
+            var ch = fr.read()
+            while (ch != -1) {
+                builder.append(ch.toChar())
+                ch = fr.read()
+            }
+        } catch (e: IOException) {
+        }
+
+        return builder.toString()
+    }
+
+    fun whiteFile(file: File, data: String) {
+        try {
+            if (!file.exists()) {
+                file.createNewFile()
+            }
+            val fw = FileWriter(file)
+            fw.write(data)
+            fw.flush()
+        } catch (e: IOException) {
+        }
+
+    }
 }
 
-fun File.toUri(): Uri? {
+
+fun File.toUri(context: Context): Uri? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        FileProvider.getUriForFile(BaseApp.instance, "com.wrbug.developerhelper.fileprovider", this)
+        FileProvider.getUriForFile(context, "com.wrbug.developerhelper.fileprovider", this)
     } else {
         Uri.fromFile(this)
     }

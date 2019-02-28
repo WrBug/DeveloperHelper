@@ -1,1 +1,1 @@
-include ':app', ':basecommon', ':commonutil', ':mmkv', ':xposedmodule', ':commonwidget', ':netbare-core', ':netbare-injector', ':basewidgetimport', ':netbare-sample'
+include ':app', ':basecommon', ':commonutil', ':mmkv', ':xposedmodule', ':commonwidget', ':netbare-core', ':netbare-injector', ':basemoduleimport', ':netbare-sample', ':ipc'

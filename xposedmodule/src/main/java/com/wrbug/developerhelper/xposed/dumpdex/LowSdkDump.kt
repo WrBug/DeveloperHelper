@@ -1,14 +1,8 @@
 package com.wrbug.developerhelper.xposed.dumpdex
 
-import android.app.Application
-import android.app.Instrumentation
 import android.content.Context
-import com.wrbug.developerhelper.basecommon.showToast
+import com.wrbug.developerhelper.commonutil.FileUtils
 
-import com.wrbug.developerhelper.xposed.dumpdex.DeviceUtils
-import com.wrbug.developerhelper.xposed.util.FileUtils
-import com.wrbug.developerhelper.xposed.dumpdex.Native
-import com.wrbug.developerhelper.xposed.dumpdex.PackerInfo
 import com.wrbug.developerhelper.xposed.util.ApplicationHelper
 import com.wrbug.developerhelper.xposed.xposedLog
 

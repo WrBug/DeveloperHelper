@@ -1,12 +1,12 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.wrbug.developerhelper.xposed.processshare
+package com.wrbug.developerhelper.ipc.processshare
 
-import android.util.ArrayMap
+import androidx.collection.ArrayMap
 import java.lang.reflect.Proxy
 
 object ProcessDataManager {
-   private val map = ArrayMap<Class<*>, Any>()
+    private val map = ArrayMap<Class<*>, Any>()
     fun <T : ProcessData> get(clazz: Class<T>): T {
         if (map.containsKey(clazz)) {
             return map[clazz] as T

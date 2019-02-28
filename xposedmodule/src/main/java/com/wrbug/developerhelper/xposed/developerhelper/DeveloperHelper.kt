@@ -6,8 +6,8 @@ import android.view.View
 import android.widget.CompoundButton
 import com.jaredrummler.android.shell.Shell
 import com.wrbug.developerhelper.xposed.dumpdex.Native
-import com.wrbug.developerhelper.xposed.processshare.GlobalConfigProcessData
-import com.wrbug.developerhelper.xposed.processshare.ProcessDataManager
+import com.wrbug.developerhelper.ipc.processshare.GlobalConfigProcessData
+import com.wrbug.developerhelper.ipc.processshare.ProcessDataManager
 import com.wrbug.developerhelper.xposed.saveToFile
 import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XC_MethodHook
