@@ -20,15 +20,8 @@ fun View.showToast(id: Int) {
 
 
 fun Context.showToast(msg: CharSequence?) {
-    val appHandler = Handler()
-    val flexibleToast = FlexibleToast(this)
-    val builder = FlexibleToast.Builder(this).setGravity(FlexibleToast.GRAVITY_BOTTOM)
-    builder.setSecondText(msg.toString())
-    if (Looper.myLooper() !== Looper.getMainLooper()) {
-        appHandler.post { flexibleToast.toastShow(builder) }
-    } else {
-        flexibleToast.toastShow(builder)
-    }
+    FlexibleToast.toastShow(this, msg.toString())
+
 }
 
 

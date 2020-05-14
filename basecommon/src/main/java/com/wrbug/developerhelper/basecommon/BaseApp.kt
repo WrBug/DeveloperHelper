@@ -12,11 +12,4 @@ abstract class BaseApp : Application() {
         instance = this
     }
 
-
-    abstract fun showToast(msg: String)
-
-    fun showToast(id: Int){
-        showToast(getString(id))
-    }
-
 }

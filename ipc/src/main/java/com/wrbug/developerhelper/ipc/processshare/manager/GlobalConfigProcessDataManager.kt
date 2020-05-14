@@ -1,5 +1,7 @@
 package com.wrbug.developerhelper.ipc.processshare.manager
 
+import com.wrbug.developerhelper.ipc.processshare.GlobalConfigProcessData
+
 
 /**
  *
@@ -9,5 +11,27 @@ package com.wrbug.developerhelper.ipc.processshare.manager
  *  description：
  *
  */
-class GlobalConfigProcessDataManager {
+class GlobalConfigProcessDataManager private constructor() :
+    ProcessDataManager<GlobalConfigProcessData>(), GlobalConfigProcessData {
+    private var isOpen: Boolean? = null
+    override fun isXposedOpen(): Boolean {
+        if (isOpen != null) {
+            return isOpen as Boolean
+        }
+        isOpen = processData?.isXposedOpen()
+        return isOpen ?: false
+    }
+
+    override fun setXposedOpen(open: Boolean) {
+        isOpen = open
+        processData?.setXposedOpen(open)
+    }
+
+    companion object {
+        private val instance = GlobalConfigProcessDataManager()
+        fun isXposedOpen() = instance.isXposedOpen()
+        fun setXposedOpen(open: Boolean){
+            instance.setXposedOpen(open)
+        }
+    }
 }

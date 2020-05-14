@@ -34,7 +34,8 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
         internal var serviceRunning = false
         fun isAccessibilitySettingsOn(): Boolean {
             var accessibilityEnabled = 0
-            val service = "com.wrbug.developerhelper/" + DeveloperHelperAccessibilityService::class.java.canonicalName
+            val service =
+                "com.wrbug.developerhelper/" + DeveloperHelperAccessibilityService::class.java.canonicalName
             try {
                 accessibilityEnabled = Settings.Secure.getInt(
                     BaseApp.instance.applicationContext.contentResolver,
@@ -140,7 +141,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
         }
         for (index in 0 until accessibilityNodeInfo.childCount) {
             val child = accessibilityNodeInfo.getChild(index)
-            if (child.isVisibleToUser.not()) {
+            if (child?.isVisibleToUser != true) {
                 continue
             }
             val screenRect = Rect()

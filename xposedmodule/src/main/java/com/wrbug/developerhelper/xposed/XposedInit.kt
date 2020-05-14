@@ -5,6 +5,7 @@ import com.wrbug.developerhelper.xposed.developerhelper.DeveloperHelper
 import com.wrbug.developerhelper.xposed.dumpdex.Dump
 import com.wrbug.developerhelper.ipc.processshare.GlobalConfigProcessData
 import com.wrbug.developerhelper.ipc.processshare.ProcessDataCreator
+import com.wrbug.developerhelper.ipc.processshare.manager.GlobalConfigProcessDataManager
 import com.wrbug.developerhelper.xposed.util.ApplicationHelper
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XposedBridge
@@ -17,7 +18,6 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  * @since 2018/3/20
  */
 class XposedInit : IXposedHookLoadPackage {
-    var configData: GlobalConfigProcessData? = null
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         val packageName = lpparam.packageName
@@ -26,13 +26,8 @@ class XposedInit : IXposedHookLoadPackage {
             DeveloperHelper.init(lpparam)
             return
         }
-        if (configData == null) {
-            configData = ProcessDataCreator.get(GlobalConfigProcessData::class.java)
-        }
-        if (configData == null) {
-            return
-        }
-        if (configData?.isXposedOpen() == false) {
+
+        if (GlobalConfigProcessDataManager.isXposedOpen()) {
             "xposed已关闭".xposedLog()
             return
         }

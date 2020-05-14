@@ -8,14 +8,12 @@ import android.content.pm.PackageInfo
 import android.graphics.Color
 import android.view.View
 import android.widget.Toast
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.PagerAdapter
 import com.jaredrummler.android.shell.Shell
 import com.wrbug.developerhelper.basecommon.showToast
-import com.wrbug.developerhelper.commonutil.CommonUtils
 import com.wrbug.developerhelper.ipc.processshare.DumpDexListProcessData
 import com.wrbug.developerhelper.ipc.processshare.ProcessDataCreator
 import com.wrbug.developerhelper.ipc.processshare.manager.AppXposedProcessDataManager
+import com.wrbug.developerhelper.ipc.processshare.manager.GlobalConfigProcessDataManager
 import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
@@ -62,10 +60,14 @@ object AppInfoPagerAdapterHook {
         applicationInfo: ApplicationInfo,
         itemInfos: java.util.ArrayList<Any>
     ) {
+        if (GlobalConfigProcessDataManager.isXposedOpen().not()) {
+            return
+        }
         val packageName = packageInfo.packageName
         val id = "appXposed"
+        val context = XposedHelpers.getObjectField(adapter, "context") as? Context
+        val label = context?.packageManager?.getApplicationLabel(applicationInfo)
         val click: View?.() -> Unit = {
-            val label = this?.context?.packageManager?.getApplicationLabel(applicationInfo)
             val status = AppXposedProcessDataManager.isAppXposedOpened(packageName).not()
             AppXposedProcessDataManager.setAppXposedStatus(
                 packageName,
@@ -74,21 +76,21 @@ object AppInfoPagerAdapterHook {
             val info = XposedHelpers.callMethod(adapter, "findItemById", id)
             if (status) {
                 this?.context?.showToast("已开启xposed功能，重启【${label}】后生效")
-                setItemInfo(info, "应用关闭Xposed", "点击关闭")
+                setItemInfo(info, "关闭${label}Xposed功能", "点击关闭")
             } else {
                 this?.context?.showToast("已关闭xposed功能，重启【${label}】后生效")
-                setItemInfo(info, "应用开启Xposed", "点击开启")
+                setItemInfo(info, "开启${label}Xposed功能", "点击开启")
             }
             val infoAdapter =
-                XposedHelpers.getDoubleField(adapter, "adapter") as RecyclerView.Adapter<*>
-            infoAdapter.notifyDataSetChanged()
+                XposedHelpers.getObjectField(adapter, "adapter")
+            XposedHelpers.callMethod(infoAdapter, "notifyDataSetChanged")
         }
 
         if (AppXposedProcessDataManager.isAppXposedOpened(packageName)) {
             itemInfos.add(
                 createItemInfo(
                     id,
-                    "应用关闭Xposed",
+                    "关闭${label}Xposed功能",
                     "点击关闭",
                     Color.parseColor("#0288d1"),
                     click
@@ -98,7 +100,7 @@ object AppInfoPagerAdapterHook {
             itemInfos.add(
                 createItemInfo(
                     id,
-                    "应用开启Xposed",
+                    "开启${label}Xposed功能",
                     "点击开启",
                     Color.parseColor("#0288d1"),
                     click

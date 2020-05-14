@@ -8,6 +8,7 @@ import com.jaredrummler.android.shell.Shell
 import com.wrbug.developerhelper.xposed.dumpdex.Native
 import com.wrbug.developerhelper.ipc.processshare.GlobalConfigProcessData
 import com.wrbug.developerhelper.ipc.processshare.ProcessDataCreator
+import com.wrbug.developerhelper.ipc.processshare.manager.GlobalConfigProcessDataManager
 import com.wrbug.developerhelper.xposed.saveToFile
 import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XC_MethodHook
@@ -34,16 +35,20 @@ object DeveloperHelper {
                 override fun afterHookedMethod(param: MethodHookParam?) {
                     "Main onCreate".xposedLog()
                     val activity = param?.thisObject as Activity
-                    val xposedSettingView = XposedHelpers.getObjectField(activity, "xposedSettingView") as View?
+                    val xposedSettingView =
+                        XposedHelpers.getObjectField(activity, "xposedSettingView") as View?
                     xposedSettingView?.apply {
                         visibility = View.VISIBLE
-                        val configData = ProcessDataCreator.get(GlobalConfigProcessData::class.java)
-                        XposedHelpers.callMethod(this, "setChecked", configData.isXposedOpen())
+                        XposedHelpers.callMethod(
+                            this,
+                            "setChecked",
+                            GlobalConfigProcessDataManager.isXposedOpen()
+                        )
                         XposedHelpers.callMethod(
                             this,
                             "setOnCheckedChangeListener",
                             CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-                                configData.setXposedOpen(isChecked)
+                                GlobalConfigProcessDataManager.setXposedOpen(isChecked)
                             })
                     }
 
@@ -96,7 +101,8 @@ object DeveloperHelper {
         "正在释放$fileName".xposedLog()
         val tmpDir = File("/data/local/tmp")
         val soFile = File(tmpDir, fileName)
-        val inputStream = activity.classLoader.getResource("lib/$libPath/libnativeDump.so").openStream()
+        val inputStream =
+            activity.classLoader.getResource("lib/$libPath/libnativeDump.so").openStream()
         if (inputStream == null) {
             "$libPath/libnativeDump.so 不存在".xposedLog()
             return
@@ -105,7 +111,10 @@ object DeveloperHelper {
         val tmpFile = File(activity.cacheDir, fileName)
         inputStream.saveToFile(tmpFile)
         val commandResult =
-            Shell.SU.run("cp ${tmpFile.absolutePath} ${soFile.absolutePath}", "chmod 777 ${soFile.absolutePath}")
+            Shell.SU.run(
+                "cp ${tmpFile.absolutePath} ${soFile.absolutePath}",
+                "chmod 777 ${soFile.absolutePath}"
+            )
         if (commandResult.isSuccessful) {
             "$fileName 释放成功".xposedLog()
         } else {

@@ -1,6 +1,8 @@
 package com.wrbug.developerhelper.commonwidget.flexibletoast
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +12,34 @@ import android.widget.Toast
 import com.wrbug.developerhelper.commonutil.UiUtils
 import com.wrbug.developerhelper.commonwidget.R
 
-class FlexibleToast(private val mContext: Context) {
+class FlexibleToast private constructor(private val mContext: Context) {
+
+    companion object {
+        const val GRAVITY_BOTTOM = 0
+        const val GRAVITY_CENTER = 1
+        const val GRAVITY_TOP = 2
+        const val TOAST_SHORT = 0
+        const val TOAST_LONG = 1
+        private var instance: FlexibleToast? = null
+        private fun getInstance(context: Context): FlexibleToast {
+            if (instance == null) {
+                instance = FlexibleToast(context.applicationContext)
+            }
+            return instance as FlexibleToast
+
+        }
+
+        fun toastShow(context: Context, msg: String) {
+            val toast = getInstance(context)
+            val builder = Builder(context).setGravity(GRAVITY_BOTTOM)
+            builder.setSecondText(msg)
+            if (Looper.myLooper() != Looper.getMainLooper()) {
+                Handler(Looper.getMainLooper()).post { toast.toastShow(builder) }
+            } else {
+                toast.toastShow(builder)
+            }
+        }
+    }
 
     private val flexibleToast: Toast by lazy {
         Toast(mContext)
@@ -115,15 +144,5 @@ class FlexibleToast(private val mContext: Context) {
             return this
         }
     }
-
-    companion object {
-
-        const val GRAVITY_BOTTOM = 0
-        const val GRAVITY_CENTER = 1
-        const val GRAVITY_TOP = 2
-        const val TOAST_SHORT = 0
-        const val TOAST_LONG = 1
-    }
-
 
 }

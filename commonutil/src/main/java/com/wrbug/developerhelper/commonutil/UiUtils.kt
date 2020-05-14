@@ -12,7 +12,7 @@ fun Dialog.dp2px(dpVal: Float): Int = UiUtils.dp2px(context, dpVal)
 fun View.dp2px(dpVal: Float): Int = UiUtils.dp2px(context, dpVal)
 
 object UiUtils {
-
+    private var statusBarHeight: Int = -1
     fun dp2px(context: Context = CommonUtils.application, dpVal: Float): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
@@ -54,12 +54,16 @@ object UiUtils {
      * 获取状态栏的高度
      */
     fun getStatusHeight(context: Context = CommonUtils.application): Int {
+        if (statusBarHeight != -1) {
+            return statusBarHeight
+        }
         var result: Int? = 10
         val resourceId =
             context.resources?.getIdentifier("status_bar_height", "dimen", "android") ?: 0
         if (resourceId > 0) {
             result = context.resources?.getDimensionPixelOffset(resourceId)
         }
-        return result ?: 0
+        statusBarHeight = result ?: 0
+        return statusBarHeight
     }
 }
