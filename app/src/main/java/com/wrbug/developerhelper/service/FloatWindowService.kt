@@ -55,7 +55,7 @@ class FloatWindowService : Service() {
     override fun onCreate() {
         super.onCreate()
         initReceiver()
-        LayoutInflater.from(this).inflate(R.layout.layout_float_window_button, null)?.let { it ->
+        LayoutInflater.from(this).inflate(R.layout.layout_float_window_button, null)?.let {
             it.setOnClickListener {
                 if (!DeveloperHelperAccessibilityService.isAccessibilitySettingsOn()) {
                     AccessibilityManager.startService(this, object : Callback<Boolean> {
@@ -86,6 +86,20 @@ class FloatWindowService : Service() {
         }
     }
 
+
+    private fun updateNotification() {
+        startForeground(0x10000, notification)
+    }
+
+    private fun updateNotificationContent(text: String) {
+        floatCustomView.setTextViewText(R.id.contentTv, text)
+        updateNotification()
+    }
+
+    private fun updateNotificationWifi(id: Int) {
+        floatCustomView.setImageViewResource(R.id.adbWifiIv, id)
+        updateNotification()
+    }
     private fun initNotification() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -108,20 +122,6 @@ class FloatWindowService : Service() {
         notification = builder.build()
         notification.flags = Notification.FLAG_ONGOING_EVENT or Notification.FLAG_NO_CLEAR or
                 Notification.FLAG_FOREGROUND_SERVICE
-        updateNotification()
-    }
-
-    private fun updateNotification() {
-        startForeground(0x10000, notification)
-    }
-
-    private fun updateNotificationContent(text: String) {
-        floatCustomView.setTextViewText(R.id.contentTv, text)
-        updateNotification()
-    }
-
-    private fun updateNotificationWifi(id: Int) {
-        floatCustomView.setImageViewResource(R.id.adbWifiIv, id)
         updateNotification()
     }
 

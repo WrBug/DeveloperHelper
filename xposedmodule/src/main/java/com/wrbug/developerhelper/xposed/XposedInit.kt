@@ -4,6 +4,7 @@ import com.wrbug.developerhelper.xposed.developerhelper.DeveloperHelper
 import com.wrbug.developerhelper.xposed.dumpdex.Dump
 import com.wrbug.developerhelper.ipc.processshare.GlobalConfigProcessData
 import com.wrbug.developerhelper.ipc.processshare.ProcessDataManager
+import com.wrbug.developerhelper.xposed.util.ApplicationHelper
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -32,6 +33,9 @@ class XposedInit : IXposedHookLoadPackage {
         if (configData?.isXposedOpen() == false) {
             "xposed已关闭".xposedLog()
             return
+        }
+        ApplicationHelper.hook(lpparam) {
+            "hooked ${javaClass.name}".xposedLog()
         }
 //        ViewNode.inject(lpparam)
         Dump.init(lpparam)

@@ -1,6 +1,9 @@
 package com.wrbug.developerhelper.ui.activity.main
 
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -9,23 +12,24 @@ import android.view.MenuItem
 import android.widget.CompoundButton
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
-import com.wrbug.developerhelper.util.NetBarStarter
 import com.wrbug.developerhelper.BuildConfig
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.*
+import com.wrbug.developerhelper.basecommon.BaseVMActivity
+import com.wrbug.developerhelper.basecommon.obtainViewModel
+import com.wrbug.developerhelper.basecommon.setupActionBar
 import com.wrbug.developerhelper.commonutil.ClipboardUtils
 import com.wrbug.developerhelper.commonutil.shell.Callback
+import com.wrbug.developerhelper.commonutil.shell.ShellManager
+import com.wrbug.developerhelper.commonutil.toInt
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.databinding.ActivityMainBinding
+import com.wrbug.developerhelper.model.entity.VersionInfo
 import com.wrbug.developerhelper.service.AccessibilityManager
 import com.wrbug.developerhelper.service.FloatWindowService
-import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.main.viewmodel.MainViewModel
+import com.wrbug.developerhelper.ui.activity.xposed.xposedsetting.XposedSettingActivity
 import com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
 import com.wrbug.developerhelper.util.DeviceUtils
-import com.wrbug.developerhelper.commonutil.toInt
-import com.wrbug.developerhelper.model.entity.VersionInfo
-import com.wrbug.developerhelper.ui.activity.xposed.xposedsetting.XposedSettingActivity
 import com.wrbug.developerhelper.util.UpdateUtils
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -71,16 +75,6 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
                 return@setOnClickListener
             }
             startActivity(Intent(this, XposedSettingActivity::class.java))
-        }
-        captureSettingView.setOnSwitcherClickListener {
-            val intent = NetBarStarter.prepareVpn()
-            if (intent == null) {
-                NetBarStarter.toggle(this@MainActivity)
-                return@setOnSwitcherClickListener
-            }
-            startActivityForResultOk(intent) {
-                NetBarStarter.toggle(this@MainActivity)
-            }
         }
     }
 

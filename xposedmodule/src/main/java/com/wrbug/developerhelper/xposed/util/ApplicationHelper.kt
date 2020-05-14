@@ -11,7 +11,6 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 object ApplicationHelper {
     private val applicationList = ArrayList<Context>()
     private val hookedApplication = ArrayList<Context>()
-    @ExperimentalUnsignedTypes
     fun hook(lpparam: XC_LoadPackage.LoadPackageParam, action: Context.() -> Unit) {
         XposedHelpers.findAndHookMethod(
             "android.content.ContextWrapper",
@@ -27,7 +26,18 @@ object ApplicationHelper {
                 }
             })
         hookNewApplication(lpparam.classLoader, action)
+        hookApplicationConstructors(lpparam.classLoader, action)
+    }
 
+    private fun hookApplicationConstructors(classLoader: ClassLoader, action: Context.() -> Unit) {
+        XposedHelpers.findClassIfExists(Application::class.java.name, classLoader)?.apply {
+            XposedBridge.hookAllConstructors(this, object : XC_MethodHook() {
+                override fun afterHookedMethod(param: MethodHookParam?) {
+                    "Application: ${param?.thisObject} newInstance".xposedLog()
+                    hookApplication(param?.thisObject as Application, action)
+                }
+            })
+        }
     }
 
     private fun hookNewApplication(classLoader: ClassLoader, action: Context.() -> Unit) {
@@ -41,10 +51,10 @@ object ApplicationHelper {
         @Throws(Throwable::class)
         override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam?) {
             "newApplication=${param?.result}".xposedLog()
-            param?.apply {
-                checkContext(result as Context, action)
-                hookNewApplication((result as Context).classLoader, action)
-                hookApplication(result as Context, action)
+            param?.result.apply {
+                checkContext(this as Context, action)
+                hookNewApplication(this.classLoader, action)
+                hookApplication(this, action)
             }
         }
     }

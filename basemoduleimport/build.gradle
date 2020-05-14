@@ -35,8 +35,6 @@ dependencies {
     api project(':commonutil')
     api project(':commonwidget')
     api project(':mmkv')
-    api project(':netbare-core')
-    api project(':netbare-injector')
     api project(':basecommon')
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
