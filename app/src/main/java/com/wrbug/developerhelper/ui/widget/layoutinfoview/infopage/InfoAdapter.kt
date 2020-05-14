@@ -40,6 +40,7 @@ class InfoAdapter(val context: Context) : RecyclerView.Adapter<InfoAdapter.ViewH
         p0.itemView.titleTv.text = itemInfo.title
         p0.itemView.contentTv.text = itemInfo.content.toString()
         p0.itemView.contentTv.setTextColor(itemInfo.textColor)
+        p0.itemView.contentTv.setTextIsSelectable(itemInfo.clickListener == null)
         p0.itemView.contentTv.setOnClickListener {
             itemInfo.content.print()
             itemInfo.clickListener?.run {

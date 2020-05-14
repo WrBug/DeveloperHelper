@@ -7,7 +7,7 @@ import android.widget.CompoundButton
 import com.jaredrummler.android.shell.Shell
 import com.wrbug.developerhelper.xposed.dumpdex.Native
 import com.wrbug.developerhelper.ipc.processshare.GlobalConfigProcessData
-import com.wrbug.developerhelper.ipc.processshare.ProcessDataManager
+import com.wrbug.developerhelper.ipc.processshare.ProcessDataCreator
 import com.wrbug.developerhelper.xposed.saveToFile
 import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XC_MethodHook
@@ -37,7 +37,7 @@ object DeveloperHelper {
                     val xposedSettingView = XposedHelpers.getObjectField(activity, "xposedSettingView") as View?
                     xposedSettingView?.apply {
                         visibility = View.VISIBLE
-                        val configData = ProcessDataManager.get(GlobalConfigProcessData::class.java)
+                        val configData = ProcessDataCreator.get(GlobalConfigProcessData::class.java)
                         XposedHelpers.callMethod(this, "setChecked", configData.isXposedOpen())
                         XposedHelpers.callMethod(
                             this,
@@ -49,7 +49,7 @@ object DeveloperHelper {
 
                 }
             })
-        EnforceMod.start(lpparam)
+        AppInfoPagerAdapterHook.start(lpparam)
     }
 
     private fun tryReleaseSo(lpparam: XC_LoadPackage.LoadPackageParam, activity: Activity) {

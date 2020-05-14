@@ -1,8 +1,11 @@
 package com.wrbug.developerhelper.ui.activity.hierachy
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.Keep
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
@@ -17,12 +20,14 @@ import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.ItemInfo
 import com.wrbug.developerhelper.util.EnforceUtils
 import com.wrbug.developerhelper.commonutil.UiUtils
+import com.wrbug.developerhelper.ipc.processshare.manager.AppXposedProcessDataManager
 import com.wrbug.developerhelper.util.format
 import com.wrbug.developerhelper.util.getString
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.util.ArrayList
 
+@Keep
 class AppInfoPagerAdapter(
     private val dialog: AppInfoDialog,
     private val apkInfo: ApkInfo?,
@@ -33,7 +38,8 @@ class AppInfoPagerAdapter(
     private val tabList = arrayListOf<String>()
     private val viewList = arrayListOf<View>()
     private val adapter = InfoAdapter(context)
-    private val enforceItem = ItemInfo(context.getString(R.string.enforce_type), context.getString(R.string.analyzing))
+    private val enforceItem =
+        ItemInfo(context.getString(R.string.enforce_type), context.getString(R.string.analyzing))
     var listener: AppInfoDialogEventListener? = null
     private val itemInfos = ArrayList<ItemInfo>()
 
@@ -68,13 +74,15 @@ class AppInfoPagerAdapter(
         itemDecoration.setFirstTopPadding(UiUtils.dp2px(context, 10F))
         rv.addItemDecoration(itemDecoration)
         apkInfo?.let { it ->
-            val item = ItemInfo(getString(R.string.page_analyze), getString(R.string.click_to_analyze))
+            val item =
+                ItemInfo(getString(R.string.page_analyze), getString(R.string.click_to_analyze))
             item.setOnClickListener(View.OnClickListener {
                 listener?.showHierachyView()
                 dialog.dismissAllowingStateLoss()
             })
             item.textColor = context.resources.getColor(R.color.colorPrimaryDark)
             itemInfos.add(item)
+            headerItemHook(it.packageInfo, it.applicationInfo, itemInfos)
             itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
             itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
             topActivity?.let {
@@ -113,6 +121,22 @@ class AppInfoPagerAdapter(
             adapter.setItems(itemInfos)
             getEnforce(it.packageInfo.packageName)
         }
+    }
+
+    private fun headerItemHook(
+        i: PackageInfo,
+        info: ApplicationInfo,
+        itemInfo: ArrayList<ItemInfo>
+    ) {
+    }
+
+    fun findItemById(id: String): ItemInfo? {
+        itemInfos.forEach {
+            if (it.id == id) {
+                return it
+            }
+        }
+        return null
     }
 
     private fun setEnforceType(type: EnforceUtils.EnforceType) {

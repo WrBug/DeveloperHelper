@@ -12,12 +12,19 @@ import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.ui.widget.bottommenu.BottomMenu
 import com.wrbug.developerhelper.ui.widget.bottommenu.OnItemClickListener
 import com.wrbug.developerhelper.ipc.processshare.DumpDexListProcessData
-import com.wrbug.developerhelper.ipc.processshare.ProcessDataManager
+import com.wrbug.developerhelper.ipc.processshare.ProcessDataCreator
 
-class ShellAppListAdapter(val context: Context) : RecyclerView.Adapter<ShellAppListAdapter.ViewHolder>() {
+class ShellAppListAdapter(val context: Context) :
+    RecyclerView.Adapter<ShellAppListAdapter.ViewHolder>() {
     private val list = ArrayList<ApkInfo>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_shell_app_info, parent, false))
+        ViewHolder(
+            LayoutInflater.from(context).inflate(
+                R.layout.item_shell_app_info,
+                parent,
+                false
+            )
+        )
 
     fun setData(data: List<ApkInfo>) {
         list.clear()
@@ -68,7 +75,7 @@ class ShellAppListAdapter(val context: Context) : RecyclerView.Adapter<ShellAppL
     }
 
     private fun removeItem(apkInfo: ApkInfo) {
-        val dexListProcessData = ProcessDataManager.get(DumpDexListProcessData::class.java)
+        val dexListProcessData = ProcessDataCreator.get(DumpDexListProcessData::class.java)
         val packageNames = dexListProcessData.getData()
         packageNames?.apply {
             remove(apkInfo.packageInfo.packageName)

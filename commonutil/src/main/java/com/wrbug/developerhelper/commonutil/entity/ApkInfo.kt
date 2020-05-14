@@ -20,7 +20,7 @@ class ApkInfo(val packageInfo: PackageInfo, val applicationInfo: ApplicationInfo
 
     fun getAppName(): String {
         val label = CommonUtils.application.packageManager.getApplicationLabel(applicationInfo)
-        return if (label == null) "" else label.toString()
+        return label?.toString() ?: ""
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

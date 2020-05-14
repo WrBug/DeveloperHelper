@@ -11,7 +11,7 @@ import com.wrbug.developerhelper.basecommon.setupActionBar
 import com.wrbug.developerhelper.commonutil.AppInfoManager
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.ipc.processshare.DumpDexListProcessData
-import com.wrbug.developerhelper.ipc.processshare.ProcessDataManager
+import com.wrbug.developerhelper.ipc.processshare.ProcessDataCreator
 import kotlinx.android.synthetic.main.activity_shell_app_manager.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -49,7 +49,7 @@ class ShellAppManagerActivity : BaseActivity() {
     private fun getShellApp() {
         swipeLayout.isRefreshing = true
         doAsync {
-            val dexListProcessData = ProcessDataManager.get(DumpDexListProcessData::class.java)
+            val dexListProcessData = ProcessDataCreator.get(DumpDexListProcessData::class.java)
             val packageNames = dexListProcessData.getData()
             if (packageNames == null || packageNames.isEmpty()) {
                 uiThread {

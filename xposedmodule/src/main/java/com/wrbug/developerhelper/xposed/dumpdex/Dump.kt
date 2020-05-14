@@ -3,7 +3,7 @@ package com.wrbug.developerhelper.xposed.dumpdex
 import android.os.Build
 import android.os.Process
 import com.wrbug.developerhelper.ipc.processshare.DumpDexListProcessData
-import com.wrbug.developerhelper.ipc.processshare.ProcessDataManager
+import com.wrbug.developerhelper.ipc.processshare.ProcessDataCreator
 import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -17,7 +17,7 @@ object Dump {
 
     fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         val type = PackerInfo.find(lpparam) ?: return
-        val data = ProcessDataManager.get(DumpDexListProcessData::class.java)
+        val data = ProcessDataCreator.get(DumpDexListProcessData::class.java)
         val packageNames = data.getData() ?: return
         val packageName = lpparam.packageName
         if (packageNames.contains(packageName).not()) {

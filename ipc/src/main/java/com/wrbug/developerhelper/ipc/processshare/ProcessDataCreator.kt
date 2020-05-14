@@ -5,7 +5,7 @@ package com.wrbug.developerhelper.ipc.processshare
 import androidx.collection.ArrayMap
 import java.lang.reflect.Proxy
 
-object ProcessDataManager {
+object ProcessDataCreator {
     private val map = ArrayMap<Class<*>, Any>()
     fun <T : ProcessData> get(clazz: Class<T>): T {
         if (map.containsKey(clazz)) {
