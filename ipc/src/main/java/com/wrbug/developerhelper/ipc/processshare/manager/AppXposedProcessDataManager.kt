@@ -1,40 +1,58 @@
 package com.wrbug.developerhelper.ipc.processshare.manager
 
+import com.wrbug.developerhelper.commonutil.fromJson
 import com.wrbug.developerhelper.ipc.processshare.AppXposedProcessData
+import io.reactivex.rxjava3.core.Observable
 
 class AppXposedProcessDataManager private constructor() :
-    ProcessDataManager<AppXposedProcessData>(),
-    AppXposedProcessData {
-    override fun setAppXposedStatusList(list: Map<String, Boolean>) {
+    ProcessDataManager<AppXposedProcessData>() {
+    fun setAppXposedStatusList(list: Map<String, Boolean>) {
         processData?.setAppXposedStatusList(list)
     }
 
-    override fun getAppXposedStatusList() = processData?.getAppXposedStatusList()
+    fun getAppXposedStatusListAsync(): Observable<Map<String, Boolean>> {
+        if (processData == null) {
+            return Observable.just(emptyMap())
+        }
+        return processData!!.getAppXposedStatusList().map {
+            it.fromJson<Map<String, Boolean>>() ?: emptyMap()
+        }.onErrorResumeNext {
+            Observable.just(emptyMap())
+        }
+    }
+
+    fun getAppXposedStatusList(): Map<String, Boolean> {
+        return getAppXposedStatusListAsync().blockingFirst()
+    }
 
     fun isAppXposedOpened(packageName: String): Boolean {
-        val map = getAppXposedStatusList() ?: return false
-        return map[packageName] ?: false
+        return getAppXposedStatusList()[packageName] == true
     }
 
     fun getOpenedAppXposedList(): List<String> {
-        val map = getAppXposedStatusList() ?: return emptyList()
+        val map = getAppXposedStatusList()
         val list = ArrayList<String>()
-        map.forEach {
-            if (it.value) {
-                list.add(it.key)
+        map.forEach { entry ->
+            if (entry.value) {
+                list.add(entry.key)
             }
         }
         return list
     }
 
     fun setAppXposedStatus(packageName: String, open: Boolean) {
-        val map = getAppXposedStatusList() ?: HashMap()
-        map[packageName] = open
-        setAppXposedStatusList(map)
+        getAppXposedStatusListAsync().subscribe({
+            val map = HashMap(it)
+            map[packageName] = open
+            setAppXposedStatusList(map)
+        }, {
+
+        })
+
     }
 
     companion object {
-         val instance = AppXposedProcessDataManager()
+        val instance = AppXposedProcessDataManager()
 
 
     }

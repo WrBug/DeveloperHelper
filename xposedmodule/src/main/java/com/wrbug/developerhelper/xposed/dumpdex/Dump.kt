@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Process
 import com.wrbug.developerhelper.ipc.processshare.DumpDexListProcessData
 import com.wrbug.developerhelper.ipc.processshare.ProcessDataCreator
+import com.wrbug.developerhelper.ipc.processshare.manager.DumpDexListProcessDataManager
 import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -17,13 +18,14 @@ object Dump {
 
     fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         val type = PackerInfo.find(lpparam) ?: return
-        val data = ProcessDataCreator.get(DumpDexListProcessData::class.java)
-        val packageNames = data.getData() ?: return
+        val packageNames = ArrayList(DumpDexListProcessDataManager.instance.getData())
         val packageName = lpparam.packageName
         if (packageNames.contains(packageName).not()) {
             "未包含 $packageName ,忽略".xposedLog()
             return
         }
+        packageNames.remove(packageName)
+        DumpDexListProcessDataManager.instance.setData(packageNames)
         copySoToCacheDir(packageName)
         "pid:${Process.myPid()},tid:${Process.myTid()},uid:${Process.myUid()},".xposedLog()
         "准备脱壳：$packageName".xposedLog()

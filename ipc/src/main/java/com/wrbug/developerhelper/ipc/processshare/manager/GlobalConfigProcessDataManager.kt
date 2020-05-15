@@ -1,6 +1,8 @@
 package com.wrbug.developerhelper.ipc.processshare.manager
 
+import com.wrbug.developerhelper.commonutil.print
 import com.wrbug.developerhelper.ipc.processshare.GlobalConfigProcessData
+import io.reactivex.rxjava3.core.Observable
 
 
 /**
@@ -12,18 +14,26 @@ import com.wrbug.developerhelper.ipc.processshare.GlobalConfigProcessData
  *
  */
 class GlobalConfigProcessDataManager private constructor() :
-    ProcessDataManager<GlobalConfigProcessData>(), GlobalConfigProcessData {
-    private var isOpen: Boolean? = null
-    override fun isXposedOpen(): Boolean {
-        if (isOpen != null) {
-            return isOpen as Boolean
+    ProcessDataManager<GlobalConfigProcessData>() {
+    fun isXposedOpenAsync(): Observable<Boolean> {
+        if (processData == null) {
+            return Observable.just(
+                false
+            )
         }
-        isOpen = processData?.isXposedOpen()
-        return isOpen ?: false
+        return processData!!.isXposedOpen()
+            .map { it?.toBoolean() ?: false }
+            .onErrorResumeNext {
+                it.print()
+                Observable.just(false)
+            }
     }
 
-    override fun setXposedOpen(open: Boolean) {
-        isOpen = open
+    fun isXposedOpen(): Boolean {
+        return isXposedOpenAsync().blockingFirst()
+    }
+
+    fun setXposedOpen(open: Boolean) {
         processData?.setXposedOpen(open)
     }
 

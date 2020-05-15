@@ -3,6 +3,7 @@ package com.wrbug.developerhelper.commonutil
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.google.gson.reflect.TypeToken
 
 import java.lang.reflect.Type
 
@@ -12,6 +13,19 @@ import java.lang.reflect.Type
  * @author wrbug
  * @since 2017/9/29
  */
+
+fun Any.toJson(): String? {
+    return try {
+        JsonHelper.toJson(this)
+    } catch (t: Throwable) {
+        null
+    }
+}
+
+inline fun <reified T> String.fromJson(): T? {
+    return JsonHelper.fromJson(this, object : TypeToken<T>() {}.type)
+}
+
 object JsonHelper {
     val gson = Gson()
 

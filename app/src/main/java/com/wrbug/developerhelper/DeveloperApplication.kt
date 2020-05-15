@@ -3,7 +3,7 @@ package com.wrbug.developerhelper
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.os.Looper
+import android.os.Process
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
@@ -11,11 +11,15 @@ import com.elvishew.xlog.internal.DefaultsFactory
 import com.wrbug.datafinder.startup.LaunchContentProvider
 import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.basewidgetimport.BaseModule
+import com.wrbug.developerhelper.commonutil.ProcessUtil
+import com.wrbug.developerhelper.commonutil.print
+import com.wrbug.developerhelper.ipc.processshare.tcp.MessageHandler
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.concurrent.thread
-import com.wrbug.developerhelper.commonwidget.flexibletoast.FlexibleToast
+import com.wrbug.developerhelper.ipc.processshare.tcp.TcpManager
+import com.wrbug.developerhelper.ipcserver.IpcManager
 import com.wrbug.developerhelper.ui.activity.main.MainActivity
+import org.jetbrains.anko.doAsync
 
 
 class DeveloperApplication : BaseApp() {
@@ -33,14 +37,25 @@ class DeveloperApplication : BaseApp() {
 
     override fun onCreate() {
         super.onCreate()
-        BaseModule.init(this)
-        instance = this
         XLog.init(
             LogConfiguration.Builder().logLevel(LogLevel.ALL).tag("developerHelper.print-->").build(),
             DefaultsFactory.createPrinter()
         )
+        registerIpcServer()
+        BaseModule.init(this)
+        instance = this
         releaseAssetsFile()
         registerLifecycle()
+    }
+
+    private fun registerIpcServer() {
+        val name = ProcessUtil.readProcName(Process.myPid())
+        if (name != "$packageName:floatWindow") {
+            "ignore registerIpcServer : $name".print()
+            return
+        }
+        IpcManager.init()
+        "registerIpcServer: ${Process.myPid()}".print()
     }
 
     private fun registerLifecycle() {
@@ -81,7 +96,7 @@ class DeveloperApplication : BaseApp() {
 
 
     private fun releaseAssetsFile() {
-        thread {
+        doAsync {
             val inputStream = BaseApp.instance.assets.open("zip.dex")
             val file = File(BaseApp.instance.cacheDir, "zip.dex")
             if (file.exists().not()) {

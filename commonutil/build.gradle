@@ -39,6 +39,8 @@ dependencies {
     api 'com.elvishew:xlog:1.6.1'
     api 'com.squareup.okhttp3:okhttp:3.12.1'
     api group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
+    api "io.reactivex.rxjava3:rxjava:3.0.3"
+    api 'io.reactivex.rxjava3:rxandroid:3.0.0'
 }
 repositories {
     mavenCentral()
