@@ -110,10 +110,6 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
         fun onRootClick() {
             vm.toggleRootPermission()
         }
-
-        fun onCaptureClick() {
-            showSnack("hehehe")
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

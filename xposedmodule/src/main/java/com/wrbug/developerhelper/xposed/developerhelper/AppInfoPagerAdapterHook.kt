@@ -60,7 +60,7 @@ object AppInfoPagerAdapterHook {
         applicationInfo: ApplicationInfo,
         itemInfos: java.util.ArrayList<Any>
     ) {
-        if (GlobalConfigProcessDataManager.isXposedOpen().not()) {
+        if (GlobalConfigProcessDataManager.instance.isXposedOpen().not()) {
             return
         }
         val packageName = packageInfo.packageName
@@ -68,8 +68,8 @@ object AppInfoPagerAdapterHook {
         val context = XposedHelpers.getObjectField(adapter, "context") as? Context
         val label = context?.packageManager?.getApplicationLabel(applicationInfo)
         val click: View?.() -> Unit = {
-            val status = AppXposedProcessDataManager.isAppXposedOpened(packageName).not()
-            AppXposedProcessDataManager.setAppXposedStatus(
+            val status = AppXposedProcessDataManager.instance.isAppXposedOpened(packageName).not()
+            AppXposedProcessDataManager.instance.setAppXposedStatus(
                 packageName,
                 status
             )
@@ -86,7 +86,7 @@ object AppInfoPagerAdapterHook {
             XposedHelpers.callMethod(infoAdapter, "notifyDataSetChanged")
         }
 
-        if (AppXposedProcessDataManager.isAppXposedOpened(packageName)) {
+        if (AppXposedProcessDataManager.instance.isAppXposedOpened(packageName)) {
             itemInfos.add(
                 createItemInfo(
                     id,

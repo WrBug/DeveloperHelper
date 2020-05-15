@@ -1,4 +1,4 @@
-package com.wrbug.developerhelper.ui.activity.xposed.shellmanager
+package com.wrbug.developerhelper.ui.activity.xposed
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -14,9 +14,10 @@ import com.wrbug.developerhelper.ui.widget.bottommenu.OnItemClickListener
 import com.wrbug.developerhelper.ipc.processshare.DumpDexListProcessData
 import com.wrbug.developerhelper.ipc.processshare.ProcessDataCreator
 
-class ShellAppListAdapter(val context: Context) :
-    RecyclerView.Adapter<ShellAppListAdapter.ViewHolder>() {
+class XposedAppListAdapter(val context: Context) :
+    RecyclerView.Adapter<XposedAppListAdapter.ViewHolder>() {
     private val list = ArrayList<ApkInfo>()
+    private var listener: OnItemChangedListener? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(
             LayoutInflater.from(context).inflate(
@@ -33,6 +34,9 @@ class ShellAppListAdapter(val context: Context) :
     }
 
     override fun getItemCount(): Int = list.size
+    fun setOnItemChangedListener(listener: OnItemChangedListener) {
+        this.listener = listener
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val apkInfo = list[position]
@@ -41,7 +45,6 @@ class ShellAppListAdapter(val context: Context) :
         holder.packageNameTv.text = apkInfo.packageInfo.packageName
         holder.apkInfo = apkInfo
     }
-
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var icoIv: ImageView = itemView.findViewById(R.id.icoIv)
@@ -75,15 +78,13 @@ class ShellAppListAdapter(val context: Context) :
     }
 
     private fun removeItem(apkInfo: ApkInfo) {
-        val dexListProcessData = ProcessDataCreator.get(DumpDexListProcessData::class.java)
-        val packageNames = dexListProcessData.getData()
-        packageNames?.apply {
-            remove(apkInfo.packageInfo.packageName)
-            dexListProcessData.setData(this)
-        }
         val index = list.indexOf(apkInfo)
         list.remove(apkInfo)
         notifyItemRemoved(index)
+        listener?.onRemoved(this, apkInfo)
     }
 
+    interface OnItemChangedListener {
+        fun onRemoved(adapter: XposedAppListAdapter, apkInfo: ApkInfo)
+    }
 }

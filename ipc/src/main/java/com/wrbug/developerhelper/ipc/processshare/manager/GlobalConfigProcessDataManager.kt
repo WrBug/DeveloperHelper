@@ -28,10 +28,6 @@ class GlobalConfigProcessDataManager private constructor() :
     }
 
     companion object {
-        private val instance = GlobalConfigProcessDataManager()
-        fun isXposedOpen() = instance.isXposedOpen()
-        fun setXposedOpen(open: Boolean){
-            instance.setXposedOpen(open)
-        }
+        val instance = GlobalConfigProcessDataManager()
     }
 }

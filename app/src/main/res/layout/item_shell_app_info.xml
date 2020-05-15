@@ -10,7 +10,7 @@
         android:id="@+id/icoIv"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@color/material_color_red_500" />
+        tools:background="@color/material_color_red_500" />
 
     <TextView
         android:id="@+id/appNameTv"

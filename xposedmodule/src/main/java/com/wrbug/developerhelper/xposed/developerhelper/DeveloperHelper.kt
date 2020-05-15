@@ -42,13 +42,13 @@ object DeveloperHelper {
                         XposedHelpers.callMethod(
                             this,
                             "setChecked",
-                            GlobalConfigProcessDataManager.isXposedOpen()
+                            GlobalConfigProcessDataManager.instance.isXposedOpen()
                         )
                         XposedHelpers.callMethod(
                             this,
                             "setOnCheckedChangeListener",
                             CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-                                GlobalConfigProcessDataManager.setXposedOpen(isChecked)
+                                GlobalConfigProcessDataManager.instance.setXposedOpen(isChecked)
                             })
                     }
 

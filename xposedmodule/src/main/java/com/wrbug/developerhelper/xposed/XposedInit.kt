@@ -27,11 +27,11 @@ class XposedInit : IXposedHookLoadPackage {
             return
         }
 
-        if (GlobalConfigProcessDataManager.isXposedOpen()) {
+        if (GlobalConfigProcessDataManager.instance.isXposedOpen()) {
             "xposed已关闭".xposedLog()
             return
         }
-        if (!AppXposedProcessDataManager.isAppXposedOpened(packageName)) {
+        if (!AppXposedProcessDataManager.instance.isAppXposedOpened(packageName)) {
             "应用未开启xposed".xposedLog()
             return
         }
