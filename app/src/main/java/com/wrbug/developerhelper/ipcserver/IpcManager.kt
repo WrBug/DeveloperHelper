@@ -18,10 +18,14 @@ object IpcManager {
                 }
                 val info = map[action] ?: return ""
                 info.method.run {
-                    return if (parameterTypes.isEmpty()) {
-                        invoke(info.obj).toString()
-                    } else {
-                        invoke(info.obj, message).toString()
+                    return try {
+                        if (parameterTypes.isEmpty()) {
+                            invoke(info.obj)?.toString() ?: ""
+                        } else {
+                            invoke(info.obj, message)?.toString() ?: ""
+                        }
+                    } catch (t: Throwable) {
+                        ""
                     }
                 }
             }
