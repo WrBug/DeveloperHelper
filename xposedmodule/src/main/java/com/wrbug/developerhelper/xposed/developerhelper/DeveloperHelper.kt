@@ -37,20 +37,21 @@ object DeveloperHelper {
                     val activity = param?.thisObject as Activity
                     val xposedSettingView =
                         XposedHelpers.getObjectField(activity, "xposedSettingView") as View?
-                    xposedSettingView?.apply {
-                        visibility = View.VISIBLE
+                    xposedSettingView?.visibility = View.VISIBLE
+                    XposedHelpers.callMethod(
+                        xposedSettingView,
+                        "setOnCheckedChangeListener",
+                        CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+                            GlobalConfigProcessDataManager.instance.setXposedOpen(isChecked)
+                        })
+                    xposedSettingView?.postDelayed({
                         XposedHelpers.callMethod(
-                            this,
+                            xposedSettingView,
                             "setChecked",
                             GlobalConfigProcessDataManager.instance.isXposedOpen()
                         )
-                        XposedHelpers.callMethod(
-                            this,
-                            "setOnCheckedChangeListener",
-                            CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-                                GlobalConfigProcessDataManager.instance.setXposedOpen(isChecked)
-                            })
-                    }
+                    }, 1000)
+
 
                 }
             })

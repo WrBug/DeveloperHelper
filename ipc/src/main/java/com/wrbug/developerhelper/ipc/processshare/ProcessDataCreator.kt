@@ -19,7 +19,7 @@ object ProcessDataCreator {
     private fun <T : ProcessData> obtainImpl(clazz: Class<T>): T {
         val instance = Proxy.newProxyInstance(
             clazz.classLoader, arrayOf(clazz),
-            ProcessDataInvocationHandler1()
+            ProcessDataInvocationHandler()
         )
         return instance as T
     }
