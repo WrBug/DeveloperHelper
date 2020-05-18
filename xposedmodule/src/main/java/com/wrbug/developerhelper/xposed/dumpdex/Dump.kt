@@ -18,14 +18,13 @@ object Dump {
 
     fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         val type = PackerInfo.find(lpparam) ?: return
-        val packageNames = ArrayList(DumpDexListProcessDataManager.instance.getData())
+        val map = DumpDexListProcessDataManager.instance.getData()
         val packageName = lpparam.packageName
-        if (packageNames.contains(packageName).not()) {
+        if (map[packageName] != true) {
             "未包含 $packageName ,忽略".xposedLog()
             return
         }
-        packageNames.remove(packageName)
-        DumpDexListProcessDataManager.instance.setData(packageNames)
+        DumpDexListProcessDataManager.instance.setData(packageName to false)
         copySoToCacheDir(packageName)
         "pid:${Process.myPid()},tid:${Process.myTid()},uid:${Process.myUid()},".xposedLog()
         "准备脱壳：$packageName".xposedLog()

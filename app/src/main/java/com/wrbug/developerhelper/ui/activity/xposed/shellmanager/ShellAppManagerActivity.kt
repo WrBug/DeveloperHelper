@@ -11,17 +11,13 @@ import com.wrbug.developerhelper.ui.activity.xposed.XposedAppListAdapter
 class ShellAppManagerActivity : BaseXposedAppManagerActivity() {
     override fun getManagerTitle(): String = getString(R.string.shell_app_manager)
 
-    override fun getPackages(): List<String> {
+    override fun getAppEnableStatus(): Map<String, Boolean> {
         val packageNames = DumpDexListProcessDataManager.instance.getData()
-        return packageNames?.toList() ?: emptyList()
+        return packageNames
     }
 
-    override fun onRemoved(adapter: XposedAppListAdapter, apkInfo: ApkInfo) {
-        val packageNames = DumpDexListProcessDataManager.instance.getData()
-        packageNames?.apply {
-            remove(apkInfo.packageInfo.packageName)
-            DumpDexListProcessDataManager.instance.setData(this)
-        }
+    override fun onChanged(adapter: XposedAppListAdapter, apkInfo: ApkInfo, isChecked: Boolean) {
+        DumpDexListProcessDataManager.instance.setData(apkInfo.applicationInfo.packageName to isChecked)
     }
 
     companion object {

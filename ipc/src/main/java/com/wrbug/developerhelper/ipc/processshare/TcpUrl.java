@@ -10,6 +10,7 @@ public class TcpUrl {
     public static class DumpDexListProcessDataUrl {
         public static final String SET_DATA = "DumpDexListProcessData/setData";
         public static final String GET_DATA = "DumpDexListProcessData/getData";
+        public static final String UPDATE_DATA = "DumpDexListProcessData/updateData";
     }
 
     public static class GlobalConfigProcessDataUrl {

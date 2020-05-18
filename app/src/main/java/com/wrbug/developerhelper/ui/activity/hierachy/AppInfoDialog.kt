@@ -27,7 +27,7 @@ class AppInfoDialog : DialogFragment() {
         }
     }
 
-    override fun onAttach(activity: Activity?) {
+    override fun onAttach(activity: Activity) {
         super.onAttach(activity)
         if (activity is AppInfoDialogEventListener) {
             listener = activity
@@ -36,7 +36,7 @@ class AppInfoDialog : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.dialog_apk_info, container, false)
-        dialog.window.takeUnless {
+        dialog?.window.takeUnless {
             it == null
         }?.run {
             val layoutParams = attributes

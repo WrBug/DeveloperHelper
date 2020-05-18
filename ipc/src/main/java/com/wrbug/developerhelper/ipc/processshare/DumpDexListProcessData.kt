@@ -8,8 +8,9 @@ import io.reactivex.rxjava3.core.Observable
 interface DumpDexListProcessData : ProcessData {
 
     @Url(TcpUrl.DumpDexListProcessDataUrl.SET_DATA)
-    fun setData(list: List<String>)
+    fun setData(map: Map<String, Boolean>)
 
     @Url(TcpUrl.DumpDexListProcessDataUrl.GET_DATA)
     fun getData(): Observable<String>
+
 }

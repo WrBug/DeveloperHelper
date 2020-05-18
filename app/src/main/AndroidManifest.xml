@@ -20,6 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.activity.xposed.appxposedsetting.AppXposedSettingActivity"></activity>
         <activity
             android:name=".ui.activity.main.MainActivity"
             android:launchMode="singleTop">
@@ -70,7 +71,7 @@
         </provider>
 
         <activity android:name=".ui.activity.xposed.xposedsetting.XposedSettingActivity" />
-        <activity android:name=".ui.activity.xposed.shellmanager.ShellAppManagerActivity"></activity>
+        <activity android:name=".ui.activity.xposed.shellmanager.ShellAppManagerActivity" />
     </application>
 
 </manifest>

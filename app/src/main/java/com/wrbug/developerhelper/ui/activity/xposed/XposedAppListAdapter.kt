@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.commonutil.AppInfoManager
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.ui.widget.bottommenu.BottomMenu
 import com.wrbug.developerhelper.ui.widget.bottommenu.OnItemClickListener
@@ -16,8 +19,28 @@ import com.wrbug.developerhelper.ipc.processshare.ProcessDataCreator
 
 class XposedAppListAdapter(val context: Context) :
     RecyclerView.Adapter<XposedAppListAdapter.ViewHolder>() {
+    companion object {
+        private val cache = ArrayList<ApkInfo>()
+    }
+
     private val list = ArrayList<ApkInfo>()
+    private val appEnableStatusMap = HashMap<String, Boolean>()
     private var listener: OnItemChangedListener? = null
+
+    init {
+        initApkInfo()
+    }
+
+    private fun initApkInfo(force: Boolean = false) {
+        if (force || list.isEmpty()) {
+            cache.clear()
+            list.clear()
+            cache.addAll(AppInfoManager.getAllApps().values)
+            cache.sortBy { it.applicationInfo.packageName }
+            list.addAll(cache)
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(
             LayoutInflater.from(context).inflate(
@@ -27,9 +50,11 @@ class XposedAppListAdapter(val context: Context) :
             )
         )
 
-    fun setData(data: List<ApkInfo>) {
-        list.clear()
-        list.addAll(data)
+    fun setAppEnableStatus(data: Map<String, Boolean>, force: Boolean = false) {
+        initApkInfo(force)
+        appEnableStatusMap.clear()
+        appEnableStatusMap.putAll(data)
+        list.sortBy { appEnableStatusMap[it.applicationInfo.packageName] != true }
         notifyDataSetChanged()
     }
 
@@ -40,10 +65,13 @@ class XposedAppListAdapter(val context: Context) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val apkInfo = list[position]
+        holder.removeListener()
         holder.icoIv.setImageDrawable(apkInfo.getIco())
         holder.appNameTv.text = apkInfo.getAppName()
         holder.packageNameTv.text = apkInfo.packageInfo.packageName
+        holder.toggle.isChecked = appEnableStatusMap[apkInfo.applicationInfo.packageName] == true
         holder.apkInfo = apkInfo
+        holder.setListener()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -51,40 +79,23 @@ class XposedAppListAdapter(val context: Context) :
         var appNameTv: TextView = itemView.findViewById(R.id.appNameTv)
         var packageNameTv: TextView = itemView.findViewById(R.id.packageNameTv)
         var apkInfo: ApkInfo? = null
+        val toggle: SwitchCompat = itemView.findViewById(R.id.toggle)
 
-        init {
-            itemView.setOnClickListener {
-                apkInfo?.apply {
-                    showDialog(this)
+        fun removeListener() {
+            toggle.setOnCheckedChangeListener(null)
+        }
+
+        fun setListener() {
+            toggle.setOnCheckedChangeListener { _, isChecked ->
+                apkInfo?.let {
+                    listener?.onChanged(this@XposedAppListAdapter, it, isChecked)
+                    appEnableStatusMap[it.applicationInfo.packageName] = isChecked
                 }
             }
         }
-
-        private fun showDialog(apkInfo: ApkInfo) {
-            val bottomMenu = BottomMenu.Builder(context)
-                .menuItems(arrayOf(context.getString(R.string.remove_item)))
-                .onItemClickListener(object : OnItemClickListener {
-                    override fun onClick(position: Int) {
-                        when (position) {
-                            0 -> {
-                                removeItem(apkInfo)
-                            }
-                        }
-                    }
-                })
-                .build()
-            bottomMenu.show()
-        }
-    }
-
-    private fun removeItem(apkInfo: ApkInfo) {
-        val index = list.indexOf(apkInfo)
-        list.remove(apkInfo)
-        notifyItemRemoved(index)
-        listener?.onRemoved(this, apkInfo)
     }
 
     interface OnItemChangedListener {
-        fun onRemoved(adapter: XposedAppListAdapter, apkInfo: ApkInfo)
+        fun onChanged(adapter: XposedAppListAdapter, apkInfo: ApkInfo, isChecked: Boolean)
     }
 }

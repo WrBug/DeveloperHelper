@@ -15,27 +15,31 @@ import io.reactivex.rxjava3.core.Observable
  */
 class DumpDexListProcessDataManager private constructor() :
     ProcessDataManager<DumpDexListProcessData>() {
-    fun setData(list: List<String>) {
-        processData?.setData(list)
+    fun setData(map: Map<String, Boolean>) {
+        processData?.setData(map)
     }
 
-    fun getDataAsync(): Observable<List<String>> {
+    fun setData(vararg pairs: Pair<String, Boolean>) {
+        processData?.setData(hashMapOf(*pairs))
+    }
+
+    private fun getDataAsync(): Observable<Map<String, Boolean>> {
         if (processData == null) {
-            return Observable.just(emptyList())
+            return Observable.just(emptyMap())
         }
         return processData!!.getData().map {
-            it.fromJson<List<String>>() ?: emptyList()
+            it.fromJson<Map<String, Boolean>>() ?: emptyMap()
         }.onErrorResumeNext {
-            Observable.just(emptyList())
+            Observable.just(emptyMap())
         }
     }
 
-    fun getData(): ArrayList<String> {
-        return ArrayList(getDataAsync().blockingFirst())
+    fun getData(): HashMap<String, Boolean> {
+        return HashMap(getDataAsync().blockingFirst())
     }
 
     fun containPackage(packageName: String): Boolean {
-        return getData().contains(packageName)
+        return getData()[packageName] ?: false
     }
 
     companion object {
