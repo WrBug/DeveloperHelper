@@ -36,7 +36,7 @@ class XposedAppListAdapter(val context: Context) :
             cache.clear()
             list.clear()
             cache.addAll(AppInfoManager.getAllApps().values)
-            cache.sortBy { it.applicationInfo.packageName }
+            cache.sortBy { it.getAppName() }
             list.addAll(cache)
         }
     }

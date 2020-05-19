@@ -44,15 +44,25 @@ object DeveloperHelper {
                         CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
                             GlobalConfigProcessDataManager.instance.setXposedOpen(isChecked)
                         })
-                    xposedSettingView?.postDelayed({
+                    val opened = GlobalConfigProcessDataManager.instance.isXposedOpen()
+                    if (!opened) {
+                        //首次启动，存在tcp服务没启动情况，延时1秒
+                        xposedSettingView?.isEnabled = false
+                        xposedSettingView?.postDelayed({
+                            XposedHelpers.callMethod(
+                                xposedSettingView,
+                                "setChecked",
+                                GlobalConfigProcessDataManager.instance.isXposedOpen()
+                            )
+                            xposedSettingView.isEnabled = true
+                        }, 1000)
+                    } else {
                         XposedHelpers.callMethod(
                             xposedSettingView,
                             "setChecked",
                             GlobalConfigProcessDataManager.instance.isXposedOpen()
                         )
-                    }, 1000)
-
-
+                    }
                 }
             })
         AppInfoPagerAdapterHook.start(lpparam)
