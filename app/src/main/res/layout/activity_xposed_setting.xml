@@ -19,10 +19,19 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
+            android:id="@+id/appXposedSettingItemView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:checkable="false"
+            app:src="@drawable/ic_switch_666666"
+            app:summary="@string/app_xposed_function_manager_summary"
+            app:switchVisible="false"
+            app:title="@string/app_xposed_function_manager" />
+
+        <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
             android:id="@+id/shellSettingItemView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             app:checkable="false"
             app:src="@drawable/ic_shield_666666"
             app:summary="@string/shell_app_manager_summary"

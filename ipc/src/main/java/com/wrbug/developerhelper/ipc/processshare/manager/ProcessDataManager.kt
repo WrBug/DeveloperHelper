@@ -16,7 +16,7 @@ import java.lang.reflect.ParameterizedType
 open class ProcessDataManager<T : ProcessData> {
 
 
-    protected val processData: T? by lazy {
+    protected val processData: T by lazy {
         val type = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0]
         ProcessDataCreator.get(type as Class<T>)
     }

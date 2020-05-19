@@ -7,14 +7,15 @@ import io.reactivex.rxjava3.core.Observable
 class AppXposedProcessDataManager private constructor() :
     ProcessDataManager<AppXposedProcessData>() {
     fun setAppXposedStatusList(list: Map<String, Boolean>) {
-        processData?.setAppXposedStatusList(list)
+        processData.setAppXposedStatusList(list)
+    }
+
+    fun setAppXposedStatusList(vararg pairs: Pair<String, Boolean>) {
+        setAppXposedStatusList(mapOf(*pairs))
     }
 
     fun getAppXposedStatusListAsync(): Observable<Map<String, Boolean>> {
-        if (processData == null) {
-            return Observable.just(emptyMap())
-        }
-        return processData!!.getAppXposedStatusList().map {
+        return processData.getAppXposedStatusList().map {
             it.fromJson<Map<String, Boolean>>() ?: emptyMap()
         }.onErrorResumeNext {
             Observable.just(emptyMap())

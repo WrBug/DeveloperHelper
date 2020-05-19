@@ -11,6 +11,8 @@ object IpcManager {
         registerController(GlobalConfigProcessDataImpl())
         registerController(AppXposedProcessDataImpl())
         registerController(DumpDexListProcessDataImpl())
+        registerController(DataFinderListProcessDataImpl())
+        registerController(FileProcessDataImpl())
         TcpManager.messageHandler = object : MessageHandler {
             override fun handle(action: String, message: String): String {
                 if (!map.containsKey(action)) {

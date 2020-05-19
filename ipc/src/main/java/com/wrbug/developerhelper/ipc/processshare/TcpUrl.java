@@ -10,11 +10,17 @@ public class TcpUrl {
     public static class DumpDexListProcessDataUrl {
         public static final String SET_DATA = "DumpDexListProcessData/setData";
         public static final String GET_DATA = "DumpDexListProcessData/getData";
-        public static final String UPDATE_DATA = "DumpDexListProcessData/updateData";
     }
-
+    public static class DataFinderListProcessDataUrl {
+        public static final String SET_DATA = "DataFinderListProcessDataUrl/setData";
+        public static final String GET_DATA = "DataFinderListProcessDataUrl/getData";
+    }
     public static class GlobalConfigProcessDataUrl {
         public static final String IS_XPOSED_OPEN = "GlobalConfigProcessData/isXposedOpen";
         public static final String SET_XPOSED_OPEN = "GlobalConfigProcessData/setXposedOpen";
+    }
+
+    public static class FileProcessDataUrl {
+        public static final String GET_DATA_FINDER_ZIP_FILE = "FileProcessDataUrl/getDataFinderZipFile";
     }
 }

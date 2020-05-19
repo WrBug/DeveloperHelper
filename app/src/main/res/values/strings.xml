@@ -89,4 +89,6 @@
     <string name="check_update_failed">检查失败...</string>
     <string name="find_new_version">发现新版本</string>
     <string name="download">下载</string>
+    <string name="app_xposed_function_manager">应用Xposed功能管理</string>
+    <string name="app_xposed_function_manager_summary">应用Xposed总开关，开启后其他xposed模块才会生效</string>
 </resources>
