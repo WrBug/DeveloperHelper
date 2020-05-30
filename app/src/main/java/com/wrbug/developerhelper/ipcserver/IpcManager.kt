@@ -8,10 +8,6 @@ object IpcManager {
     private val map = HashMap<String, MethodInfo>()
 
     fun init() {
-        registerController(GlobalConfigProcessDataImpl())
-        registerController(AppXposedProcessDataImpl())
-        registerController(DumpDexListProcessDataImpl())
-        registerController(DataFinderListProcessDataImpl())
         registerController(FileProcessDataImpl())
         TcpManager.messageHandler = object : MessageHandler {
             override fun handle(action: String, message: String): String {

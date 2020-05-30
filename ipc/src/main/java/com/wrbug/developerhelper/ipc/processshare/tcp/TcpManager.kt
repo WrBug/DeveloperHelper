@@ -52,6 +52,7 @@ object TcpManager {
             "onReceived: $result".print()
             it.onNext(result ?: "")
         }.onErrorResumeNext {
+            it.printStackTrace()
             Observable.just("")
         }.subscribeOn(Schedulers.io())
     }

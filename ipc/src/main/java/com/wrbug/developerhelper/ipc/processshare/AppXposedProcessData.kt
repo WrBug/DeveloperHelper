@@ -14,9 +14,8 @@ import io.reactivex.rxjava3.core.Observable
  */
 @Keep
 interface AppXposedProcessData : ProcessData {
-    @Url(TcpUrl.AppXposedProcessDataUrl.SET_APP_XPOSED_STATUS_LIST)
-    fun setAppXposedStatusList(list: Map<String, Boolean>)
+    fun setAppXposedStatus(map: Map<String, Boolean>)
 
-    @Url(TcpUrl.AppXposedProcessDataUrl.GET_APP_XPOSED_STATUS_LIST)
-    fun getAppXposedStatusList(): Observable<String>
+    fun setAppXposedStatus(packageName: String, open: Boolean)
+    fun getAppXposedStatus(): Observable<Map<String, Boolean>>
 }

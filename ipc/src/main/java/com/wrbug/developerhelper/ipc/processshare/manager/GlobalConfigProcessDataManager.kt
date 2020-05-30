@@ -15,26 +15,12 @@ import io.reactivex.rxjava3.core.Observable
  */
 class GlobalConfigProcessDataManager private constructor() :
     ProcessDataManager<GlobalConfigProcessData>() {
-    fun isXposedOpenAsync(): Observable<Boolean> {
-        if (processData == null) {
-            return Observable.just(
-                false
-            )
-        }
-        return processData!!.isXposedOpen()
-            .map { it?.toBoolean() ?: false }
-            .onErrorResumeNext {
-                it.print()
-                Observable.just(false)
-            }
-    }
-
     fun isXposedOpen(): Boolean {
-        return isXposedOpenAsync().blockingFirst()
+        return processData.isXposedOpen().blockingFirst()
     }
 
     fun setXposedOpen(open: Boolean) {
-        processData?.setXposedOpen(open)
+        processData.setXposedOpen(open)
     }
 
     companion object {

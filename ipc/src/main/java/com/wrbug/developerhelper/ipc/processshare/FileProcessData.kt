@@ -17,4 +17,8 @@ interface FileProcessData : ProcessData {
 
     @Url(TcpUrl.FileProcessDataUrl.GET_DATA_FINDER_ZIP_FILE)
     fun getDataFinderZipFile(): Observable<String>
+
+
+    @Url(TcpUrl.FileProcessDataUrl.GET_DUMP_SO_ZIP_FILE)
+    fun getDumpSoZipFile(): Observable<String>
 }

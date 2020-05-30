@@ -13,14 +13,17 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        externalNativeBuild {
-            cmake {
-                cppFlags "-std=c++14", "-fms-extensions"
+        if(enableNdk){
+            externalNativeBuild {
+                cmake {
+                    cppFlags "-std=c++14", "-fms-extensions"
+                }
+            }
+            ndk {
+                abiFilters "armeabi-v7a", "arm64-v8a"
             }
         }
-        ndk {
-            abiFilters "armeabi-v7a", "arm64-v8a"
-        }
+
 
     }
 
@@ -30,11 +33,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
+    if(enableNdk){
+        externalNativeBuild {
+            cmake {
+                path "CMakeLists.txt"
+            }
         }
     }
+
 }
 
 dependencies {

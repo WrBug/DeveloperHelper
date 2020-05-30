@@ -21,4 +21,11 @@ class FileProcessDataImpl {
         val base64 = Base64.encodeAsString(data)
         return base64
     }
+
+    @Controller(TcpUrl.FileProcessDataUrl.GET_DUMP_SO_ZIP_FILE)
+    fun getDumpSoZipFile(): String {
+        val data = BaseApp.instance.assets.open("nativeDump.zip").readBytes()
+        val base64 = Base64.encodeAsString(data)
+        return base64
+    }
 }

@@ -3,6 +3,7 @@
 package com.wrbug.developerhelper.ipc.processshare
 
 import androidx.collection.ArrayMap
+import com.wrbug.developerhelper.ipc.processshare.data.IpcFileDataManager
 import java.lang.reflect.Proxy
 
 object ProcessDataCreator {
@@ -17,6 +18,10 @@ object ProcessDataCreator {
     }
 
     private fun <T : ProcessData> obtainImpl(clazz: Class<T>): T {
+        val service = IpcFileDataManager.getService(clazz)
+        if (service != null) {
+            return service
+        }
         val instance = Proxy.newProxyInstance(
             clazz.classLoader, arrayOf(clazz),
             ProcessDataInvocationHandler()

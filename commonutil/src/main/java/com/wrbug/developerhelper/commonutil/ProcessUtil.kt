@@ -44,7 +44,7 @@ object ProcessUtil {
         return null
     }
 
-    fun readProcName(myPid: Int): String? {
+    fun readProcName(myPid: Int=Process.myPid()): String? {
         var fileInputStream: FileInputStream? = null
         try {
             fileInputStream = FileInputStream("/proc/$myPid/cmdline")

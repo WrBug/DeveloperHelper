@@ -2,9 +2,11 @@ package com.wrbug.developerhelper.xposed.dumpdex
 
 import android.os.Build
 import android.os.Process
+import com.wrbug.developerhelper.commonutil.ZipUtils
 import com.wrbug.developerhelper.ipc.processshare.DumpDexListProcessData
 import com.wrbug.developerhelper.ipc.processshare.ProcessDataCreator
 import com.wrbug.developerhelper.ipc.processshare.manager.DumpDexListProcessDataManager
+import com.wrbug.developerhelper.ipc.processshare.manager.FileProcessDataManager
 import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -18,9 +20,8 @@ object Dump {
 
     fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         val type = PackerInfo.find(lpparam) ?: return
-        val map = DumpDexListProcessDataManager.instance.getData()
         val packageName = lpparam.packageName
-        if (map[packageName] != true) {
+        if (!DumpDexListProcessDataManager.instance.containPackage(packageName)) {
             "未包含 $packageName ,忽略".xposedLog()
             return
         }
@@ -45,17 +46,14 @@ object Dump {
     }
 
     private fun copySoToCacheDir(packageName: String) {
-        copySoFile(packageName, Native.SO_FILE)
-        copySoFile(packageName, Native.SO_FILE_V7a)
-        copySoFile(packageName, Native.SO_FILE_V8a)
-    }
-
-    private fun copySoFile(packageName: String, filename: String) {
-        val file = File("/data/local/tmp/$filename")
-        val mvFile = File("/data/data/$packageName/cache", filename)
-        if (mvFile.exists()) {
-            mvFile.delete()
+        val dir = "/data/data/$packageName/cache"
+        val data = FileProcessDataManager.instance.getDumpSoZipFile().blockingFirst() ?: return
+        val file = File(dir, "so.zip").apply {
+            if (exists()) {
+                delete()
+            }
+            writeBytes(data)
         }
-        file.copyTo(mvFile)
+        ZipUtils.unzip(file.absolutePath, dir)
     }
 }

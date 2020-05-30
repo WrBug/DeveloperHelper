@@ -22,6 +22,12 @@ class FileProcessDataManager private constructor() :
         }
     }
 
+    fun getDumpSoZipFile(): Observable<ByteArray> {
+        return processData.getDumpSoZipFile().map {
+            Base64.decode(it.toCharArray())
+        }
+    }
+
     companion object {
         val instance = FileProcessDataManager()
     }

@@ -6,9 +6,7 @@ import io.reactivex.rxjava3.core.Observable
 
 @Keep
 interface GlobalConfigProcessData : ProcessData {
-    @Url(TcpUrl.GlobalConfigProcessDataUrl.IS_XPOSED_OPEN)
-    fun isXposedOpen(): Observable<String>
+    fun isXposedOpen(): Observable<Boolean>
 
-    @Url(TcpUrl.GlobalConfigProcessDataUrl.SET_XPOSED_OPEN)
     fun setXposedOpen(open: Boolean)
 }

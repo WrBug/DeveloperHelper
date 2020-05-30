@@ -23,16 +23,8 @@ class DumpDexListProcessDataManager private constructor() :
         processData.setData(hashMapOf(*pairs))
     }
 
-    private fun getDataAsync(): Observable<Map<String, Boolean>> {
-        return processData.getData().map {
-            it.fromJson<Map<String, Boolean>>() ?: emptyMap()
-        }.onErrorResumeNext {
-            Observable.just(emptyMap())
-        }
-    }
-
     fun getData(): HashMap<String, Boolean> {
-        return HashMap(getDataAsync().blockingFirst())
+        return HashMap(processData.getData().blockingFirst())
     }
 
     fun containPackage(packageName: String): Boolean {

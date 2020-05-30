@@ -17,9 +17,9 @@ class BoundsInfoView : View {
             field = value
             invalidate()
         }
-    private val edgeLineSize = UiUtils.dp2px(context,4F).toFloat()
+    private val edgeLineSize = UiUtils.dp2px(context, 4F).toFloat()
     private val paint = Paint()
-    var unit: Unit = Unit.DP
+    private var unit: Unit = Unit.DP
         set(value) {
             if (field == value) {
                 return
@@ -27,11 +27,19 @@ class BoundsInfoView : View {
             field = value
             invalidate()
         }
-    private val textMargin = UiUtils.dp2px(context,3F)
+    private val textMargin = UiUtils.dp2px(context, 3F)
 
-    constructor(context: Context) : super(context)
+    constructor(context: Context) : this(context, null)
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        setOnClickListener {
+            toggleUnit()
+        }
+    }
+
+    private fun toggleUnit() {
+        unit = if (unit == Unit.DP) Unit.PX else Unit.DP
+    }
 
     override fun onDraw(canvas: Canvas?) {
         val rect = drawRect(canvas)
@@ -45,16 +53,16 @@ class BoundsInfoView : View {
         bounds?.let {
             paint.reset()
             paint.isAntiAlias = true
-            paint.textSize = UiUtils.dp2px(context,14F).toFloat()
+            paint.textSize = UiUtils.dp2px(context, 14F).toFloat()
             var leftMargin = it.left
             var topMargin = it.top
             var rightMargin = UiUtils.getDeviceWidth() - it.right
             var bottomMargin = UiUtils.getDeviceHeight() - it.bottom
             if (unit == Unit.DP) {
-                leftMargin = UiUtils.px2dp(context,leftMargin.toFloat()).toInt()
-                topMargin = UiUtils.px2dp(context,topMargin.toFloat()).toInt()
-                rightMargin = UiUtils.px2dp(context,rightMargin.toFloat()).toInt()
-                bottomMargin = UiUtils.px2dp(context,bottomMargin.toFloat()).toInt()
+                leftMargin = UiUtils.px2dp(context, leftMargin.toFloat()).toInt()
+                topMargin = UiUtils.px2dp(context, topMargin.toFloat()).toInt()
+                rightMargin = UiUtils.px2dp(context, rightMargin.toFloat()).toInt()
+                bottomMargin = UiUtils.px2dp(context, bottomMargin.toFloat()).toInt()
             }
             val leftMarginText = "$leftMargin ${unit.s}"
             val topMarginText = "$topMargin ${unit.s}"
@@ -100,13 +108,13 @@ class BoundsInfoView : View {
             var width = it.right - it.left
             var height = it.bottom - it.top
             if (unit == Unit.DP) {
-                width = UiUtils.px2dp(context,width.toFloat()).toInt()
-                height = UiUtils.px2dp(context,height.toFloat()).toInt()
+                width = UiUtils.px2dp(context, width.toFloat()).toInt()
+                height = UiUtils.px2dp(context, height.toFloat()).toInt()
             }
             val text = "$width ${unit.s} × $height ${unit.s}"
             paint.reset()
             paint.isAntiAlias = true
-            paint.textSize = UiUtils.dp2px(context,14F).toFloat()
+            paint.textSize = UiUtils.dp2px(context, 14F).toFloat()
             val bounds = Rect()
             paint.getTextBounds(text, 0, text.length, bounds)
             val textWidth = bounds.width()
@@ -127,7 +135,7 @@ class BoundsInfoView : View {
             paint.style = Paint.Style.STROKE
             paint.isAntiAlias = true
             paint.color = resources.getColor(R.color.colorAccent)
-            paint.strokeWidth = UiUtils.dp2px(context,1F).toFloat()
+            paint.strokeWidth = UiUtils.dp2px(context, 1F).toFloat()
             CanvasHelper.drawAL(
                 rect.left,
                 lineRect.left + edgeLineSize / 2,
@@ -174,7 +182,12 @@ class BoundsInfoView : View {
         val lineWidth = measuredWidth / 6
         val lineHeight = measuredHeight / 6
         val lineRect =
-            RectF(rect.left / 2F, rect.top / 2F, measuredWidth - rect.left / 2F, measuredHeight - rect.top / 2F)
+            RectF(
+                rect.left / 2F,
+                rect.top / 2F,
+                measuredWidth - rect.left / 2F,
+                measuredHeight - rect.top / 2F
+            )
         canvas?.run {
             drawLine(
                 lineRect.left,
@@ -213,7 +226,7 @@ class BoundsInfoView : View {
         paint.style = Paint.Style.STROKE
         paint.isAntiAlias = true
         paint.color = resources.getColor(R.color.colorAccent)
-        paint.strokeWidth = UiUtils.dp2px(context,2F).toFloat()
+        paint.strokeWidth = UiUtils.dp2px(context, 2F).toFloat()
         val width = measuredWidth / 3F
         val height = measuredHeight / 4F
         val top = measuredHeight * 3 / 8F
@@ -224,6 +237,6 @@ class BoundsInfoView : View {
 
 
     enum class Unit(var s: String) {
-        DP("dp"), PX("dp")
+        DP("dp"), PX("px")
     }
 }

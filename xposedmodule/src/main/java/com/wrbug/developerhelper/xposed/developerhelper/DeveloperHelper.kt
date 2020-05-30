@@ -83,9 +83,8 @@ object DeveloperHelper {
                         doAsync {
                             try {
                                 initProcessDataDir()
-                                saveSo(activity, "armeabi", Native.SO_FILE)
-                                saveSo(activity, "armeabi-v7a", Native.SO_FILE_V7a)
-                                saveSo(activity, "arm64-v8a", Native.SO_FILE_V8a)
+//                                saveSo(activity, "armeabi-v7a", Native.SO_FILE_V7a)
+//                                saveSo(activity, "arm64-v8a", Native.SO_FILE_V8a)
                             } catch (e: Exception) {
                                 XposedBridge.log(e)
                             }
