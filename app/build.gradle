@@ -9,8 +9,10 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
-    signingConfigs {
-        releaseConfig
+    if (isSignFileValid()) {
+        signingConfigs {
+            releaseConfig
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -31,7 +33,7 @@ android {
     buildTypes {
         debug {
             versionNameSuffix "-debug"
-            if (signingConfigs.releaseConfig != null) {
+            if (isSignFileValid()) {
                 signingConfig signingConfigs.releaseConfig
             }
         }
@@ -94,4 +96,8 @@ if (propFile.canRead()) {
 } else {
     println 'release build not found signing file'
     android.buildTypes.release.signingConfig = null
+}
+
+def isSignFileValid() {
+    return file('../signing.properties').canRead()
 }
