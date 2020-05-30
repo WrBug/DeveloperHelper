@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.showToast
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.commonutil.shell.Callback
 import com.wrbug.developerhelper.commonutil.shell.ShellManager

@@ -59,7 +59,8 @@ class AppDataInfoView : FrameLayout {
                     return@uiThread
                 }
                 databaseContainer.removeAllViews()
-                val params = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                val params =
+                    LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
                 for (sqliteFile in sqliteFiles) {
                     val textView = AppCompatTextView(context)
                     textView.text = sqliteFile.name
@@ -86,7 +87,8 @@ class AppDataInfoView : FrameLayout {
                     return@uiThread
                 }
                 sharedPreferenceContainer.removeAllViews()
-                val params = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                val params =
+                    LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
                 files.forEach {
                     val textView = AppCompatTextView(context)
                     textView.text = it.name
@@ -96,7 +98,12 @@ class AppDataInfoView : FrameLayout {
                     textView.tag = it
                     sharedPreferenceContainer.addView(textView, params)
                     textView.setOnClickListener {
-                        SharedPreferenceEditActivity.start(context, (it.tag as File).absolutePath)
+                        SharedPreferenceEditActivity.start(
+                            context,
+                            (it.tag as File).absolutePath,
+                            packageName,
+                            apkInfo?.getAppName()?:""
+                        )
                     }
                 }
             }

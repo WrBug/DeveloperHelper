@@ -36,7 +36,7 @@
     <string name="restore">恢复</string>
     <string name="save_shared_preference_failed">保存失败，请按错误提示修改后再提交</string>
     <string name="confirm_shared_preference_save">检测到值有修改，是否保存？</string>
-    <string name="save_shared_preference_success">保存成功，由于缓存原因，新数据重启后才会生效</string>
+    <string name="save_shared_preference_success">保存成功，由于缓存原因，新数据重启后才会生效，是否立即重启%1$s？</string>
     <string name="exit">退出</string>
     <string name="exit_content">是否退出应用？</string>
     <string name="ok">确定</string>

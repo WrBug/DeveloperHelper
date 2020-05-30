@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.basecommon.setupActionBar
+import com.wrbug.developerhelper.commonutil.AppManagerUtils
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
 import com.wrbug.developerhelper.util.OutSharedPreferenceManager
@@ -20,17 +21,24 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
 
-class SharedPreferenceEditActivity : BaseActivity(), SharedPreferenceListAdapter.OnValueChangedListener {
-
+class SharedPreferenceEditActivity : BaseActivity(),
+    SharedPreferenceListAdapter.OnValueChangedListener {
 
     private var filePath: String = ""
+    private var filePackageName = ""
+    private var appName = ""
     private lateinit var adapter: SharedPreferenceListAdapter
     private var saveMenuItem: MenuItem? = null
 
     companion object {
-        fun start(context: Context, filePath: String) {
+        private const val KEY_FILE_PATH = "filePath"
+        private const val KEY_PACKAGE_NAME = "packageName"
+        private const val KEY_APP_NAME = "appName"
+        fun start(context: Context, filePath: String, packageName: String, appName: String) {
             val intent = Intent(context, SharedPreferenceEditActivity::class.java)
-            intent.putExtra("filePath", filePath)
+            intent.putExtra(KEY_FILE_PATH, filePath)
+            intent.putExtra(KEY_PACKAGE_NAME, packageName)
+            intent.putExtra(KEY_APP_NAME, appName)
             context.startActivity(intent)
         }
 
@@ -40,7 +48,9 @@ class SharedPreferenceEditActivity : BaseActivity(), SharedPreferenceListAdapter
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shared_preference_edit)
         intent?.let {
-            filePath = it.getStringExtra("filePath")
+            filePath = it.getStringExtra(KEY_FILE_PATH)
+            filePackageName = it.getStringExtra(KEY_PACKAGE_NAME)
+            appName = it.getStringExtra(KEY_APP_NAME)
         }
         setupActionBar(R.id.toolbar) {
             if (filePath.isNotEmpty()) {
@@ -88,8 +98,21 @@ class SharedPreferenceEditActivity : BaseActivity(), SharedPreferenceListAdapter
             .setTitle(R.string.notice)
             .setPositiveButton(R.string.save_and_exit) { _, _ ->
                 if (doSave()) {
-                    showSnack(getString(R.string.save_shared_preference_success))
-                    finish()
+                    showDialog(
+                        R.string.notice,
+                        getString(R.string.save_shared_preference_success, appName),
+                        R.string.ok,
+                        R.string.cancel,
+                        {
+                            AppManagerUtils.restartApp(
+                                this@SharedPreferenceEditActivity,
+                                filePackageName
+                            )
+                            finish()
+                        }, {
+                            finish()
+                        }
+                    )
                 } else {
                     showSnack(getString(R.string.save_shared_preference_failed))
                 }
@@ -115,8 +138,20 @@ class SharedPreferenceEditActivity : BaseActivity(), SharedPreferenceListAdapter
                         showSnack(getString(R.string.save_shared_preference_failed))
                         return@run
                     }
-                    showSnack(getString(R.string.save_shared_preference_success))
                     parseXml()
+                    showDialog(
+                        R.string.notice,
+                        getString(R.string.save_shared_preference_success, appName),
+                        R.string.ok,
+                        R.string.cancel,
+                        {
+                            AppManagerUtils.restartApp(
+                                this@SharedPreferenceEditActivity,
+                                filePackageName
+                            )
+                            finish()
+                        }
+                    )
                 }
             }
         }

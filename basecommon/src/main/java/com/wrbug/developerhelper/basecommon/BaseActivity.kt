@@ -1,10 +1,13 @@
 package com.wrbug.developerhelper.basecommon
 
 import android.annotation.TargetApi
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import java.util.ArrayList
@@ -58,7 +61,122 @@ abstract class BaseActivity : AppCompatActivity() {
         requestPermissions(list.toTypedArray(), PERMISSION_REQUEST_CODE)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+
+    fun showDialog(
+        @StringRes title: Int,
+        @StringRes msg: Int,
+        @StringRes positiveText: Int,
+        positiveListener: DialogInterface.OnClickListener
+    ) {
+        showDialog(title, msg, positiveText, 0, positiveListener, null)
+    }
+
+    fun showDialog(
+        title: String,
+        msg: String,
+        positiveText: String,
+        positiveListener: DialogInterface.OnClickListener
+    ) {
+        showDialog(title, msg, positiveText, null, positiveListener, null)
+    }
+
+
+    fun showDialog(
+        @StringRes title: Int,
+        @StringRes msg: Int,
+        @StringRes positiveText: Int,
+        @StringRes negativeText: Int,
+        onPositiveClick: DialogInterface?.(Int) -> Unit,
+        onNegativeClick: DialogInterface?.(Int) -> Unit? = {
+
+        }
+    ) {
+        showDialog(
+            title,
+            msg,
+            positiveText,
+            negativeText,
+            DialogInterface.OnClickListener { dialog, which -> dialog.onPositiveClick(which) },
+            DialogInterface.OnClickListener { dialog, which -> dialog.onNegativeClick(which) })
+    }
+
+    fun showDialog(
+        @StringRes title: Int,
+        msg: String,
+        @StringRes positiveText: Int,
+        @StringRes negativeText: Int,
+        onPositiveClick: DialogInterface?.(Int) -> Unit,
+        onNegativeClick: DialogInterface?.(Int) -> Unit? = {
+
+        }
+    ) {
+        showDialog(
+            title,
+            msg,
+            positiveText,
+            negativeText,
+            DialogInterface.OnClickListener { dialog, which -> dialog.onPositiveClick(which) },
+            DialogInterface.OnClickListener { dialog, which -> dialog.onNegativeClick(which) })
+    }
+
+    private fun showDialog(
+        @StringRes title: Int,
+        @StringRes msg: Int,
+        @StringRes positiveText: Int,
+        @StringRes negativeText: Int,
+        positiveListener: DialogInterface.OnClickListener,
+        negativeListener: DialogInterface.OnClickListener?
+    ) {
+        showDialog(
+            getString(title),
+            getString(msg),
+            getString(positiveText),
+            if (negativeText == 0) null else getString(negativeText),
+            positiveListener,
+            negativeListener
+        )
+    }
+
+    private fun showDialog(
+        @StringRes title: Int,
+        msg: String,
+        @StringRes positiveText: Int,
+        @StringRes negativeText: Int,
+        positiveListener: DialogInterface.OnClickListener,
+        negativeListener: DialogInterface.OnClickListener?
+    ) {
+        showDialog(
+            getString(title),
+            msg,
+            getString(positiveText),
+            if (negativeText == 0) null else getString(negativeText),
+            positiveListener,
+            negativeListener
+        )
+    }
+
+    fun showDialog(
+        title: String,
+        msg: String,
+        positiveText: String,
+        negativeText: String?,
+        positiveListener: DialogInterface.OnClickListener,
+        negativeListener: DialogInterface.OnClickListener?
+    ) {
+        val builder = AlertDialog.Builder(this).setMessage(msg)
+            .setTitle(title)
+            .setPositiveButton(positiveText, positiveListener)
+        if (negativeText.isNullOrEmpty().not()) {
+            builder.setNegativeButton(negativeText, negativeListener)
+        }
+        builder.show()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             val list = ArrayList<String>()
             for (i in grantResults.indices) {

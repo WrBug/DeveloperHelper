@@ -100,7 +100,8 @@ class AppSettingView : ScrollView {
                     return@doAsync
                 }
                 if (ShellManager.cpFile(dexDir, dir.absolutePath)) {
-                    val zipFile = File(context.externalCacheDir, "${apkInfo?.getAppName() ?: ""}-dex.zip")
+                    val zipFile =
+                        File(context.externalCacheDir, "${apkInfo?.getAppName() ?: ""}-dex.zip")
                     dir.zip(zipFile)
                     val uri = zipFile.toUri(context)
                     if (uri == null) {
@@ -156,11 +157,13 @@ class AppSettingView : ScrollView {
             return
         }
         apkInfo?.apply {
-            showNotice(context.getString(R.string.confirm_stop_app), DialogInterface.OnClickListener { _, _ ->
-                if (AppManagerUtils.forceStopApp(applicationInfo.packageName)) {
-                    activityFinish()
-                }
-            })
+            showNotice(
+                context.getString(R.string.confirm_stop_app),
+                DialogInterface.OnClickListener { _, _ ->
+                    if (AppManagerUtils.forceStopApp(applicationInfo.packageName)) {
+                        activityFinish()
+                    }
+                })
         }
     }
 
@@ -169,16 +172,12 @@ class AppSettingView : ScrollView {
             return
         }
         apkInfo?.apply {
-            showNotice(context.getString(R.string.confirm_restart_app), DialogInterface.OnClickListener { _, _ ->
-                if (!AppManagerUtils.forceStopApp(applicationInfo.packageName)) {
-                    showToast(context.getString(R.string.restart_failed))
-                    return@OnClickListener
-                }
-                activityFinish()
-                val intent = context.packageManager.getLaunchIntentForPackage(applicationInfo.packageName)
-                intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(intent)
-            })
+            showNotice(
+                context.getString(R.string.confirm_restart_app),
+                DialogInterface.OnClickListener { _, _ ->
+                    AppManagerUtils.restartApp(context, applicationInfo.packageName)
+                    activityFinish()
+                })
         }
     }
 
@@ -187,7 +186,8 @@ class AppSettingView : ScrollView {
             return
         }
         apkInfo?.apply {
-            val backupAppData = BackupUtils.backupAppData(applicationInfo.packageName, applicationInfo.dataDir)
+            val backupAppData =
+                BackupUtils.backupAppData(applicationInfo.packageName, applicationInfo.dataDir)
             if (backupAppData == null) {
                 showToast(context.getString(R.string.backup_failed))
                 return
@@ -207,7 +207,10 @@ class AppSettingView : ScrollView {
                 (context as BaseActivity).requestPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                     object : BaseActivity.PermissionCallback() {
                         override fun granted() {
-                            val zipFile = File(context.externalCacheDir, "${apkInfo?.getAppName() ?: ""}-data.zip")
+                            val zipFile = File(
+                                context.externalCacheDir,
+                                "${apkInfo?.getAppName() ?: ""}-data.zip"
+                            )
                             backupAppData.zip(zipFile)
                             val uri = zipFile.toUri(context)
                             if (uri == null) {

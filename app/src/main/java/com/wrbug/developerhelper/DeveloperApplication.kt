@@ -33,6 +33,7 @@ class DeveloperApplication : BaseApp() {
     override fun attachBaseContext(base: Context?) {
         LaunchContentProvider.setAutoLaunch(false)
         super.attachBaseContext(base)
+        instance = this
     }
 
     override fun onCreate() {
@@ -43,7 +44,6 @@ class DeveloperApplication : BaseApp() {
         )
         registerIpcServer()
         BaseModule.init(this)
-        instance = this
         releaseAssetsFile()
         registerLifecycle()
     }

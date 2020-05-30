@@ -5,5 +5,5 @@ import com.wrbug.developerhelper.mmkv.manager.MMKVManager
 
 object RootUtils {
     val configKv = MMKVManager.get(ConfigKv::class.java)
-    fun isRoot() = configKv.isOpenRoot().not()
+    fun isRoot() = configKv.isOpenRoot()
 }
