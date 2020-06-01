@@ -50,11 +50,12 @@ object AppInfoPagerAdapterHook {
             val applicationInfo = args[1] as ApplicationInfo
             val itemInfos = args[2] as ArrayList<Any>
             itemInfoClass = itemInfos[0].javaClass
-            addAppXposedItem(adapter, packageInfo, applicationInfo, itemInfos)
+            addAppXposedItem(lpparam, adapter, packageInfo, applicationInfo, itemInfos)
         }
     }
 
     private fun addAppXposedItem(
+        lpparam: XC_LoadPackage.LoadPackageParam,
         adapter: Any,
         packageInfo: PackageInfo,
         applicationInfo: ApplicationInfo,
@@ -68,45 +69,25 @@ object AppInfoPagerAdapterHook {
         val context = XposedHelpers.getObjectField(adapter, "context") as? Context
         val label = context?.packageManager?.getApplicationLabel(applicationInfo)
         val click: View?.() -> Unit = {
-            val status = AppXposedProcessDataManager.instance.isAppXposedOpened(packageName).not()
-            AppXposedProcessDataManager.instance.setAppXposedStatus(
-                packageName,
-                status
+            val intent = Intent(
+                context,
+                XposedHelpers.findClass(
+                    "com.wrbug.developerhelper.ui.activity.xposed.appxposedmodulemanager.AppXposedModuleManagerActivity",
+                    lpparam.classLoader
+                )
             )
-            val info = XposedHelpers.callMethod(adapter, "findItemById", id)
-            if (status) {
-                this?.context?.showToast("已开启xposed功能，重启【${label}】后生效")
-                setItemInfo(info, "关闭${label}Xposed功能", "点击关闭")
-            } else {
-                this?.context?.showToast("已关闭xposed功能，重启【${label}】后生效")
-                setItemInfo(info, "开启${label}Xposed功能", "点击开启")
-            }
-            val infoAdapter =
-                XposedHelpers.getObjectField(adapter, "adapter")
-            XposedHelpers.callMethod(infoAdapter, "notifyDataSetChanged")
+            context?.startActivity(intent)
         }
+        itemInfos.add(
+            createItemInfo(
+                id,
+                "${label}Xposed模块管理",
+                "点击设置",
+                Color.parseColor("#0288d1"),
+                click
+            )
+        )
 
-        if (AppXposedProcessDataManager.instance.isAppXposedOpened(packageName)) {
-            itemInfos.add(
-                createItemInfo(
-                    id,
-                    "关闭${label}Xposed功能",
-                    "点击关闭",
-                    Color.parseColor("#0288d1"),
-                    click
-                )
-            )
-        } else {
-            itemInfos.add(
-                createItemInfo(
-                    id,
-                    "开启${label}Xposed功能",
-                    "点击开启",
-                    Color.parseColor("#0288d1"),
-                    click
-                )
-            )
-        }
     }
 
 

@@ -28,6 +28,11 @@
             app:switchVisible="false"
             app:title="@string/app_xposed_function_manager" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@color/material_text_color_black_divider" />
+
         <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
             android:id="@+id/shellSettingItemView"
             android:layout_width="match_parent"
@@ -38,9 +43,22 @@
             app:switchVisible="false"
             app:title="@string/shell_app_manager" />
 
+
+        <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
+            android:id="@+id/dataFinderSettingItemView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:checkable="false"
+            app:src="@drawable/ic_data_finder_666666"
+            app:summary="@string/data_finder_manager_summary"
+            app:switchVisible="false"
+            app:title="@string/data_finder_manager" />
+
+
         <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:checkable="false"
             app:src="@drawable/ic_xposed_custom_666666"
             app:summary="开发中，支持自定义模块加载"

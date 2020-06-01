@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/ripple_with_color_mask">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icoIv"
         android:layout_width="20dp"
         android:layout_height="20dp"

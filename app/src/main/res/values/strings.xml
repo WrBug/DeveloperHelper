@@ -80,7 +80,7 @@
     <string name="no_dex_files">无脱壳文件</string>
     <string name="xposed_setting">Xposed设置</string>
     <string name="shell_app_manager_summary">管理、移除需要脱壳的应用</string>
-    <string name="shell_app_manager">脱壳应用管理</string>
+    <string name="shell_app_manager">应用脱壳</string>
     <string name="remove_item">移除该项</string>
     <string name="open_xposed_first">请先开启Xposed设置</string>
     <string name="check_update">检查更新</string>
@@ -91,4 +91,6 @@
     <string name="download">下载</string>
     <string name="app_xposed_function_manager">应用Xposed功能管理</string>
     <string name="app_xposed_function_manager_summary">应用Xposed总开关，开启后其他xposed模块才会生效</string>
+    <string name="data_finder_manager">DataFinder</string>
+    <string name="data_finder_manager_summary">DataFinder服务，开启后可以在浏览器访问数据库等信息，需要wifi环境</string>
 </resources>
