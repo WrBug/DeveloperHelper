@@ -27,7 +27,7 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener, OnNodeChan
 
 
     private var apkInfo: ApkInfo? = null
-    private var nodeList: List<HierarchyNode>? = null
+    private var nodeList: ArrayList<HierarchyNode>? = null
     private var nodeMap: HashMap<Long, HierarchyNode>? = null
     private var showHierachyView = false
     private var topActivity: TopActivityInfo? = null
@@ -73,15 +73,38 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener, OnNodeChan
         intent?.run {
             apkInfo = getParcelableExtra("apkInfo")
             nodeList = getParcelableArrayListExtra("node")
+            checkNodeList()
             topActivity = getParcelableExtra("topActivity")
             val json = getStringExtra("nodeMap")
-            nodeMap = JsonHelper.fromJson(json, object : TypeToken<HashMap<Long, HierarchyNode>>() {}.type)
+            nodeMap = JsonHelper.fromJson(
+                json,
+                object : TypeToken<HashMap<Long, HierarchyNode>>() {}.type
+            )
         }
         val filter = IntentFilter(ACTION_FINISH_HIERACHY_Activity)
         receiver.setActivity(this)
         registerReceiver(receiver, filter)
         showAppInfoDialog()
         FloatWindowService.setFloatButtonVisible(this, false)
+    }
+
+    private fun checkNodeList() {
+        nodeList ?: return
+        if (nodeList?.size ?: 0 <= 1) {
+            return
+        }
+        var hierarchyNode: HierarchyNode? = null
+        nodeList?.forEach {
+            if (hierarchyNode == null) {
+                hierarchyNode = it
+            } else if (it.screenBounds?.contains(hierarchyNode?.screenBounds) == true) {
+                hierarchyNode = it
+            }
+        }
+        nodeList?.clear()
+        hierarchyNode?.let {
+            nodeList?.add(it)
+        }
     }
 
     private fun showAppInfoDialog() {
@@ -96,7 +119,8 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener, OnNodeChan
     override fun showHierachyView() {
         showHierachyView = true
         hierarchyView.setHierarchyNodes(nodeList)
-        hierarchyView.setOnHierarchyNodeClickListener(object : HierarchyView.OnHierarchyNodeClickListener {
+        hierarchyView.setOnHierarchyNodeClickListener(object :
+            HierarchyView.OnHierarchyNodeClickListener {
             override fun onClick(node: HierarchyNode, parentNode: HierarchyNode?) {
                 hierarchyDetailView.visibility = View.VISIBLE
                 hierarchyDetailView.setNode(node, parentNode)
