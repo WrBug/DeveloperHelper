@@ -8,7 +8,6 @@ import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
 import com.elvishew.xlog.internal.DefaultsFactory
-import com.wrbug.datafinder.startup.LaunchContentProvider
 import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.basewidgetimport.BaseModule
 import com.wrbug.developerhelper.commonutil.ProcessUtil
@@ -31,7 +30,6 @@ class DeveloperApplication : BaseApp() {
     }
 
     override fun attachBaseContext(base: Context?) {
-        LaunchContentProvider.setAutoLaunch(false)
         super.attachBaseContext(base)
         instance = this
     }

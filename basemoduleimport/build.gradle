@@ -36,8 +36,4 @@ dependencies {
     api project(':commonwidget')
     api project(':mmkv')
     api project(':basecommon')
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-}
-repositories {
-    mavenCentral()
 }

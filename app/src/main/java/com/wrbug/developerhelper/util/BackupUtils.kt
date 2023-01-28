@@ -5,7 +5,6 @@ import android.os.Environment
 import com.wrbug.developerhelper.basecommon.BaseApp
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.commonutil.toUri
-import com.wrbug.developerhelper.xposed.developerhelper.DeveloperHelper
 import java.io.File
 
 object BackupUtils {
