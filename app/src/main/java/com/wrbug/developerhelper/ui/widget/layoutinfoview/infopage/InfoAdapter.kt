@@ -2,17 +2,16 @@ package com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.commonutil.print
-import kotlinx.android.synthetic.main.item_view_info.view.*
+import com.wrbug.developerhelper.databinding.ItemViewInfoBinding
 
-class InfoAdapter(val context: Context) : RecyclerView.Adapter<InfoAdapter.ViewHolder>() {
+class InfoAdapter(val context: Context): RecyclerView.Adapter<InfoAdapter.ViewHolder>() {
+
     private val list = arrayListOf<ItemInfo>()
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_view_info, p0, false))
+        return ViewHolder(ItemViewInfoBinding.inflate(LayoutInflater.from(p0.context), p0, false))
     }
 
     override fun getItemCount(): Int {
@@ -37,11 +36,11 @@ class InfoAdapter(val context: Context) : RecyclerView.Adapter<InfoAdapter.ViewH
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         val itemInfo = list[p1]
-        p0.itemView.titleTv.text = itemInfo.title
-        p0.itemView.contentTv.text = itemInfo.content.toString()
-        p0.itemView.contentTv.setTextColor(itemInfo.textColor)
-        p0.itemView.contentTv.setTextIsSelectable(itemInfo.clickListener == null)
-        p0.itemView.contentTv.setOnClickListener {
+        p0.binding.titleTv.text = itemInfo.title
+        p0.binding.contentTv.text = itemInfo.content.toString()
+        p0.binding.contentTv.setTextColor(itemInfo.textColor)
+        p0.binding.contentTv.setTextIsSelectable(itemInfo.clickListener == null)
+        p0.binding.contentTv.setOnClickListener {
             itemInfo.content.print()
             itemInfo.clickListener?.run {
                 onClick(it)
@@ -56,5 +55,7 @@ class InfoAdapter(val context: Context) : RecyclerView.Adapter<InfoAdapter.ViewH
         }
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class ViewHolder(val binding: ItemViewInfoBinding): RecyclerView.ViewHolder(binding.root) {
+
+    }
 }

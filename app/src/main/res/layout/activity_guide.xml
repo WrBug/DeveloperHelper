@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
@@ -87,7 +88,7 @@
             android:textColor="@android:color/white"
             android:visibility="gone" />
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/buttonNext"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
@@ -96,7 +97,7 @@
             android:contentDescription="@string/onboarding_next_button_description"
             android:padding="@dimen/activity_horizontal_margin"
             android:src="@drawable/ic_chevron_right_white_24dp"
-            android:tint="@android:color/white" />
+            app:tint="@android:color/white" />
     </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

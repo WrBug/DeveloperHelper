@@ -1,15 +1,15 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply from: "${rootDir}/common.gradle"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 32
 
 
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
 

@@ -9,9 +9,10 @@ import android.view.View
 import android.widget.CompoundButton
 import android.widget.FrameLayout
 import com.wrbug.developerhelper.R
-import kotlinx.android.synthetic.main.view_setting_item.view.*
+import com.wrbug.developerhelper.databinding.ViewSettingItemBinding
 
-class SettingItemView : FrameLayout {
+class SettingItemView: FrameLayout {
+
     var checkable: Boolean = true
         set(value) {
             field = value
@@ -21,21 +22,23 @@ class SettingItemView : FrameLayout {
     var checked: Boolean = false
         set(value) {
             field = value
-            switcher.isChecked = checked
+            binding.switcher.isChecked = checked
         }
     private var switcherMaskViewClicked = false
+    private val binding: ViewSettingItemBinding by lazy {
+        ViewSettingItemBinding.inflate(LayoutInflater.from(context), this, true)
+    }
 
-    constructor(context: Context) : super(context) {
+    constructor(context: Context): super(context) {
         initView()
     }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+    constructor(context: Context, attrs: AttributeSet): super(context, attrs) {
         initView()
         initAttrs(attrs)
     }
 
     private fun initView() {
-        LayoutInflater.from(context).inflate(R.layout.view_setting_item, this)
         setBackgroundResource(R.drawable.ripple_with_color_mask)
     }
 
@@ -46,10 +49,10 @@ class SettingItemView : FrameLayout {
                 setImage(it)
             }
             val title = getString(R.styleable.SettingItemView_title)
-            titleTv.text = title
+            binding.titleTv.text = title
             setSummary(getString(R.styleable.SettingItemView_summary))
             val switchVisible = getBoolean(R.styleable.SettingItemView_switchVisible, true)
-            switcher.visibility = if (switchVisible) View.VISIBLE else View.GONE
+            binding.switcher.visibility = if (switchVisible) View.VISIBLE else View.GONE
             checked = getBoolean(R.styleable.SettingItemView_checked, false)
             checkable = getBoolean(R.styleable.SettingItemView_checkable, true)
             recycle()
@@ -60,44 +63,43 @@ class SettingItemView : FrameLayout {
     override fun setOnClickListener(l: OnClickListener?) {
         super.setOnClickListener(l)
         if (switcherMaskViewClicked.not()) {
-            switcherMaskView.setOnClickListener(l)
+            binding.switcherMaskView.setOnClickListener(l)
         }
     }
 
     fun setOnSwitcherClickListener(listener: View.() -> Unit) {
         switcherMaskViewClicked = true
-        switcherMaskView.setOnClickListener(listener)
+        binding.switcherMaskView.setOnClickListener(listener)
     }
 
-    fun isChecked() = switcher.isChecked
+    fun isChecked() = binding.switcher.isChecked
 
     private fun setSwitchCheckable() {
         if (checkable) {
 //            switcher.setOnTouchListener(null)
-            switcherMaskView.visibility = View.GONE
+            binding.switcherMaskView.visibility = View.GONE
         } else {
 //            switcher.setOnTouchListener { _, _ -> true }
-            switcherMaskView.visibility = View.VISIBLE
+            binding.switcherMaskView.visibility = View.VISIBLE
         }
     }
 
     fun setOnCheckedChangeListener(listener: CompoundButton.OnCheckedChangeListener) {
-        switcher.setOnCheckedChangeListener(listener)
+        binding.switcher.setOnCheckedChangeListener(listener)
     }
 
     fun setImage(drawable: Drawable) {
-        icoIv.setImageDrawable(drawable)
-        icoIv.visibility = View.VISIBLE
+        binding.icoIv.setImageDrawable(drawable)
+        binding.icoIv.visibility = View.VISIBLE
     }
 
     fun setSummary(summary: String?) {
         summary.takeIf {
             !TextUtils.isEmpty(it)
         }?.let {
-            summaryTv.text = it
-            summaryTv.visibility = View.VISIBLE
+            binding.summaryTv.text = it
+            binding.summaryTv.visibility = View.VISIBLE
         }
     }
-
 
 }

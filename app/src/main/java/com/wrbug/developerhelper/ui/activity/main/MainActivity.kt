@@ -27,18 +27,12 @@ import com.wrbug.developerhelper.model.entity.VersionInfo
 import com.wrbug.developerhelper.service.AccessibilityManager
 import com.wrbug.developerhelper.service.FloatWindowService
 import com.wrbug.developerhelper.ui.activity.main.viewmodel.MainViewModel
-import com.wrbug.developerhelper.ui.activity.xposed.xposedsetting.XposedSettingActivity
-import com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
 import com.wrbug.developerhelper.util.DeviceUtils
 import com.wrbug.developerhelper.util.UpdateUtils
-import kotlinx.android.synthetic.main.activity_main.*
 
-
-class MainActivity : BaseVMActivity<MainViewModel>() {
-
+class MainActivity: BaseVMActivity<MainViewModel>() {
 
     lateinit var binding: ActivityMainBinding
-    lateinit var xposedSettingView: SettingItemView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (DeviceUtils.isFloatWindowOpened()) {
@@ -47,7 +41,6 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
         }
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.presenter = Presenter()
-        xposedSettingView = binding.xposedSettingView
         binding.mainVm = vm
         setupActionBar(R.id.toolbar) {
 
@@ -59,23 +52,16 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
     }
 
     private fun initListener() {
-        floatWindowSettingView.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
+        binding.floatWindowSettingView.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
             if (isChecked && DeviceUtils.isFloatWindowOpened()) {
                 FloatWindowService.start(this)
             } else {
                 FloatWindowService.stop(this)
             }
         })
-        rootSettingView.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, _ ->
+        binding.rootSettingView.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, _ ->
 
         })
-        xposedSettingView.setOnClickListener {
-            if (xposedSettingView.isChecked().not()) {
-                showSnack(getString(R.string.open_xposed_first))
-                return@setOnClickListener
-            }
-            startActivity(Intent(this, XposedSettingActivity::class.java))
-        }
     }
 
     override fun getViewModel(): MainViewModel {
@@ -88,8 +74,9 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
     }
 
     inner class Presenter {
+
         fun onAccessibilityClick() {
-            if (!accessibilitySettingView.checked) {
+            if (!binding.accessibilitySettingView.checked) {
                 AccessibilityManager.startAccessibilitySetting(context)
             } else {
                 showSnack(getString(R.string.accessibility_service_opened))
@@ -97,9 +84,12 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
         }
 
         fun onFloatWindowClick() {
-            if (!floatWindowSettingView.checked) {
+            if (!binding.floatWindowSettingView.checked) {
                 startActivityForResult(
-                    Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")),
+                    Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:$packageName")
+                    ),
                     0
                 )
             } else {
@@ -117,18 +107,15 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let {
-            when (it.itemId) {
-                R.id.about_menu -> {
-                    showAboutDialog()
-                }
-                R.id.exit_menu -> {
-                    showExitMenuDialog()
-                }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.about_menu -> {
+                showAboutDialog()
+            }
+            R.id.exit_menu -> {
+                showExitMenuDialog()
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 
@@ -155,15 +142,11 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
         }
         .create().show()
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
-    }
-
     private fun checkUpdate(showSnack: Boolean = false) {
         if (showSnack) {
             showSnack(getString(R.string.checking_update))
         }
-        UpdateUtils.checkUpdate(object : Callback<VersionInfo> {
+        UpdateUtils.checkUpdate(object: Callback<VersionInfo> {
             override fun onSuccess(data: VersionInfo) {
                 if (BuildConfig.VERSION_NAME == data.versionName) {
                     showSnack(getString(R.string.no_new_version))
@@ -191,11 +174,12 @@ class MainActivity : BaseVMActivity<MainViewModel>() {
         }
         .create().show()
 
-    private val receiver = object : BroadcastReceiver() {
+    private val receiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.run {
                 if (action == ReceiverConstant.ACTION_ACCESSIBILITY_SERVICE_STATUS_CHANGED) {
-                    accessibilitySettingView.checked = intent.getBooleanExtra("status", false)
+                    binding.accessibilitySettingView.checked =
+                        intent.getBooleanExtra("status", false)
                 }
             }
         }

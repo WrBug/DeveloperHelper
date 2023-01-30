@@ -14,37 +14,39 @@ import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.ui.activity.databaseedit.DatabaseEditActivity
 import com.wrbug.developerhelper.ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity
 import com.wrbug.developerhelper.commonutil.UiUtils
-import kotlinx.android.synthetic.main.view_app_data_info.view.*
+import com.wrbug.developerhelper.databinding.ViewAppDataInfoBinding
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
 
-class AppDataInfoView : FrameLayout {
+class AppDataInfoView: FrameLayout {
+
+    private lateinit var binding: ViewAppDataInfoBinding
     var apkInfo: ApkInfo? = null
         set(value) {
             field = value
             loadData()
         }
 
-    constructor(context: Context) : super(context) {
+    constructor(context: Context): super(context) {
         initView()
 
     }
 
-    constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet) {
+    constructor(context: Context, attributeSet: AttributeSet): super(context, attributeSet) {
         initView()
     }
 
     private fun initView() {
-        LayoutInflater.from(context).inflate(R.layout.view_app_data_info, this)
+        binding = ViewAppDataInfoBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     private fun loadData() {
         apkInfo?.run {
-            apkPathTv.text = applicationInfo.publicSourceDir
+            binding.apkPathTv.text = applicationInfo.publicSourceDir
             val apkSignInfo = ApkUtils.getApkSignInfo(context, applicationInfo.packageName)
-            apkSha1Tv.text = apkSignInfo.sha1
-            apkMd5Tv.text = apkSignInfo.md5
+            binding.apkSha1Tv.text = apkSignInfo.sha1
+            binding.apkMd5Tv.text = apkSignInfo.md5
             getSharedPreferencesFiles(applicationInfo.packageName)
             getDatabaseFiles(applicationInfo.packageName)
         }
@@ -55,10 +57,10 @@ class AppDataInfoView : FrameLayout {
             val sqliteFiles = ShellManager.getSqliteFiles(packageName)
             uiThread {
                 if (sqliteFiles.isEmpty()) {
-                    defaultDbTv.setText(R.string.none)
+                    binding.defaultDbTv.setText(R.string.none)
                     return@uiThread
                 }
-                databaseContainer.removeAllViews()
+                binding.databaseContainer.removeAllViews()
                 val params =
                     LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
                 for (sqliteFile in sqliteFiles) {
@@ -68,7 +70,7 @@ class AppDataInfoView : FrameLayout {
                     textView.setTextColor(resources.getColor(R.color.item_content_text))
                     textView.setPadding(0, UiUtils.dp2px(context, 8F), 0, 0)
                     textView.tag = sqliteFile
-                    databaseContainer.addView(textView, params)
+                    binding.databaseContainer.addView(textView, params)
                     textView.setOnClickListener {
                         DatabaseEditActivity.start(context, (it.tag as File).absolutePath)
                     }
@@ -83,10 +85,10 @@ class AppDataInfoView : FrameLayout {
             val files = AppInfoManager.getSharedPreferencesFiles(packageName)
             uiThread {
                 if (files.isEmpty()) {
-                    defaultSpTv.setText(R.string.none)
+                    binding.defaultSpTv.setText(R.string.none)
                     return@uiThread
                 }
-                sharedPreferenceContainer.removeAllViews()
+                binding.sharedPreferenceContainer.removeAllViews()
                 val params =
                     LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
                 files.forEach {
@@ -96,13 +98,13 @@ class AppDataInfoView : FrameLayout {
                     textView.setTextColor(resources.getColor(R.color.item_content_text))
                     textView.setPadding(0, UiUtils.dp2px(context, 8F), 0, 0)
                     textView.tag = it
-                    sharedPreferenceContainer.addView(textView, params)
+                    binding.sharedPreferenceContainer.addView(textView, params)
                     textView.setOnClickListener {
                         SharedPreferenceEditActivity.start(
                             context,
                             (it.tag as File).absolutePath,
                             packageName,
-                            apkInfo?.getAppName()?:""
+                            apkInfo?.getAppName() ?: ""
                         )
                     }
                 }

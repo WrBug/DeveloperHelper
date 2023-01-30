@@ -16,21 +16,23 @@ import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
 import com.wrbug.developerhelper.util.OutSharedPreferenceManager
 import com.wrbug.developerhelper.util.XmlUtil
 import com.wrbug.developerhelper.commonutil.dp2px
-import kotlinx.android.synthetic.main.activity_shared_preference_edit.*
+import com.wrbug.developerhelper.databinding.ActivitySharedPreferenceEditBinding
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
 
-class SharedPreferenceEditActivity : BaseActivity(),
-    SharedPreferenceListAdapter.OnValueChangedListener {
+class SharedPreferenceEditActivity: BaseActivity(),
+                                    SharedPreferenceListAdapter.OnValueChangedListener {
 
     private var filePath: String = ""
     private var filePackageName = ""
     private var appName = ""
     private lateinit var adapter: SharedPreferenceListAdapter
     private var saveMenuItem: MenuItem? = null
+    private lateinit var binding: ActivitySharedPreferenceEditBinding
 
     companion object {
+
         private const val KEY_FILE_PATH = "filePath"
         private const val KEY_PACKAGE_NAME = "packageName"
         private const val KEY_APP_NAME = "appName"
@@ -46,11 +48,11 @@ class SharedPreferenceEditActivity : BaseActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_shared_preference_edit)
+        binding = ActivitySharedPreferenceEditBinding.inflate(layoutInflater).inject()
         intent?.let {
-            filePath = it.getStringExtra(KEY_FILE_PATH)
-            filePackageName = it.getStringExtra(KEY_PACKAGE_NAME)
-            appName = it.getStringExtra(KEY_APP_NAME)
+            filePath = it.getStringExtra(KEY_FILE_PATH).orEmpty()
+            filePackageName = it.getStringExtra(KEY_PACKAGE_NAME).orEmpty()
+            appName = it.getStringExtra(KEY_APP_NAME).orEmpty()
         }
         setupActionBar(R.id.toolbar) {
             if (filePath.isNotEmpty()) {
@@ -58,12 +60,12 @@ class SharedPreferenceEditActivity : BaseActivity(),
             }
         }
 
-        sprefRv.layoutManager = LinearLayoutManager(this)
+        binding.sprefRv.layoutManager = LinearLayoutManager(this)
         adapter = SharedPreferenceListAdapter(this)
-        sprefRv.adapter = adapter
+        binding.sprefRv.adapter = adapter
         adapter.setOnValueChangedListener(this)
         val spaceItemDecoration = SpaceItemDecoration(dp2px(10F))
-        sprefRv.addItemDecoration(spaceItemDecoration)
+        binding.sprefRv.addItemDecoration(spaceItemDecoration)
         parseXml()
 
     }
@@ -130,29 +132,27 @@ class SharedPreferenceEditActivity : BaseActivity(),
         return success
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.run {
-            when (itemId) {
-                R.id.save_menu -> {
-                    if (!doSave()) {
-                        showSnack(getString(R.string.save_shared_preference_failed))
-                        return@run
-                    }
-                    parseXml()
-                    showDialog(
-                        R.string.notice,
-                        getString(R.string.save_shared_preference_success, appName),
-                        R.string.ok,
-                        R.string.cancel,
-                        {
-                            AppManagerUtils.restartApp(
-                                this@SharedPreferenceEditActivity,
-                                filePackageName
-                            )
-                            finish()
-                        }
-                    )
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.save_menu -> {
+                if (!doSave()) {
+                    showSnack(getString(R.string.save_shared_preference_failed))
+                    return super.onOptionsItemSelected(item)
                 }
+                parseXml()
+                showDialog(
+                    R.string.notice,
+                    getString(R.string.save_shared_preference_success, appName),
+                    R.string.ok,
+                    R.string.cancel,
+                    {
+                        AppManagerUtils.restartApp(
+                            this@SharedPreferenceEditActivity,
+                            filePackageName
+                        )
+                        finish()
+                    }
+                )
             }
         }
         return super.onOptionsItemSelected(item)

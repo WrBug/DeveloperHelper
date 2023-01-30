@@ -9,15 +9,18 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
 import java.util.ArrayList
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity: AppCompatActivity() {
+
     private lateinit var toastRootView: View
     protected lateinit var context: BaseActivity
     private var mPermissionCallback: PermissionCallback? = null
 
     companion object {
+
         private const val PERMISSION_REQUEST_CODE = 0xAADF1
     }
 
@@ -38,7 +41,6 @@ abstract class BaseActivity : AppCompatActivity() {
     fun showSnack(id: Int) {
         Snackbar.make(toastRootView, id, Snackbar.LENGTH_SHORT).show()
     }
-
 
     @TargetApi(Build.VERSION_CODES.M)
     fun requestPermission(permissions: Array<String>, callback: PermissionCallback) {
@@ -61,11 +63,13 @@ abstract class BaseActivity : AppCompatActivity() {
         requestPermissions(list.toTypedArray(), PERMISSION_REQUEST_CODE)
     }
 
-
     fun showDialog(
-        @StringRes title: Int,
-        @StringRes msg: Int,
-        @StringRes positiveText: Int,
+        @StringRes
+        title: Int,
+        @StringRes
+        msg: Int,
+        @StringRes
+        positiveText: Int,
         positiveListener: DialogInterface.OnClickListener
     ) {
         showDialog(title, msg, positiveText, 0, positiveListener, null)
@@ -80,12 +84,15 @@ abstract class BaseActivity : AppCompatActivity() {
         showDialog(title, msg, positiveText, null, positiveListener, null)
     }
 
-
     fun showDialog(
-        @StringRes title: Int,
-        @StringRes msg: Int,
-        @StringRes positiveText: Int,
-        @StringRes negativeText: Int,
+        @StringRes
+        title: Int,
+        @StringRes
+        msg: Int,
+        @StringRes
+        positiveText: Int,
+        @StringRes
+        negativeText: Int,
         onPositiveClick: DialogInterface?.(Int) -> Unit,
         onNegativeClick: DialogInterface?.(Int) -> Unit? = {
 
@@ -101,10 +108,13 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun showDialog(
-        @StringRes title: Int,
+        @StringRes
+        title: Int,
         msg: String,
-        @StringRes positiveText: Int,
-        @StringRes negativeText: Int,
+        @StringRes
+        positiveText: Int,
+        @StringRes
+        negativeText: Int,
         onPositiveClick: DialogInterface?.(Int) -> Unit,
         onNegativeClick: DialogInterface?.(Int) -> Unit? = {
 
@@ -120,10 +130,14 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun showDialog(
-        @StringRes title: Int,
-        @StringRes msg: Int,
-        @StringRes positiveText: Int,
-        @StringRes negativeText: Int,
+        @StringRes
+        title: Int,
+        @StringRes
+        msg: Int,
+        @StringRes
+        positiveText: Int,
+        @StringRes
+        negativeText: Int,
         positiveListener: DialogInterface.OnClickListener,
         negativeListener: DialogInterface.OnClickListener?
     ) {
@@ -138,10 +152,13 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun showDialog(
-        @StringRes title: Int,
+        @StringRes
+        title: Int,
         msg: String,
-        @StringRes positiveText: Int,
-        @StringRes negativeText: Int,
+        @StringRes
+        positiveText: Int,
+        @StringRes
+        negativeText: Int,
         positiveListener: DialogInterface.OnClickListener,
         negativeListener: DialogInterface.OnClickListener?
     ) {
@@ -195,10 +212,16 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     abstract class PermissionCallback {
+
         abstract fun granted()
 
         open fun denied(permissions: List<String>) {
 
         }
+    }
+
+    protected fun <T: ViewBinding> T.inject(): T {
+        setContentView(this.root)
+        return this
     }
 }

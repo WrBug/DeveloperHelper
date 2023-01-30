@@ -20,11 +20,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.activity.xposed.appxposedmodulemanager.AppXposedModuleManagerActivity"></activity>
-        <activity android:name=".ui.activity.xposed.appxposedsetting.AppXposedSettingActivity" />
         <activity
             android:name=".ui.activity.main.MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,7 +33,8 @@
 
         <service
             android:name=".service.DeveloperHelperAccessibilityService"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
@@ -56,10 +56,15 @@
 
         <activity
             android:name=".ui.activity.guide.GuideActivity"
+            android:exported="false"
             android:label="@string/title_activity_guide"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity" />
-        <activity android:name=".ui.activity.databaseedit.DatabaseEditActivity" />
+        <activity
+            android:name=".ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.databaseedit.DatabaseEditActivity"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -70,10 +75,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
-
-        <activity android:name=".ui.activity.xposed.xposedsetting.XposedSettingActivity" />
-        <activity android:name=".ui.activity.xposed.shellmanager.ShellAppManagerActivity" />
-        <activity android:name=".ui.activity.xposed.datafindermanager.DataFinderManagerActivity" />
     </application>
 
 </manifest>

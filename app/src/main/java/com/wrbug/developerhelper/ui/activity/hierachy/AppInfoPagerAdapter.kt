@@ -32,9 +32,10 @@ class AppInfoPagerAdapter(
     private val dialog: AppInfoDialog,
     private val apkInfo: ApkInfo?,
     private val topActivity: TopActivityInfo?
-) :
+):
     PagerAdapter() {
-    private val context: Context = dialog.activity!!
+
+    private val context: Context = dialog.requireContext()
     private val tabList = arrayListOf<String>()
     private val viewList = arrayListOf<View>()
     private val adapter = InfoAdapter(context)
@@ -161,7 +162,6 @@ class AppInfoPagerAdapter(
     override fun getCount(): Int {
         return tabList.size
     }
-
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         container.addView(viewList[position])

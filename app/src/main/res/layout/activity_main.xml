@@ -85,15 +85,6 @@
                     app:src="@drawable/ic_root_666666"
                     app:summary="@string/open_root_permission_summary"
                     app:title="@string/open_root_permission_title" />
-
-                <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
-                    android:id="@+id/xposedSettingView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:src="@drawable/ic_xposed_666666"
-                    app:summary="@string/open_xposed_summary"
-                    app:title="@string/open_xposed_title" />
             </LinearLayout>
         </ScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

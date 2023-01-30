@@ -4,15 +4,17 @@ import android.animation.ArgbEvaluator
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity
-import kotlinx.android.synthetic.main.activity_guide.*
+import com.wrbug.developerhelper.databinding.ActivityDatabaseEditBinding
+import com.wrbug.developerhelper.databinding.ActivityGuideBinding
 
-
-class GuideActivity : BaseActivity() {
+class GuideActivity: BaseActivity() {
 
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+    private lateinit var binding: ActivityGuideBinding
     private val bgColors: IntArray by lazy {
         intArrayOf(
             ContextCompat.getColor(this, R.color.colorPrimary),
@@ -25,17 +27,17 @@ class GuideActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_guide)
+        binding = ActivityGuideBinding.inflate(layoutInflater).inject()
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
-        viewPager.adapter = mSectionsPagerAdapter
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        binding.viewPager.adapter = mSectionsPagerAdapter
+        binding.viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
             override fun onPageSelected(position: Int) {
                 currentPosition = position
                 updateIndicators(position)
-                viewPager.setBackgroundColor(bgColors[position])
-                buttonPre.visibility = if (position == 0) View.GONE else View.VISIBLE
-                buttonNext.visibility = if (position == 2) View.GONE else View.VISIBLE
-                buttonFinish.visibility = if (position == 2) View.VISIBLE else View.GONE
+                binding.viewPager.setBackgroundColor(bgColors[position])
+                binding.buttonPre.visibility = if (position == 0) View.GONE else View.VISIBLE
+                binding.buttonNext.visibility = if (position == 2) View.GONE else View.VISIBLE
+                binding.buttonFinish.visibility = if (position == 2) View.VISIBLE else View.GONE
             }
 
             override fun onPageScrollStateChanged(position: Int) {
@@ -48,11 +50,15 @@ class GuideActivity : BaseActivity() {
                     bgColors[p0],
                     bgColors[if (p0 == 2) p0 else p0 + 1]
                 ) as Int
-                viewPager.setBackgroundColor(colorUpdate)
+                binding.viewPager.setBackgroundColor(colorUpdate)
             }
 
         })
-        indicators = arrayOf(imageViewIndicator0 as View, imageViewIndicator1 as View, imageViewIndicator2 as View)
+        indicators = arrayOf(
+            binding.imageViewIndicator0 as View,
+            binding.imageViewIndicator1 as View,
+            binding.imageViewIndicator2 as View
+        )
     }
 
     private fun updateIndicators(position: Int) {

@@ -14,7 +14,6 @@ import com.wrbug.developerhelper.commonutil.AppManagerUtils
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.mmkv.ConfigKv
 import com.wrbug.developerhelper.mmkv.manager.MMKVManager
-import kotlinx.android.synthetic.main.view_app_setting.view.*
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.widget.AppCompatButton
@@ -23,57 +22,59 @@ import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.commonutil.zip
 import com.wrbug.developerhelper.util.BackupUtils
 import com.wrbug.developerhelper.commonutil.toUri
+import com.wrbug.developerhelper.databinding.ViewAppSettingBinding
 import gdut.bsx.share2.Share2
 import gdut.bsx.share2.ShareContentType
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
 
+class AppSettingView: ScrollView {
 
-class AppSettingView : ScrollView {
     var apkInfo: ApkInfo? = null
     private val configKv = MMKVManager.get(ConfigKv::class.java)
     private var exportDexBtn: AppCompatButton? = null
+    private lateinit var binding: ViewAppSettingBinding
 
-    constructor(context: Context) : super(context) {
+    constructor(context: Context): super(context) {
         initView()
     }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+    constructor(context: Context, attrs: AttributeSet): super(context, attrs) {
         initView()
     }
 
     private fun initView() {
-        LayoutInflater.from(context).inflate(R.layout.view_app_setting, this)
+        binding = ViewAppSettingBinding.inflate(LayoutInflater.from(context), this, true)
         exportDexBtn = findViewById(R.id.exportDexBtn)
         if (configKv.isOpenRoot().not()) {
-            backupApkBtn.isEnabled = false
-            backupApkDataDirBtn.isEnabled = false
-            restartAppBtn.isEnabled = false
-            stopAppBtn.isEnabled = false
-            deleteAppDataBtn.isEnabled = false
+            binding.backupApkBtn.isEnabled = false
+            binding.backupApkDataDirBtn.isEnabled = false
+            binding.restartAppBtn.isEnabled = false
+            binding.stopAppBtn.isEnabled = false
+            binding.deleteAppDataBtn.isEnabled = false
             exportDexBtn?.isEnabled = false
         }
         initListener()
     }
 
     private fun initListener() {
-        backupApkBtn.setOnClickListener {
+        binding.backupApkBtn.setOnClickListener {
             doBackupApk()
         }
-        backupApkDataDirBtn.setOnClickListener {
+        binding.backupApkDataDirBtn.setOnClickListener {
             doBackupDataDir()
         }
-        restartAppBtn.setOnClickListener {
+        binding.restartAppBtn.setOnClickListener {
             doRestartApp()
         }
-        stopAppBtn.setOnClickListener {
+        binding.stopAppBtn.setOnClickListener {
             doStopApp()
         }
-        deleteAppDataBtn.setOnClickListener {
+        binding.deleteAppDataBtn.setOnClickListener {
             doDeleteAppData()
         }
-        uninstallAppBtn.setOnClickListener {
+        binding.uninstallAppBtn.setOnClickListener {
             doUninstallApp()
         }
 
@@ -205,7 +206,7 @@ class AppSettingView : ScrollView {
             context.getString(R.string.backup_success_and_share_msg),
             DialogInterface.OnClickListener { _, _ ->
                 (context as BaseActivity).requestPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    object : BaseActivity.PermissionCallback() {
+                    object: BaseActivity.PermissionCallback() {
                         override fun granted() {
                             val zipFile = File(
                                 context.externalCacheDir,
@@ -255,27 +256,25 @@ class AppSettingView : ScrollView {
     }
 
     private fun showShareApkDialog(uri: Uri) {
-        showNotice(
-            context.getString(R.string.backup_success_and_share_msg),
-            DialogInterface.OnClickListener { _, _ ->
-                (context as BaseActivity).requestPermission(arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ),
-                    object : BaseActivity.PermissionCallback() {
-                        override fun granted() {
-                            activityFinish()
-                            Share2.Builder(context as Activity)
-                                .setContentType(ShareContentType.FILE)
-                                .setShareFileUri(uri)
-                                .setOnActivityResult(10)
-                                .build()
-                                .shareBySystem()
-                        }
+        showNotice(context.getString(R.string.backup_success_and_share_msg)) { _, _ ->
+            (context as BaseActivity).requestPermission(arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ),
+                object: BaseActivity.PermissionCallback() {
+                    override fun granted() {
+                        activityFinish()
+                        Share2.Builder(context as Activity)
+                            .setContentType(ShareContentType.FILE)
+                            .setShareFileUri(uri)
+                            .setOnActivityResult(10)
+                            .build()
+                            .shareBySystem()
+                    }
 
-                    })
+                })
 
-            })
+        }
     }
 
     private fun checkRoot(): Boolean {

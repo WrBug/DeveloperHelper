@@ -20,9 +20,9 @@ import com.wrbug.developerhelper.ipcserver.IpcManager
 import com.wrbug.developerhelper.ui.activity.main.MainActivity
 import org.jetbrains.anko.doAsync
 
-
-class DeveloperApplication : BaseApp() {
+class DeveloperApplication: BaseApp() {
     companion object {
+
         private lateinit var instance: DeveloperApplication
         fun getInstance(): DeveloperApplication {
             return instance
@@ -37,7 +37,8 @@ class DeveloperApplication : BaseApp() {
     override fun onCreate() {
         super.onCreate()
         XLog.init(
-            LogConfiguration.Builder().logLevel(LogLevel.ALL).tag("developerHelper.print-->").build(),
+            LogConfiguration.Builder().logLevel(LogLevel.ALL).tag("developerHelper.print-->")
+                .build(),
             DefaultsFactory.createPrinter()
         )
         registerIpcServer()
@@ -57,41 +58,37 @@ class DeveloperApplication : BaseApp() {
     }
 
     private fun registerLifecycle() {
-        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+        registerActivityLifecycleCallbacks(object: ActivityLifecycleCallbacks {
             private var count = 0
-            override fun onActivityPaused(activity: Activity?) {
+            override fun onActivityPaused(activity: Activity) {
 
             }
 
-            override fun onActivityResumed(activity: Activity?) {
+            override fun onActivityResumed(activity: Activity) {
             }
 
-            override fun onActivityStarted(activity: Activity?) {
+            override fun onActivityStarted(activity: Activity) {
                 count++
             }
 
-            override fun onActivityDestroyed(activity: Activity?) {
+            override fun onActivityDestroyed(activity: Activity) {
             }
 
-            override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
             }
 
-            override fun onActivityStopped(activity: Activity?) {
+            override fun onActivityStopped(activity: Activity) {
                 count--
-                activity?.let {
-                    if (count == 0 && activity is MainActivity) {
-                        activity.finish()
-                    }
+                if (count == 0 && activity is MainActivity) {
+                    activity.finish()
                 }
-
             }
 
-            override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
             }
 
         })
     }
-
 
     private fun releaseAssetsFile() {
         doAsync {
