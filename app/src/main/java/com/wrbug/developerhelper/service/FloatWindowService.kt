@@ -14,6 +14,7 @@ import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.commonutil.shell.Callback
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
+import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
 import com.wrbug.developerhelper.ui.activity.main.MainActivity
 import com.yhao.floatwindow.FloatWindow
 import com.yhao.floatwindow.Screen
@@ -55,7 +56,7 @@ class FloatWindowService : Service() {
         super.onCreate()
         initReceiver()
         LayoutInflater.from(this).inflate(R.layout.layout_float_window_button, null)?.let {
-            it.setOnClickListener {
+            it.setOnDoubleCheckClickListener {
                 if (!DeveloperHelperAccessibilityService.isAccessibilitySettingsOn()) {
                     AccessibilityManager.startService(this, object : Callback<Boolean> {
                         override fun onSuccess(data: Boolean) {
@@ -67,7 +68,7 @@ class FloatWindowService : Service() {
                         }
 
                     })
-                    return@setOnClickListener
+                    return@setOnDoubleCheckClickListener
                 }
                 sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))
             }
