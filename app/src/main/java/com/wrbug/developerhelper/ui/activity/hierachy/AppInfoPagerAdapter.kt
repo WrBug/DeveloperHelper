@@ -25,6 +25,7 @@ import com.wrbug.developerhelper.util.format
 import com.wrbug.developerhelper.util.getString
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import java.lang.StringBuilder
 import java.util.ArrayList
 
 @Keep
@@ -84,18 +85,17 @@ class AppInfoPagerAdapter(
             item.textColor = context.resources.getColor(R.color.colorPrimaryDark)
             itemInfos.add(item)
             headerItemHook(it.packageInfo, it.applicationInfo, itemInfos)
-            itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
-            itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
             topActivity?.let {
+                itemInfos.add(ItemInfo("PackageName", it.packageName))
                 itemInfos.add(ItemInfo("Activity", it.activity))
-                it.fragments.takeUnless { fragments ->
-                    fragments.isNullOrEmpty()
-                }?.forEach {
-                    if (it.hidden.not()) {
-                        itemInfos.add(ItemInfo("Fragment", it.name))
+                it.fragments?.takeUnless { it.isEmpty() }
+                    ?.map { it.name + "(state=${it.state},tag=${it.tag})" }
+                    ?.joinToString("\n")?.let {
+                        itemInfos.add(ItemInfo("Fragments", it))
                     }
-                }
             }
+            itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
+            itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
             it.applicationInfo.className?.let { name ->
                 itemInfos.add(ItemInfo("Application", name))
             }

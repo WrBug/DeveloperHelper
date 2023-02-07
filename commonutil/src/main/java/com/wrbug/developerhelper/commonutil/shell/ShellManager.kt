@@ -6,13 +6,16 @@ import com.wrbug.developerhelper.commonutil.ShellUtils
 import com.wrbug.developerhelper.commonutil.entity.FragmentInfo
 import com.wrbug.developerhelper.commonutil.entity.LsFileInfo
 import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
+import com.wrbug.developerhelper.commonutil.toInt
 import java.io.File
 import java.util.regex.Pattern
 
-
 object ShellManager {
+
     private const val SHELL_TOP_ACTIVITY = "dumpsys activity top"
-    private const val SHELL_PROCESS_PID_1 = "ps -ef | grep \"%1\$s\" | grep -v %1\$s:| grep -v grep | awk '{print \$2}'"
+    private const val SHELL_APP_ACTIVITY = "dumpsys activity %1\$s"
+    private const val SHELL_PROCESS_PID_1 =
+        "ps -ef | grep \"%1\$s\" | grep -v %1\$s:| grep -v grep | awk '{print \$2}'"
     private const val SHELL_PROCESS_PID_2 = "top -b -n 1 |grep %1\$s |grep -v grep|grep -v %1\$s:"
     private const val SHELL_PROCESS_PID_3 = "top -n 1 |grep %1\$s |grep -v grep|grep -v %1\$s:"
     private var SHELL_OPEN_ACCESSiBILITY_SERVICE = arrayOf(
@@ -26,11 +29,15 @@ object ShellManager {
     private const val SHELL_UNINSTALL_APP = "pm uninstall %1\$s"
     private const val SHELL_CLEAR_APP_DATA = "pm clear %1\$s"
     private const val SHELL_FORCE_STOP_APP = "am force-stop %1\$s"
-    private val SHELL_OPEN_ADB_WIFI = arrayOf("setprop service.adb.tcp.port 5555", "stop adbd", "start adbd")
+    private val SHELL_OPEN_ADB_WIFI =
+        arrayOf("setprop service.adb.tcp.port 5555", "stop adbd", "start adbd")
+
     fun getTopActivity(callback: Callback<TopActivityInfo?>) {
-        ShellUtils.runWithSu(arrayOf(SHELL_TOP_ACTIVITY), object : ShellUtils.ShellResultCallback() {
+        ShellUtils.runWithSu(arrayOf(SHELL_TOP_ACTIVITY), object: ShellUtils.ShellResultCallback() {
             override fun onComplete(result: CommandResult) {
-                callback.onSuccess(getTopActivity(result))
+                val activityInfo = getTopActivity(result)
+                activityInfo.fragments = getFragment(activityInfo.packageName)
+                callback.onSuccess(activityInfo)
             }
 
             override fun onError(msg: String) {
@@ -38,6 +45,84 @@ object ShellManager {
             }
         })
 
+    }
+
+    private fun getFragment(packageName: String): Array<FragmentInfo> {
+        val lines =
+            ShellUtils.runWithSu(String.format(SHELL_APP_ACTIVITY, packageName)).stdout.toList()
+        val splitIndex = lines.indexOfFirst { it.trim().isEmpty() }
+        val (tasks, insetsController) = if (splitIndex == -1) {
+            lines to emptyList()
+        } else {
+            lines.subList(0, splitIndex) to lines.subList(splitIndex + 1, lines.size)
+        }
+
+        val list = ArrayList<FragmentInfo>()
+        val map = getFragments(insetsController.ifEmpty { tasks })
+        map.forEach {
+            val info = FragmentInfo(
+                name = it.key,
+                containerId = it.value["mContainerId"].orEmpty(),
+                tag = it.value["mTag"].orEmpty(),
+                state = it.value["mState"].toInt(),
+                who = it.value["mWho"].orEmpty(),
+                backStackNesting = it.value["mBackStackNesting"].toInt(),
+                added = it.value["mAdded"].toBoolean(),
+                removing = it.value["mRemoving"].toBoolean(),
+                fromLayout = it.value["mFromLayout"].toBoolean(),
+                inLayout = it.value["mInLayout"].toBoolean(),
+                hidden = it.value["mHidden"].toBoolean(),
+                detached = it.value["mDetached"].toBoolean(),
+            )
+            list.add(info)
+        }
+        return list.toTypedArray()
+    }
+
+    private fun getFragments(list: List<String>): Map<String, Map<String, String>> {
+        val index = list.indexOfFirst { tabCount(it) == 2 && it.trim() == "Added Fragments:" }
+        if (index == -1) {
+            return emptyMap()
+        }
+        val fragmentNameList = arrayListOf<String>()
+        for (i in index + 1 until list.size) {
+            val line = list[i]
+            if (tabCount(line) != 3) {
+                break
+            }
+            fragmentNameList.add(line.trim().split(" ")[1])
+        }
+        val fragmentMap = hashMapOf<String, Map<String, String>>()
+        list.forEachIndexed { index, str ->
+            if (tabCount(str) == 2) {
+                val name = str.trim().split(" ")[0]
+                if (!fragmentNameList.contains(name)) {
+                    return@forEachIndexed
+                }
+                val map = hashMapOf<String, String>()
+                for (i in index + 1 until list.size) {
+                    val line = list[i].trim()
+                    if (!line.startsWith("m")) {
+                        break
+                    }
+                    line.split(" ").forEach {
+                        val pair = it.split("=")
+                        if (pair.size == 2) {
+                            map[pair[0]] = pair[1]
+                        }
+                    }
+                }
+                val pureName = name.substring(0, name.indexOf("{"))
+                if (pureName != "ReportFragment") {
+                    fragmentMap[pureName] = map
+                }
+            }
+        }
+        return fragmentMap
+    }
+
+    private fun tabCount(str: String): Int {
+        return (str.length - str.trimStart().length) / 2
     }
 
     fun getTopActivity(result: CommandResult): TopActivityInfo {
@@ -50,7 +135,7 @@ object ShellManager {
                 val pattern = Pattern.compile(regex)
                 val matcher = pattern.matcher(task_)
                 if (matcher.find()) {
-                    topActivityInfo.activity = matcher.group().split(" ")[1]
+                    topActivityInfo.setFullActivity(matcher.group().split(" ")[1])
                 }
                 val split =
                     task_.split("\n[ ]{4}[A-Z]".toRegex()).dropLastWhile { it.isEmpty() }
@@ -65,67 +150,9 @@ object ShellManager {
                                     continue
                                 }
                                 topActivityInfo.viewIdHex[split1[5].substring(split1[5].indexOf("id/"))] =
-                                        split1[4]
+                                    split1[4]
                             }
                         }
-                    } else if (s.contains("ocal Activity")) {
-                    } else if (s.contains("ctive Fragments")) {
-                        val list = ArrayList<FragmentInfo>()
-                        val split2 =
-                            s.split("\n {6}#[0-9]+:".toRegex()).filterNot { it.isBlank() }
-                        for (s2 in split2) {
-                            if (s2.contains("mFragmentId=")) {
-                                val name = s2.trim { it <= ' ' }.substring(0, s2.indexOf("{") - 1)
-                                val fragmentInfo = FragmentInfo()
-                                list.add(fragmentInfo)
-                                fragmentInfo.name = name
-                                val split3 =
-                                    s2.replace("Child FragmentManager", "Child_FragmentManager").split(" ".toRegex())
-                                        .dropLastWhile { it.isEmpty() }
-                                for (s31 in split3) {
-                                    if (s31.contains("Child_FragmentManager")) {
-                                        break
-                                    }
-                                    val s3 = s31.replace("\n", "").replace(" ", "")
-                                    when {
-                                        s3.startsWith("mFragmentId=") -> fragmentInfo.fragmentId =
-                                                s3.replace("mFragmentId=", "")
-                                        s3.startsWith("mContainerId=") -> fragmentInfo.containerId =
-                                                s3.replace("mContainerId=", "")
-                                        s3.startsWith("mTag=") -> fragmentInfo.tag = s3.replace("mTag=", "")
-                                        s3.startsWith("mState=") -> fragmentInfo.state =
-                                                s3.replace("mState=", "").toInt()
-                                        s3.startsWith("mIndex=") -> fragmentInfo.index =
-                                                s3.replace("mIndex=", "").toInt()
-                                        s3.startsWith("mWho=") -> fragmentInfo.who = s3.replace("mWho=", "")
-                                        s3.startsWith("mBackStackNesting=") -> fragmentInfo.backStackNesting =
-                                                s3.replace("mBackStackNesting=", "").toInt()
-                                        s3.startsWith("mAdded=") -> fragmentInfo.added = s3.replace("mAdded=", "") ==
-                                                "true"
-                                        s3.startsWith("mRemoving=") -> fragmentInfo.removing = s3.replace(
-                                            "mRemoving=",
-                                            ""
-                                        ) == "true"
-                                        s3.startsWith("mFromLayout=") -> fragmentInfo.fromLayout = s3.replace(
-                                            "mFromLayout=",
-                                            ""
-                                        ) ==
-                                                "true"
-                                        s3.startsWith("mInLayout=") -> fragmentInfo.inLayout = s3.replace(
-                                            "mInLayout=",
-                                            ""
-                                        ) == "true"
-                                        s3.startsWith("mHidden=") -> fragmentInfo.hidden = s3.replace("mHidden=", "") ==
-                                                "true"
-                                        s3.startsWith("mDetached=") -> fragmentInfo.detached = s3.replace(
-                                            "mDetached=",
-                                            ""
-                                        ) == "true"
-                                    }
-                                }
-                            }
-                        }
-                        topActivityInfo.fragments = list.toTypedArray()
                     }
                 }
                 break
@@ -151,7 +178,8 @@ object ShellManager {
     }
 
     fun getPid(packageName: String): String {
-        var result: CommandResult = ShellUtils.runWithSu(String.format(SHELL_PROCESS_PID_1, packageName))
+        var result: CommandResult =
+            ShellUtils.runWithSu(String.format(SHELL_PROCESS_PID_1, packageName))
         if (result.isSuccessful) {
             return result.getStdout()
         }
@@ -183,15 +211,17 @@ object ShellManager {
     }
 
     fun openAccessibilityService(callback: Callback<Boolean>? = null) {
-        ShellUtils.runWithSu(SHELL_OPEN_ACCESSiBILITY_SERVICE, object : ShellUtils.ShellResultCallback() {
-            override fun onComplete(result: CommandResult) {
-                callback?.onSuccess(result.isSuccessful && result.getStdout().isEmpty())
-            }
+        ShellUtils.runWithSu(
+            SHELL_OPEN_ACCESSiBILITY_SERVICE,
+            object: ShellUtils.ShellResultCallback() {
+                override fun onComplete(result: CommandResult) {
+                    callback?.onSuccess(result.isSuccessful && result.getStdout().isEmpty())
+                }
 
-            override fun onError(msg: String) {
-                callback?.onSuccess(false)
-            }
-        })
+                override fun onError(msg: String) {
+                    callback?.onSuccess(false)
+                }
+            })
     }
 
     fun catFile(filaPath: String): String {
@@ -216,7 +246,8 @@ object ShellManager {
             return false
         }
         commandResult = ShellUtils.runWithSu("cp -R $source $dst && chmod $mod $dst")
-        return commandResult.isSuccessful || commandResult.getStderr()?.contains("Operation not permitted") ?: false
+        return commandResult.isSuccessful || commandResult.getStderr()
+            ?.contains("Operation not permitted") ?: false
     }
 
     fun catFile(source: String, dst: String, mod: String? = null): Boolean {
@@ -232,12 +263,14 @@ object ShellManager {
     fun getZipFileList(path: String): List<String?> {
         val file = File(CommonUtils.application.cacheDir, "zip.dex")
         if (file.exists()) {
-            ShellUtils.runWithSu("cp ${file.absolutePath} /data/local/tmp", "rm -rf ${file.absolutePath}")
+            ShellUtils.runWithSu(
+                "cp ${file.absolutePath} /data/local/tmp",
+                "rm -rf ${file.absolutePath}"
+            )
         }
         val commandResult = ShellUtils.runWithSu(String.format(SHELL_GET_ZIP_FILE_LIST, path))
         return commandResult.stdout
     }
-
 
     fun lsDir(path: String): List<String?> {
         val commandResult = ShellUtils.runWithSu("ls $path")

@@ -19,10 +19,10 @@ import com.wrbug.developerhelper.ui.activity.main.MainActivity
 import com.yhao.floatwindow.FloatWindow
 import com.yhao.floatwindow.Screen
 
-
-class FloatWindowService : Service() {
+class FloatWindowService: Service() {
 
     companion object {
+
         const val FLOAT_BUTTON = "floatButton"
         private const val CHANNEL_ID = "DEMON"
         fun start(context: Context) {
@@ -44,8 +44,10 @@ class FloatWindowService : Service() {
         RemoteViews(packageName, R.layout.view_float_custom).apply {
             setOnClickPendingIntent(
                 R.id.adbWifiContainer, PendingIntent.getBroadcast(
-                    applicationContext, 0,
-                    Intent(ReceiverConstant.ACTION_ADB_WIFI_CLICKED), PendingIntent.FLAG_UPDATE_CURRENT
+                    applicationContext,
+                    0,
+                    Intent(ReceiverConstant.ACTION_ADB_WIFI_CLICKED),
+                    PendingIntent.FLAG_UPDATE_CURRENT
                 )
             )
         }
@@ -58,7 +60,7 @@ class FloatWindowService : Service() {
         LayoutInflater.from(this).inflate(R.layout.layout_float_window_button, null)?.let {
             it.setOnDoubleCheckClickListener {
                 if (!DeveloperHelperAccessibilityService.isAccessibilitySettingsOn()) {
-                    AccessibilityManager.startService(this, object : Callback<Boolean> {
+                    AccessibilityManager.startService(this, object: Callback<Boolean> {
                         override fun onSuccess(data: Boolean) {
                             if (data) {
                                 it.postDelayed({
@@ -82,10 +84,8 @@ class FloatWindowService : Service() {
                 .setDesktopShow(true)                        //桌面显示
                 .build()
 
-
         }
     }
-
 
     private fun updateNotification() {
         startForeground(0x10000, notification)
@@ -100,18 +100,33 @@ class FloatWindowService : Service() {
         floatCustomView.setImageViewResource(R.id.adbWifiIv, id)
         updateNotification()
     }
+
     private fun initNotification() {
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel =
-                NotificationChannel(CHANNEL_ID, getString(R.string.demon_process), NotificationManager.IMPORTANCE_LOW)
+                NotificationChannel(
+                    CHANNEL_ID,
+                    getString(R.string.demon_process),
+                    NotificationManager.IMPORTANCE_LOW
+                )
             channel.enableLights(true)
             channel.setShowBadge(true)
             notificationManager.createNotificationChannel(channel)
         }
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        } else {
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        }
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setAutoCancel(false)
             .setContentIntent(pendingIntent)
@@ -159,8 +174,8 @@ class FloatWindowService : Service() {
 
     override fun onBind(intent: Intent): IBinder = null!!
 
+    private inner class Receiver: BroadcastReceiver() {
 
-    private inner class Receiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
                 ReceiverConstant.ACTION_SET_FLOAT_BUTTON_VISIBLE -> {

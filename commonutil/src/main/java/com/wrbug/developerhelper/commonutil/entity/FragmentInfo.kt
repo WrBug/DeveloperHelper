@@ -6,7 +6,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class FragmentInfo(
     var name: String = "",
-    var fragmentId: String = "",
     var containerId: String = "",
     var tag: String = "",
     var state: Int = 0,
@@ -19,4 +18,6 @@ data class FragmentInfo(
     var inLayout: Boolean = false,
     var hidden: Boolean = true,
     var detached: Boolean = false
-): Parcelable
+): Parcelable {
+
+}
