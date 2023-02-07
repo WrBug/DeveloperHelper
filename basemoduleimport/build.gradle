@@ -3,13 +3,13 @@ apply plugin: 'kotlin-android'
 apply from: "${rootDir}/common.gradle"
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 28
 
 
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
@@ -28,7 +28,7 @@ android {
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
-    api 'androidx.appcompat:appcompat:1.5.1'
+    api 'androidx.appcompat:appcompat:1.1.0'
     api 'androidx.constraintlayout:constraintlayout:2.1.4'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
     api 'androidx.recyclerview:recyclerview:1.0.0'

@@ -3,13 +3,13 @@ apply plugin: 'kotlin-android'
 apply from: "${rootDir}/common.gradle"
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 28
 
 
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
