@@ -33,15 +33,12 @@ class AppInfoPagerAdapter(
     private val dialog: AppInfoDialog,
     private val apkInfo: ApkInfo?,
     private val topActivity: TopActivityInfo?
-):
-    PagerAdapter() {
+) : PagerAdapter() {
 
     private val context: Context = dialog.requireContext()
     private val tabList = arrayListOf<String>()
     private val viewList = arrayListOf<View>()
     private val adapter = InfoAdapter(context)
-    private val enforceItem =
-        ItemInfo(context.getString(R.string.enforce_type), context.getString(R.string.analyzing))
     var listener: AppInfoDialogEventListener? = null
     private val itemInfos = ArrayList<ItemInfo>()
 
@@ -84,74 +81,31 @@ class AppInfoPagerAdapter(
             })
             item.textColor = context.resources.getColor(R.color.colorPrimaryDark)
             itemInfos.add(item)
-            headerItemHook(it.packageInfo, it.applicationInfo, itemInfos)
             topActivity?.let {
                 itemInfos.add(ItemInfo("PackageName", it.packageName))
                 itemInfos.add(ItemInfo("Activity", it.activity))
-                it.fragments?.takeUnless { it.isEmpty() }
-                    ?.map { it.name + "(state=${it.state},tag=${it.tag})" }
-                    ?.joinToString("\n")?.let {
-                        itemInfos.add(ItemInfo("Fragments", it))
-                    }
             }
             itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
             itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
             it.applicationInfo.className?.let { name ->
                 itemInfos.add(ItemInfo("Application", name))
             }
-            itemInfos.add(enforceItem)
             itemInfos.add(ItemInfo("uid", it.applicationInfo.uid))
-            ShellManager.getPid(it.packageInfo.packageName).takeUnless {
-                it.isEmpty()
-            }?.let {
+            ShellManager.getPid(it.packageInfo.packageName).takeUnless { it.isEmpty() }?.let {
                 itemInfos.add(ItemInfo("Pid", it))
             }
             itemInfos.add(
                 ItemInfo(
-                    getString(R.string.first_install_time),
-                    it.packageInfo.firstInstallTime.format()
+                    getString(R.string.first_install_time), it.packageInfo.firstInstallTime.format()
                 )
             )
             itemInfos.add(
                 ItemInfo(
-                    getString(R.string.last_update_time),
-                    it.packageInfo.lastUpdateTime.format()
+                    getString(R.string.last_update_time), it.packageInfo.lastUpdateTime.format()
                 )
             )
             itemInfos.add(ItemInfo("DataDir", it.applicationInfo.dataDir))
             adapter.setItems(itemInfos)
-            getEnforce(it.packageInfo.packageName)
-        }
-    }
-
-    private fun headerItemHook(
-        i: PackageInfo,
-        info: ApplicationInfo,
-        itemInfo: ArrayList<ItemInfo>
-    ) {
-    }
-
-    fun findItemById(id: String): ItemInfo? {
-        itemInfos.forEach {
-            if (it.id == id) {
-                return it
-            }
-        }
-        return null
-    }
-
-    private fun setEnforceType(type: EnforceUtils.EnforceType) {
-        enforceItem.content = type.type
-    }
-
-    private fun getEnforce(packageName: String) {
-        doAsync {
-            val type = EnforceUtils.getEnforceType(packageName)
-            uiThread {
-                setEnforceType(type)
-                adapter.notifyItemChanged(enforceItem)
-            }
-
         }
     }
 

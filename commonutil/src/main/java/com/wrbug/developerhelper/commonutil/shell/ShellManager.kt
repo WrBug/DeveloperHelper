@@ -2,6 +2,7 @@ package com.wrbug.developerhelper.commonutil.shell
 
 import com.jaredrummler.android.shell.CommandResult
 import com.wrbug.developerhelper.commonutil.CommonUtils
+import com.wrbug.developerhelper.commonutil.Constant
 import com.wrbug.developerhelper.commonutil.ShellUtils
 import com.wrbug.developerhelper.commonutil.entity.FragmentInfo
 import com.wrbug.developerhelper.commonutil.entity.LsFileInfo
@@ -33,17 +34,18 @@ object ShellManager {
         arrayOf("setprop service.adb.tcp.port 5555", "stop adbd", "start adbd")
 
     fun getTopActivity(callback: Callback<TopActivityInfo?>) {
-        ShellUtils.runWithSu(arrayOf(SHELL_TOP_ACTIVITY), object: ShellUtils.ShellResultCallback() {
-            override fun onComplete(result: CommandResult) {
-                val activityInfo = getTopActivity(result)
-                activityInfo.fragments = getFragment(activityInfo.packageName)
-                callback.onSuccess(activityInfo)
-            }
+        ShellUtils.runWithSu(arrayOf(SHELL_TOP_ACTIVITY),
+            object : ShellUtils.ShellResultCallback() {
+                override fun onComplete(result: CommandResult) {
+                    val activityInfo = getTopActivity(result)
+                    activityInfo.fragments = getFragment(activityInfo.packageName)
+                    callback.onSuccess(activityInfo)
+                }
 
-            override fun onError(msg: String) {
-                callback.onSuccess(null)
-            }
-        })
+                override fun onError(msg: String) {
+                    callback.onSuccess(null)
+                }
+            })
 
     }
 
@@ -137,8 +139,7 @@ object ShellManager {
                 if (matcher.find()) {
                     topActivityInfo.setFullActivity(matcher.group().split(" ")[1])
                 }
-                val split =
-                    task_.split("\n[ ]{4}[A-Z]".toRegex()).dropLastWhile { it.isEmpty() }
+                val split = task_.split("\n[ ]{4}[A-Z]".toRegex()).dropLastWhile { it.isEmpty() }
                 for (s in split) {
                     if (s.contains("iew Hierarchy")) {
                         for (s1 in s.split("\n".toRegex()).dropLastWhile { it.isEmpty() }) {
@@ -194,7 +195,15 @@ object ShellManager {
     }
 
     fun getSqliteFiles(packageName: String): Array<File> {
-        val dbPath = "/data/data/$packageName/databases"
+        val list = getSqliteFiles("/data/data", packageName)
+        if (list.isNotEmpty()) {
+            return list
+        }
+        return getSqliteFiles(Constant.DATA_MIRROR, packageName)
+    }
+
+    private fun getSqliteFiles(dir: String, packageName: String): Array<File> {
+        val dbPath = "$dir/$packageName/databases"
         val list = lsDir(dbPath)
         val files = ArrayList<File>()
         for (file in list) {
@@ -211,9 +220,8 @@ object ShellManager {
     }
 
     fun openAccessibilityService(callback: Callback<Boolean>? = null) {
-        ShellUtils.runWithSu(
-            SHELL_OPEN_ACCESSiBILITY_SERVICE,
-            object: ShellUtils.ShellResultCallback() {
+        ShellUtils.runWithSu(SHELL_OPEN_ACCESSiBILITY_SERVICE,
+            object : ShellUtils.ShellResultCallback() {
                 override fun onComplete(result: CommandResult) {
                     callback?.onSuccess(result.isSuccessful && result.getStdout().isEmpty())
                 }
@@ -264,8 +272,7 @@ object ShellManager {
         val file = File(CommonUtils.application.cacheDir, "zip.dex")
         if (file.exists()) {
             ShellUtils.runWithSu(
-                "cp ${file.absolutePath} /data/local/tmp",
-                "rm -rf ${file.absolutePath}"
+                "cp ${file.absolutePath} /data/local/tmp", "rm -rf ${file.absolutePath}"
             )
         }
         val commandResult = ShellUtils.runWithSu(String.format(SHELL_GET_ZIP_FILE_LIST, path))

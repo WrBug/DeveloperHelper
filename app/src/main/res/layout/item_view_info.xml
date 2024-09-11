@@ -11,8 +11,7 @@
         android:id="@+id/titleTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/item_title_text"
-        android:textSize="16sp"
+        android:textAppearance="@style/TextAppearance.ItemTitle"
         tools:text="标题" />
 
     <androidx.appcompat.widget.AppCompatTextView

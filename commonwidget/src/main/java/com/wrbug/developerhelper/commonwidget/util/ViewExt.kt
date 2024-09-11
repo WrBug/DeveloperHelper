@@ -14,3 +14,25 @@ fun View?.setOnDoubleCheckClickListener(duration: Long = 800, clickListener: (Vi
         }
     }
 }
+
+
+inline var View.visible: Boolean
+    set(value) {
+        visibility = if (value) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+    }
+    get() = visibility == View.VISIBLE
+
+
+inline var View.inVisible: Boolean
+    set(value) {
+        visibility = if (value) {
+            View.INVISIBLE
+        } else {
+            View.VISIBLE
+        }
+    }
+    get() = visibility == View.INVISIBLE

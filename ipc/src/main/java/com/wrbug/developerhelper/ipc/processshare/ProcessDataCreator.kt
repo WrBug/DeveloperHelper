@@ -2,12 +2,11 @@
 
 package com.wrbug.developerhelper.ipc.processshare
 
-import androidx.collection.ArrayMap
 import com.wrbug.developerhelper.ipc.processshare.data.IpcFileDataManager
 import java.lang.reflect.Proxy
 
 object ProcessDataCreator {
-    private val map = ArrayMap<Class<*>, Any>()
+    private val map = hashMapOf<Class<*>, Any>()
     fun <T : ProcessData> get(clazz: Class<T>): T {
         if (map.containsKey(clazz)) {
             return map[clazz] as T

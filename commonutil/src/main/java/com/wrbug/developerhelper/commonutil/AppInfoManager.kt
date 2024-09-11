@@ -32,7 +32,15 @@ object AppInfoManager {
 
 
     fun getSharedPreferencesFiles(packageName: String): Array<File> {
-        val path = "/data/data/$packageName/shared_prefs"
+        val list = getSharedPreferencesFiles("/data/data", packageName)
+        if (list.isNotEmpty()) {
+            return list
+        }
+        return getSharedPreferencesFiles(Constant.DATA_MIRROR, packageName)
+    }
+
+    private fun getSharedPreferencesFiles(dir: String, packageName: String): Array<File> {
+        val path = "$dir/$packageName/shared_prefs"
         val list = ShellManager.lsDir(path)
         val files = ArrayList<File>()
         for (file in list) {
@@ -45,6 +53,5 @@ object AppInfoManager {
         }
         return files.toTypedArray()
     }
-
 
 }

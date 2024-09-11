@@ -14,7 +14,7 @@ import com.wrbug.developerhelper.commonutil.UiUtils
 import com.wrbug.developerhelper.commonutil.dp2px
 import com.wrbug.developerhelper.databinding.DialogApkInfoBinding
 
-class AppInfoDialog: DialogFragment() {
+class AppInfoDialog : DialogFragment() {
 
     private var apkInfo: ApkInfo? = null
     private var topActivity: TopActivityInfo? = null
@@ -55,13 +55,11 @@ class AppInfoDialog: DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.titleContainer.setPadding(0, UiUtils.getStatusHeight(), 0, 0)
-        activity?.let {
-            val pagerAdapter = AppInfoPagerAdapter(this, apkInfo, topActivity)
-            pagerAdapter.listener = listener
-            binding.viewPager.adapter = pagerAdapter
-            binding.tabLayout.setupWithViewPager(binding.viewPager)
-        }
-        apkInfo?.let { it ->
+        val pagerAdapter = AppInfoPagerAdapter(this, apkInfo, topActivity)
+        pagerAdapter.listener = listener
+        binding.viewPager.adapter = pagerAdapter
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
+        apkInfo?.let {
             binding.logoIv.setImageDrawable(it.getIco())
             binding.titleTv.text = it.getAppName()
             binding.subTitleTv.text = it.applicationInfo.packageName
