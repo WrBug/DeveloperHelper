@@ -10,8 +10,8 @@ import com.wrbug.developerhelper.commonutil.CommonUtils
 class ApkInfo(val packageInfo: PackageInfo, val applicationInfo: ApplicationInfo) : Parcelable {
 
     constructor(parcel: Parcel) : this(
-        parcel.readParcelable(PackageInfo::class.java.classLoader),
-        parcel.readParcelable(ApplicationInfo::class.java.classLoader)
+        parcel.readParcelable(PackageInfo::class.java.classLoader)!!,
+        parcel.readParcelable(ApplicationInfo::class.java.classLoader)!!
     )
 
     fun getIco(): Drawable {
@@ -20,7 +20,7 @@ class ApkInfo(val packageInfo: PackageInfo, val applicationInfo: ApplicationInfo
 
     fun getAppName(): String {
         val label = CommonUtils.application.packageManager.getApplicationLabel(applicationInfo)
-        return label?.toString() ?: ""
+        return label.toString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

@@ -31,7 +31,7 @@ object ClipboardUtils {
         try {
             val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             // 将文本内容放到系统剪贴板里。
-            cm.primaryClip = ClipData.newPlainText(null, text)
+            cm.setPrimaryClip(ClipData.newPlainText(null, text))
         } catch (t: Throwable) {
         }
 

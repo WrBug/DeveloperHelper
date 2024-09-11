@@ -25,7 +25,8 @@
             android:padding="20dp"
             android:text="@string/table_data_is_empty"
             android:textSize="18sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.evrencoskun.tableview.TableView
             android:id="@+id/tableView"

@@ -10,15 +10,17 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.commonwidget.util.inVisible
+import com.wrbug.developerhelper.databinding.ItemSharedPreferenceInfoBinding
 import com.wrbug.developerhelper.model.entity.SharedPreferenceItemInfo
 
 class SharedPreferenceListAdapter(val context: Context) :
     RecyclerView.Adapter<SharedPreferenceListAdapter.ViewHolder>() {
     private val data: ArrayList<SharedPreferenceItemInfo> = arrayListOf()
-    private var onValueChangedListener: OnValueChangedListener? = null
+    private var onValueChangedListener: ((Boolean) -> Unit)? = null
     private var changedFlag: Long = 0
 
-    fun setOnValueChangedListener(listener: OnValueChangedListener) {
+    fun setOnValueChangedListener(listener: (Boolean) -> Unit) {
         onValueChangedListener = listener
     }
 
@@ -30,7 +32,9 @@ class SharedPreferenceListAdapter(val context: Context) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_shared_preference_info, parent, false))
+        return ViewHolder(
+            ItemSharedPreferenceInfoBinding.inflate(LayoutInflater.from(context), parent, false)
+        )
     }
 
     override fun getItemCount(): Int {
@@ -39,18 +43,15 @@ class SharedPreferenceListAdapter(val context: Context) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val sharedPreferenceItemInfo = data[position]
-        holder.titleTv?.text = sharedPreferenceItemInfo.key
-        holder.contentTv?.setText(sharedPreferenceItemInfo.value)
-        holder.restoreTv?.visibility =
-                if (sharedPreferenceItemInfo.value == sharedPreferenceItemInfo.newValue) {
-                    View.INVISIBLE
-                } else {
-                    View.VISIBLE
-                }
+        holder.removeTextChangedListener()
+        holder.binding.titleTv.text = sharedPreferenceItemInfo.key
+        holder.binding.contentEt.setText(sharedPreferenceItemInfo.newValue)
+        holder.binding.restoreTv.inVisible =
+            sharedPreferenceItemInfo.value == sharedPreferenceItemInfo.newValue
         if (sharedPreferenceItemInfo.isValueValid()) {
-            holder.contentTv?.error = null
+            holder.binding.contentEt.error = null
         } else {
-            holder.contentTv?.error = context.getString(R.string.input_error)
+            holder.binding.contentEt.error = context.getString(R.string.input_error)
         }
         holder.tag = sharedPreferenceItemInfo
         holder.addTextChangedListener()
@@ -61,18 +62,23 @@ class SharedPreferenceListAdapter(val context: Context) :
     }
 
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val titleTv: TextView? = itemView.findViewById(R.id.titleTv)
-        val contentTv: EditText? = itemView.findViewById(R.id.contentEt)
-        var restoreTv: TextView? = itemView.findViewById(R.id.restoreTv)
+    inner class ViewHolder(val binding: ItemSharedPreferenceInfoBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         var tag: SharedPreferenceItemInfo? = null
         var textWatcher: TextWatcher? = null
 
         init {
-            restoreTv?.setOnClickListener {
+            binding.restoreTv.setOnClickListener {
                 tag?.run {
-                    contentTv?.setText(value)
+                    binding.contentEt.setText(value)
                 }
+            }
+        }
+
+        fun removeTextChangedListener() {
+            if (textWatcher != null) {
+                binding.contentEt.removeTextChangedListener(textWatcher)
+                textWatcher = null
             }
         }
 
@@ -90,9 +96,9 @@ class SharedPreferenceListAdapter(val context: Context) :
                         tag?.let {
                             it.newValue = toString()
                             if (it.isValueValid()) {
-                                contentTv?.error = null
+                                binding.contentEt.error = null
                             } else {
-                                contentTv?.error = context.getString(R.string.input_error)
+                                binding.contentEt.error = context.getString(R.string.input_error)
                             }
                         }
                         changedFlag = if (toString() == tag?.value) {
@@ -100,30 +106,22 @@ class SharedPreferenceListAdapter(val context: Context) :
                         } else {
                             changedFlag or 1L shl index
                         }
-                        onValueChangedListener?.onChanged(changedFlag != 0L)
+                        onValueChangedListener?.invoke(changedFlag != 0L)
                     }
 
-                    restoreTv?.visibility =
-                            if (tag?.value == tag?.newValue) {
-                                View.INVISIBLE
-                            } else {
-                                View.VISIBLE
-                            }
+                    binding.restoreTv.inVisible = tag?.value == tag?.newValue
                 }
 
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                override fun beforeTextChanged(
+                    s: CharSequence?, start: Int, count: Int, after: Int
+                ) {
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 }
 
             }
-            contentTv?.addTextChangedListener(textWatcher)
+            binding.contentEt.addTextChangedListener(textWatcher)
         }
-    }
-
-
-    interface OnValueChangedListener {
-        fun onChanged(changed: Boolean)
     }
 }

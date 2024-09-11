@@ -16,8 +16,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/item_title_text"
-            android:textSize="16sp"
+            android:textAppearance="@style/TextAppearance.ItemTitle"
             tools:text="标题" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -25,9 +24,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:visibility="gone"
             android:text="@string/restore"
-            android:textColor="@color/material_color_light_blue_500" />
+            android:textColor="@color/material_color_light_blue_500"
+            android:visibility="gone" />
     </LinearLayout>
 
 

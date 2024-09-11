@@ -4,7 +4,6 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.regex.Pattern
 
-
 fun String.isInt(): Boolean {
     if (isNumber()) {
         return BigInteger(this).toLong() < Integer.MAX_VALUE && BigInteger(this).toLong() > Integer.MIN_VALUE
@@ -39,30 +38,32 @@ fun String.toBoolean(): Boolean {
     return false
 }
 
-fun String.toInt(): Int {
+fun String?.toInt(): Int {
+    this ?: return 0
     if (isInt()) {
         return BigInteger(this).toInt()
     }
     return 0
 }
 
-
-fun String.toLong(): Long {
+fun String?.toLong(): Long {
+    this ?: return 0
     if (isNumber()) {
         return BigInteger(this).toLong()
     }
     return 0L
 }
 
-
-fun String.toFloat(): Float {
+fun String?.toFloat(): Float {
+    this ?: return 0F
     if (isDecimal()) {
         return BigDecimal(this).toFloat()
     }
     return 0F
 }
 
-fun String.toDouble(): Double {
+fun String?.toDouble(): Double {
+    this ?: return 0.0
     if (isDecimal()) {
         return BigDecimal(this).toDouble()
     }

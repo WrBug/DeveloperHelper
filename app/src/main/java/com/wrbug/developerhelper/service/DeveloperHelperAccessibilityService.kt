@@ -41,7 +41,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
                     BaseApp.instance.applicationContext.contentResolver,
                     android.provider.Settings.Secure.ACCESSIBILITY_ENABLED
                 )
-            } catch (e: Settings.SettingNotFoundException) {
+            } catch (_: Settings.SettingNotFoundException) {
             }
 
             val mStringColonSplitter = TextUtils.SimpleStringSplitter(':')
@@ -111,7 +111,6 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
         serviceRunning = true
         nodeMap.clear()
     }
-
 
 
     override fun onDestroy() {
@@ -206,16 +205,8 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
 
     inner class DeveloperHelperAccessibilityReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, data: Intent?) {
-            showToast(getString(R.string.getting_app_info))
-            ShellManager.getTopActivity(object : Callback<TopActivityInfo?> {
-
-                override fun onSuccess(data: TopActivityInfo?) {
-                    topActivity = data
-                    val nodesInfo = readNode()
-                    HierarchyActivity.start(context, currentAppInfo, nodesInfo, topActivity)
-                }
-            })
-
+            val nodesInfo = readNode()
+            HierarchyActivity.start(context, currentAppInfo, nodesInfo)
         }
     }
 

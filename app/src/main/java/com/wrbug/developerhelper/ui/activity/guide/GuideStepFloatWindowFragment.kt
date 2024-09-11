@@ -8,21 +8,24 @@ import android.view.View
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.service.FloatWindowService
 import com.wrbug.developerhelper.util.DeviceUtils
-import kotlinx.android.synthetic.main.fragment_guide.*
 
-class GuideStepFloatWindowFragment : GuideStepFragment() {
+class GuideStepFloatWindowFragment: GuideStepFragment() {
+
     override fun getLabelText(): String {
         return getString(R.string.float_window_permission)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        icoIv.setImageResource(R.drawable.ic_float_air_bubble)
-        contentTv.setOnClickListener {
-            if (DeviceUtils.isFloatWindowOpened(activity!!)) {
+        binding.icoIv.setImageResource(R.drawable.ic_float_air_bubble)
+        binding.contentTv.setOnClickListener {
+            if (DeviceUtils.isFloatWindowOpened(requireContext())) {
                 return@setOnClickListener
             }
             startActivityForResult(
-                Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${activity?.packageName}")),
+                Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:${activity?.packageName}")
+                ),
                 0
             )
         }
@@ -34,15 +37,16 @@ class GuideStepFloatWindowFragment : GuideStepFragment() {
     }
 
     private fun checkFloatWindow() {
-        if (activity != null && DeviceUtils.isFloatWindowOpened(activity!!)) {
-            contentTv.text = getString(R.string.float_window_opened)
-            FloatWindowService.start(activity!!)
+        if (activity != null && DeviceUtils.isFloatWindowOpened(requireContext())) {
+            binding.contentTv.text = getString(R.string.float_window_opened)
+            FloatWindowService.start(requireContext())
         } else {
-            contentTv.text = getString(R.string.float_window_closed)
+            binding.contentTv.text = getString(R.string.float_window_closed)
         }
     }
 
     companion object {
+
         fun instance(): GuideStepFloatWindowFragment {
             val fragment = GuideStepFloatWindowFragment()
             return fragment

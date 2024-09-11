@@ -1,13 +1,10 @@
 package com.wrbug.developerhelper.ui.activity.guide
 
-import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.service.AccessibilityManager
 import com.wrbug.developerhelper.service.DeveloperHelperAccessibilityService
-import kotlinx.android.synthetic.main.fragment_guide.*
 
 class GuideStepAccessibilityFragment : GuideStepFragment() {
     override fun getLabelText(): String {
@@ -16,8 +13,8 @@ class GuideStepAccessibilityFragment : GuideStepFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         checkIsOpen()
-        icoIv.setImageResource(R.drawable.ic_accessibility_black)
-        contentTv.setOnClickListener {
+        binding.icoIv.setImageResource(R.drawable.ic_accessibility_black)
+        binding.contentTv.setOnClickListener {
             if (DeveloperHelperAccessibilityService.serviceRunning) {
                 return@setOnClickListener
             }
@@ -27,7 +24,7 @@ class GuideStepAccessibilityFragment : GuideStepFragment() {
     }
 
     private fun checkIsOpen() {
-        contentTv.text =
+        binding.contentTv.text =
                 if (DeveloperHelperAccessibilityService.serviceRunning) "无障碍辅助已开启" else "无障碍辅助已关闭，将无法分析布局和页面信息，点击开启"
     }
 

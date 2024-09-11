@@ -10,15 +10,28 @@ import androidx.recyclerview.widget.RecyclerView
  * @author wrbug
  * @since 2017/9/29
  */
-class SpaceItemDecoration : RecyclerView.ItemDecoration {
-    private var leftSpace: Int = 0
-    private var topSpace: Int = 0
-    private var rightSpace: Int = 0
-    private var bottomSpace: Int = 0
-    private var firstTopSpace = 0
-    private var lastBottomSpace: Int = 0
+class SpaceItemDecoration(
+    private val leftSpace: Int = 0,
+    private val topSpace: Int = 0,
+    private val rightSpace: Int = 0,
+    private val bottomSpace: Int = 0,
+    private var firstTopSpace: Int = 0,
+    private var lastBottomSpace: Int = 0,
+) : RecyclerView.ItemDecoration() {
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+
+    constructor(space: Int) : this(
+        bottomSpace = space,
+        topSpace = space,
+        rightSpace = space,
+        leftSpace = space,
+        lastBottomSpace = space,
+        firstTopSpace = space
+    )
+
+    override fun getItemOffsets(
+        outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
+    ) {
         super.getItemOffsets(outRect, view, parent, state)
         outRect.left = leftSpace
         outRect.right = rightSpace
@@ -35,14 +48,6 @@ class SpaceItemDecoration : RecyclerView.ItemDecoration {
 
     }
 
-    constructor(space: Int) {
-        bottomSpace = space
-        topSpace = space
-        rightSpace = space
-        leftSpace = space
-        lastBottomSpace = space
-        firstTopSpace = space
-    }
 
     fun setLastBottomPadding(space: Int) {
         lastBottomSpace = space
@@ -50,14 +55,5 @@ class SpaceItemDecoration : RecyclerView.ItemDecoration {
 
     fun setFirstTopPadding(space: Int) {
         firstTopSpace = space
-    }
-
-    constructor(leftSpace: Int, topSpace: Int, rightSpace: Int, bottomSpace: Int) {
-        this.leftSpace = leftSpace
-        this.topSpace = topSpace
-        this.rightSpace = rightSpace
-        this.bottomSpace = bottomSpace
-        lastBottomSpace = bottomSpace
-        firstTopSpace = topSpace
     }
 }

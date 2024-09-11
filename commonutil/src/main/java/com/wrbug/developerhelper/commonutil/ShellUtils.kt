@@ -2,28 +2,22 @@ package com.wrbug.developerhelper.commonutil
 
 import com.jaredrummler.android.shell.CommandResult
 import com.jaredrummler.android.shell.Shell
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
 
 object ShellUtils {
-    fun run(cmds: Array<String>, callback: ShellResultCallback) {
-        doAsync {
-            val run = Shell.SH.run(*cmds)
-            callback.onComplete(run)
-        }
-    }
-
     fun run(vararg cmds: String): CommandResult {
         return Shell.SH.run(*cmds)
     }
 
-    fun runWithSu(cmds: Array<String>, callback: ShellResultCallback) {
-        if (!RootUtils.isRoot()) {
-            callback.onError("未开启root权限")
-            return
-        }
-        doAsync {
-            val run = Shell.SU.run(*cmds)
-            callback.onComplete(run)
+    fun runWithSu(cmds: Array<String>): Single<CommandResult> {
+        return Single.just(cmds).map {
+            if (!RootUtils.isRoot()) {
+                throw ShellException("未开启root权限")
+            }
+            Shell.SU.run(*it)
         }
     }
 
@@ -42,16 +36,4 @@ object ShellUtils {
     fun isRoot(): Boolean {
         return Shell.SU.available()
     }
-
-    abstract class ShellResultCallback(vararg args: Any) {
-        protected var args = args
-        open fun onComplete(result: CommandResult) {
-
-        }
-
-        open fun onError(msg: String) {
-
-        }
-    }
-
 }

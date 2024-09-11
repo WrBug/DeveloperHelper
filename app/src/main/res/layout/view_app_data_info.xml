@@ -17,8 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Apk目录"
-            android:textColor="@color/item_title_text"
-            android:textSize="16sp" />
+            android:textAppearance="@style/TextAppearance.ItemTitle" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/apkPathTv"
@@ -34,8 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="MD5"
-            android:textColor="@color/item_title_text"
-            android:textSize="16sp" />
+            android:textAppearance="@style/TextAppearance.ItemTitle" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/apkMd5Tv"
@@ -51,8 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="SHA1"
-            android:textColor="@color/item_title_text"
-            android:textSize="16sp" />
+            android:textAppearance="@style/TextAppearance.ItemTitle" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/apkSha1Tv"
@@ -67,8 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="SharedPreferences列表"
-            android:textColor="@color/item_title_text"
-            android:textSize="16sp" />
+            android:textAppearance="@style/TextAppearance.ItemTitle" />
 
         <LinearLayout
             android:id="@+id/sharedPreferenceContainer"
@@ -91,8 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/database_list"
-            android:textColor="@color/item_title_text"
-            android:textSize="16sp" />
+            android:textAppearance="@style/TextAppearance.ItemTitle" />
 
         <LinearLayout
             android:id="@+id/databaseContainer"

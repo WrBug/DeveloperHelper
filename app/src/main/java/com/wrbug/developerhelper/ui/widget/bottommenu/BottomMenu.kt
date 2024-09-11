@@ -9,45 +9,42 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.commonutil.UiUtils
+import com.wrbug.developerhelper.databinding.DialogBottomMenuBinding
 import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
-import kotlinx.android.synthetic.main.dialog_bottom_menu.*
 
-class BottomMenu(context: Context) : BottomSheetDialog(context), OnItemClickListener {
+class BottomMenu(context: Context): BottomSheetDialog(context), OnItemClickListener {
 
     private var title = ""
     val adapter: BottomMenuItemAdapter by lazy {
         BottomMenuItemAdapter(context)
     }
-
+    private lateinit var binding: DialogBottomMenuBinding
     private var items: Array<String> = arrayOf()
     private var listener: OnItemClickListener? = null
-
-    init {
-        setContentView(R.layout.dialog_bottom_menu)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = DialogBottomMenuBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initRv()
         initView()
     }
 
     private fun initView() {
-        titleTv.text = title
-        titleTv.visibility = if (title.isEmpty()) View.GONE else View.VISIBLE
+        binding.titleTv.text = title
+        binding.titleTv.visibility = if (title.isEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun initRv() {
-        menuListRv.layoutManager = LinearLayoutManager(context)
+        binding.menuListRv.layoutManager = LinearLayoutManager(context)
         val decoration = SpaceItemDecoration(UiUtils.dp2px(context, 0F))
         decoration.setLastBottomPadding(UiUtils.dp2px(context, 10F))
         decoration.setFirstTopPadding(UiUtils.dp2px(context, 10F))
-        menuListRv.addItemDecoration(decoration)
+        binding.menuListRv.addItemDecoration(decoration)
         val dividerItemDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         dividerItemDecoration.setDrawable(ColorDrawable(context.resources.getColor(R.color.divider_color)))
-        menuListRv.addItemDecoration(dividerItemDecoration)
+        binding.menuListRv.addItemDecoration(dividerItemDecoration)
         adapter.setOnItemClickListener(this)
-        menuListRv.adapter = adapter
+        binding.menuListRv.adapter = adapter
         adapter.list = items
     }
 
@@ -57,6 +54,7 @@ class BottomMenu(context: Context) : BottomSheetDialog(context), OnItemClickList
     }
 
     class Builder(val context: Context) {
+
         private var title = ""
         private var items: Array<String> = arrayOf()
         private var listener: OnItemClickListener? = null

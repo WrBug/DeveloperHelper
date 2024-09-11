@@ -41,7 +41,7 @@ class BoundsInfoView : View {
         unit = if (unit == Unit.DP) Unit.PX else Unit.DP
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         val rect = drawRect(canvas)
         val lineRect = drawEdge(rect, canvas)
         drawAl(rect, lineRect, canvas)

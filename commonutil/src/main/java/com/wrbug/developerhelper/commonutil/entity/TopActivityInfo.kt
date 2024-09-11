@@ -1,36 +1,22 @@
 package com.wrbug.developerhelper.commonutil.entity
 
-import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-class TopActivityInfo() : Parcelable {
-    var activity = ""
-    var viewIdHex = HashMap<String, String>()
+@Parcelize
+class TopActivityInfo(
+    var packageName: String = "",
+    var activity: String = "",
     var fragments: Array<FragmentInfo>? = null
+): Parcelable {
 
-    constructor(parcel: Parcel) : this() {
-        activity = parcel.readString()
-        fragments = parcel.createTypedArray(FragmentInfo)
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(activity)
-        parcel.writeTypedArray(fragments, flags)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<TopActivityInfo> {
-        override fun createFromParcel(parcel: Parcel): TopActivityInfo {
-            return TopActivityInfo(parcel)
-        }
-
-        override fun newArray(size: Int): Array<TopActivityInfo?> {
-            return arrayOfNulls(size)
+    fun setFullActivity(ac: String) {
+        kotlin.runCatching {
+            val arr = ac.split("/")
+            packageName = arr[0]
+            activity = arr[0] + arr[1]
         }
     }
 
-
+    var viewIdHex = HashMap<String, String>()
 }

@@ -1,14 +1,16 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply from: "${rootDir}/common.gradle"
 
 android {
-    compileSdkVersion 28
+    namespace "com.wrbug.developerhelper.commonwidget"
+    compileSdk 34
 
 
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
 
@@ -27,10 +29,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':mmkv')
     testImplementation 'junit:junit:4.12'
     implementation project(':commonutil')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-}
-repositories {
-    mavenCentral()
 }

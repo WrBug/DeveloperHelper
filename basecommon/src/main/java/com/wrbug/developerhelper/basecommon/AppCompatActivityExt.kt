@@ -57,10 +57,10 @@ fun AppCompatActivity.startActivityForResult(intent: Intent, callback: ActivityR
 
 fun AppCompatActivity.startActivityForResultOk(
     intent: Intent,
-    action: Intent.() -> Unit
+    action: Intent?.() -> Unit
 ) {
     ActResultRequest(this).startForResult(intent, object : ActivityResultCallback() {
-        override fun onActivityResultOk(data: Intent) {
+        override fun onActivityResultOk(data: Intent?) {
             action(data)
         }
     })

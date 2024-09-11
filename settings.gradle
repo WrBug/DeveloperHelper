@@ -1,1 +1,24 @@
-include ':app', ':basecommon', ':commonutil', ':mmkv', ':xposedmodule', ':commonwidget', ':basemoduleimport', ':ipc'
+pluginManagement {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven {
+            url "https://jitpack.io"
+        }
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        google()
+        mavenCentral()
+        maven {
+            url "https://jitpack.io"
+        }
+    }
+}
+
+include ':app', ':basecommon', ':commonutil', ':mmkv', ':commonwidget', ':basemoduleimport',":ipc"

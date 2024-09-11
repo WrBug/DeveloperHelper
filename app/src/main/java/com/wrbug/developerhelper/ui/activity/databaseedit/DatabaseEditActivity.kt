@@ -7,26 +7,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.evrencoskun.tableview.listener.ITableViewListener
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.BaseActivity
-import com.wrbug.developerhelper.basecommon.setupActionBar
-import com.wrbug.developerhelper.basecommon.showToast
+import com.wrbug.developerhelper.basecommon.*
 import com.wrbug.developerhelper.model.entity.DatabaseTableInfo
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.util.DatabaseUtils
 import com.wrbug.developerhelper.commonutil.dp2px
-import kotlinx.android.synthetic.main.activity_database_edit.*
+import com.wrbug.developerhelper.databinding.ActivityDatabaseEditBinding
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
-class DatabaseEditActivity : BaseActivity() {
+class DatabaseEditActivity: BaseActivity() {
+
     private var filePath: String? = ""
     private lateinit var dbPath: File
+    private lateinit var dataBinding: ActivityDatabaseEditBinding
     private val tableNames = ArrayList<String>()
     private var dbMap: Map<String, DatabaseTableInfo> = TreeMap()
     private val adapter = DatabaseTableAdapter(this)
@@ -40,6 +41,7 @@ class DatabaseEditActivity : BaseActivity() {
     }
 
     companion object {
+
         fun start(context: Context, filePath: String) {
             val intent = Intent(context, DatabaseEditActivity::class.java)
             intent.putExtra("filePath", filePath)
@@ -49,7 +51,8 @@ class DatabaseEditActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_database_edit)
+        dataBinding = ActivityDatabaseEditBinding.inflate(layoutInflater)
+        setContentView(dataBinding.root)
         intent?.run {
             filePath = getStringExtra("filePath")
         }
@@ -67,8 +70,8 @@ class DatabaseEditActivity : BaseActivity() {
     }
 
     private fun initTableView() {
-        tableView.adapter = adapter
-        tableView.tableViewListener = object : ITableViewListener {
+        dataBinding.tableView.adapter = adapter
+        dataBinding.tableView.tableViewListener = object: ITableViewListener {
             override fun onCellLongPressed(p0: RecyclerView.ViewHolder, p1: Int, p2: Int) {
 
             }
@@ -96,7 +99,8 @@ class DatabaseEditActivity : BaseActivity() {
             if (dstDir.exists().not()) {
                 dstDir.mkdir()
             }
-            val success = ShellManager.cpFile(dbPath.absolutePath, "${dstDir.absolutePath}/${dbPath.name}")
+            val success =
+                ShellManager.cpFile(dbPath.absolutePath, "${dstDir.absolutePath}/${dbPath.name}")
             if (!success) {
                 uiThread {
                     showToast(getString(R.string.get_database_failed))
@@ -115,11 +119,13 @@ class DatabaseEditActivity : BaseActivity() {
         }
     }
 
-
     private fun setTableContainer() {
-        tableNameContainer.removeAllViews()
+        dataBinding.tableNameContainer.removeAllViews()
         val layoutParams =
-            LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         val dp10 = dp2px(10F)
         val dp20 = dp2px(20F)
         tableNames.forEachIndexed { index, name ->
@@ -135,7 +141,7 @@ class DatabaseEditActivity : BaseActivity() {
             tv.setOnClickListener {
                 selectTable(it.tag as Int)
             }
-            tableNameContainer.addView(tv, layoutParams)
+            dataBinding.tableNameContainer.addView(tv, layoutParams)
         }
     }
 
@@ -161,9 +167,9 @@ class DatabaseEditActivity : BaseActivity() {
                 uiThread {
                     setHasData(!cell.isEmpty())
                     adapter.setAllItems(keyList, rowHeaders, cell)
-                    var tv = tableNameContainer.getChildAt(selectedIndex) as TextView
+                    var tv = dataBinding.tableNameContainer.getChildAt(selectedIndex) as TextView
                     tv.setTextColor(resources.getColor(R.color.text_color_666666))
-                    tv = tableNameContainer.getChildAt(position) as TextView
+                    tv = dataBinding.tableNameContainer.getChildAt(position) as TextView
                     tv.setTextColor(resources.getColor(R.color.colorPrimary))
                     selectedIndex = position
                 }
@@ -172,7 +178,7 @@ class DatabaseEditActivity : BaseActivity() {
     }
 
     private fun setHasData(hasData: Boolean) {
-        noDataTv.visibility = if (hasData) View.GONE else View.VISIBLE
-        tableView.visibility = if (hasData) View.VISIBLE else View.GONE
+        dataBinding.noDataTv.visibility = if (hasData) View.GONE else View.VISIBLE
+        dataBinding.tableView.visibility = if (hasData) View.VISIBLE else View.GONE
     }
 }

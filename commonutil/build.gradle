@@ -1,14 +1,16 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply from: "${rootDir}/common.gradle"
 
 android {
-    compileSdkVersion 28
+    namespace "com.wrbug.developerhelper.commonutil"
+    compileSdk 34
 
 
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
 
@@ -28,11 +30,10 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api 'com.jaredrummler:android-shell:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation project(':mmkv')
     api "org.jetbrains.anko:anko-commons:0.10.8"
     api 'com.google.code.gson:gson:2.8.5'
@@ -41,7 +42,4 @@ dependencies {
     api group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
     api "io.reactivex.rxjava3:rxjava:3.0.3"
     api 'io.reactivex.rxjava3:rxandroid:3.0.0'
-}
-repositories {
-    mavenCentral()
 }

@@ -5,6 +5,7 @@ import android.view.View
 class ItemInfo @JvmOverloads constructor(
     var title: String = "",
     var content: Any = "",
+    var showCopy: Boolean = true,
     listener: View.OnClickListener? = null
 ) {
     var id = title

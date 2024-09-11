@@ -2,25 +2,56 @@ package com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.wrbug.developerhelper.R
+import com.airbnb.lottie.LottieDrawable
+import com.wrbug.developerhelper.commonutil.ClipboardUtils
 import com.wrbug.developerhelper.commonutil.print
-import kotlinx.android.synthetic.main.item_view_info.view.*
+import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
+import com.wrbug.developerhelper.commonwidget.util.visible
+import com.wrbug.developerhelper.databinding.ItemInfoLoadingBinding
+import com.wrbug.developerhelper.databinding.ItemViewInfoBinding
 
-class InfoAdapter(val context: Context) : RecyclerView.Adapter<InfoAdapter.ViewHolder>() {
-    private val list = arrayListOf<ItemInfo>()
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_view_info, p0, false))
+class InfoAdapter(val context: Context, private val topItem: ItemInfo? = null) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    companion object {
+        private const val VIEW_TYPE_ITEM = 0
+        private const val VIEW_TYPE_LOADING = 1
+    }
+
+    private val list = arrayListOf<Any>()
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
+        if (p1 == VIEW_TYPE_LOADING) {
+            return LoadingViewHolder(
+                ItemInfoLoadingBinding.inflate(
+                    LayoutInflater.from(p0.context), p0, false
+                )
+            )
+        }
+        return InfoViewHolder(
+            ItemViewInfoBinding.inflate(
+                LayoutInflater.from(p0.context), p0, false
+            )
+        )
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (list[position] is LoadingItem) {
+            VIEW_TYPE_LOADING
+        } else {
+            VIEW_TYPE_ITEM
+        }
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    fun setItems(list: ArrayList<ItemInfo>) {
+    fun setItems(list: List<Any>) {
         this.list.clear()
+        topItem?.let {
+            this.list.add(it)
+        }
         if (list.isEmpty().not()) {
             this.list.addAll(list)
         }
@@ -35,17 +66,27 @@ class InfoAdapter(val context: Context) : RecyclerView.Adapter<InfoAdapter.ViewH
         notifyItemInserted(index)
     }
 
-    override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        val itemInfo = list[p1]
-        p0.itemView.titleTv.text = itemInfo.title
-        p0.itemView.contentTv.text = itemInfo.content.toString()
-        p0.itemView.contentTv.setTextColor(itemInfo.textColor)
-        p0.itemView.contentTv.setTextIsSelectable(itemInfo.clickListener == null)
-        p0.itemView.contentTv.setOnClickListener {
-            itemInfo.content.print()
-            itemInfo.clickListener?.run {
-                onClick(it)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is InfoViewHolder) {
+            val itemInfo = list[position] as ItemInfo
+            holder.binding.titleTv.text = itemInfo.title
+            holder.binding.contentTv.text = itemInfo.content.toString()
+            holder.binding.contentTv.setTextColor(itemInfo.textColor)
+            holder.binding.contentTv.setTextIsSelectable(itemInfo.clickListener == null)
+            holder.binding.ivCopy.visible = itemInfo.showCopy
+            holder.binding.ivCopy.setOnDoubleCheckClickListener {
+                ClipboardUtils.saveClipboardText(context, itemInfo.content.toString())
             }
+            holder.binding.contentTv.setOnClickListener {
+                itemInfo.content.print()
+                itemInfo.clickListener?.run {
+                    onClick(it)
+                }
+            }
+        } else if (holder is LoadingViewHolder) {
+            holder.binding.loadingView.visible = true
+            holder.binding.loadingView.playAnimation()
+            holder.binding.loadingView.repeatCount = LottieDrawable.INFINITE
         }
     }
 
@@ -56,5 +97,7 @@ class InfoAdapter(val context: Context) : RecyclerView.Adapter<InfoAdapter.ViewH
         }
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class InfoViewHolder(val binding: ItemViewInfoBinding) : RecyclerView.ViewHolder(binding.root)
+    class LoadingViewHolder(val binding: ItemInfoLoadingBinding) :
+        RecyclerView.ViewHolder(binding.root)
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.basecommon.uiThread
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
@@ -20,50 +21,64 @@ import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.ItemInfo
 import com.wrbug.developerhelper.util.EnforceUtils
 import com.wrbug.developerhelper.commonutil.UiUtils
+import com.wrbug.developerhelper.commonutil.addTo
+import com.wrbug.developerhelper.commonutil.shell.Callback
 import com.wrbug.developerhelper.ipc.processshare.manager.AppXposedProcessDataManager
+import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.LoadingItem
 import com.wrbug.developerhelper.util.format
 import com.wrbug.developerhelper.util.getString
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import java.lang.StringBuilder
 import java.util.ArrayList
 
 @Keep
 class AppInfoPagerAdapter(
-    private val dialog: AppInfoDialog,
-    private val apkInfo: ApkInfo?,
-    private val topActivity: TopActivityInfo?
-) :
-    PagerAdapter() {
-    private val context: Context = dialog.activity!!
+    private val dialog: AppInfoDialog, private val disposable: CompositeDisposable
+) : PagerAdapter() {
+
+    private val context: Context = dialog.requireContext()
     private val tabList = arrayListOf<String>()
     private val viewList = arrayListOf<View>()
-    private val adapter = InfoAdapter(context)
-    private val enforceItem =
-        ItemInfo(context.getString(R.string.enforce_type), context.getString(R.string.analyzing))
+    private val adapter by lazy {
+        InfoAdapter(context, analyzeItem)
+    }
     var listener: AppInfoDialogEventListener? = null
-    private val itemInfos = ArrayList<ItemInfo>()
-
-    init {
-        initAppInfoTab()
-        initAppDataInfoTab()
-        initAppSettingTab()
+    private val itemInfos = ArrayList<Any>()
+    private val analyzeItem by lazy {
+        ItemInfo(getString(R.string.page_analyze), getString(R.string.click_to_analyze)).apply {
+            showCopy = false
+            textColor = context.resources.getColor(R.color.colorPrimaryDark)
+            setOnClickListener(View.OnClickListener {
+                listener?.showHierachyView()
+                dialog.dismissAllowingStateLoss()
+            })
+        }
     }
 
-    private fun initAppSettingTab() {
+    fun loadData(apkInfo: ApkInfo?) {
+        initAppInfoTab(apkInfo)
+        initAppDataInfoTab(apkInfo)
+        initAppSettingTab(apkInfo)
+        notifyDataSetChanged()
+    }
+
+    private fun initAppSettingTab(apkInfo: ApkInfo?) {
         tabList.add(context.getString(R.string.app_setting))
         val view = AppSettingView(context)
-        view.apkInfo = apkInfo
+        view.setApkInfo(apkInfo)
         viewList.add(view)
     }
 
-    private fun initAppDataInfoTab() {
+    private fun initAppDataInfoTab(apkInfo: ApkInfo?) {
         tabList.add(context.getString(R.string.data_info))
         val appDataInfoView = AppDataInfoView(context)
         viewList.add(appDataInfoView)
         appDataInfoView.apkInfo = apkInfo
     }
 
-    private fun initAppInfoTab() {
+    private fun initAppInfoTab(apkInfo: ApkInfo?) {
         tabList.add(context.getString(R.string.base_info))
         val rv = RecyclerView(context)
         viewList.add(rv)
@@ -74,84 +89,44 @@ class AppInfoPagerAdapter(
         itemDecoration.setFirstTopPadding(UiUtils.dp2px(context, 10F))
         rv.addItemDecoration(itemDecoration)
         apkInfo?.let { it ->
-            val item =
-                ItemInfo(getString(R.string.page_analyze), getString(R.string.click_to_analyze))
-            item.setOnClickListener(View.OnClickListener {
-                listener?.showHierachyView()
-                dialog.dismissAllowingStateLoss()
-            })
-            item.textColor = context.resources.getColor(R.color.colorPrimaryDark)
-            itemInfos.add(item)
-            headerItemHook(it.packageInfo, it.applicationInfo, itemInfos)
-            itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
-            itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
-            topActivity?.let {
-                itemInfos.add(ItemInfo("Activity", it.activity))
-                it.fragments.takeUnless { fragments ->
-                    fragments.isNullOrEmpty()
-                }?.forEach {
-                    if (it.hidden.not()) {
-                        itemInfos.add(ItemInfo("Fragment", it.name))
-                    }
-                }
-            }
             it.applicationInfo.className?.let { name ->
                 itemInfos.add(ItemInfo("Application", name))
             }
-            itemInfos.add(enforceItem)
+            itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
+            itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
             itemInfos.add(ItemInfo("uid", it.applicationInfo.uid))
-            ShellManager.getPid(it.packageInfo.packageName).takeUnless {
-                it.isEmpty()
-            }?.let {
+            ShellManager.getPid(it.packageInfo.packageName).takeUnless { it.isEmpty() }?.let {
                 itemInfos.add(ItemInfo("Pid", it))
             }
             itemInfos.add(
                 ItemInfo(
-                    getString(R.string.first_install_time),
-                    it.packageInfo.firstInstallTime.format()
+                    getString(R.string.first_install_time), it.packageInfo.firstInstallTime.format()
                 )
             )
             itemInfos.add(
                 ItemInfo(
-                    getString(R.string.last_update_time),
-                    it.packageInfo.lastUpdateTime.format()
+                    getString(R.string.last_update_time), it.packageInfo.lastUpdateTime.format()
                 )
             )
             itemInfos.add(ItemInfo("DataDir", it.applicationInfo.dataDir))
             adapter.setItems(itemInfos)
-            getEnforce(it.packageInfo.packageName)
+            loadTopActivityInfo()
         }
     }
 
-    private fun headerItemHook(
-        i: PackageInfo,
-        info: ApplicationInfo,
-        itemInfo: ArrayList<ItemInfo>
-    ) {
-    }
-
-    fun findItemById(id: String): ItemInfo? {
-        itemInfos.forEach {
-            if (it.id == id) {
-                return it
+    private fun loadTopActivityInfo() {
+        ShellManager.getTopActivity().subscribe({ data ->
+            data.activity.takeIf { it.isNotEmpty() }?.let {
+                itemInfos.add(0, ItemInfo("Activity", it))
             }
-        }
-        return null
-    }
-
-    private fun setEnforceType(type: EnforceUtils.EnforceType) {
-        enforceItem.content = type.type
-    }
-
-    private fun getEnforce(packageName: String) {
-        doAsync {
-            val type = EnforceUtils.getEnforceType(packageName)
-            uiThread {
-                setEnforceType(type)
-                adapter.notifyItemChanged(enforceItem)
+            data.packageName.takeIf { it.isNotEmpty() }?.let {
+                itemInfos.add(0, ItemInfo("PackageName", it))
             }
+            adapter.setItems(itemInfos)
+        }, {
 
-        }
+        }).addTo(disposable)
+
     }
 
     override fun isViewFromObject(view: View, o: Any): Boolean {
@@ -161,7 +136,6 @@ class AppInfoPagerAdapter(
     override fun getCount(): Int {
         return tabList.size
     }
-
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         container.addView(viewList[position])

@@ -9,15 +9,18 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
 import java.util.ArrayList
 
 abstract class BaseActivity : AppCompatActivity() {
+
     private lateinit var toastRootView: View
     protected lateinit var context: BaseActivity
     private var mPermissionCallback: PermissionCallback? = null
 
     companion object {
+
         private const val PERMISSION_REQUEST_CODE = 0xAADF1
     }
 
@@ -38,7 +41,6 @@ abstract class BaseActivity : AppCompatActivity() {
     fun showSnack(id: Int) {
         Snackbar.make(toastRootView, id, Snackbar.LENGTH_SHORT).show()
     }
-
 
     @TargetApi(Build.VERSION_CODES.M)
     fun requestPermission(permissions: Array<String>, callback: PermissionCallback) {
@@ -61,7 +63,6 @@ abstract class BaseActivity : AppCompatActivity() {
         requestPermissions(list.toTypedArray(), PERMISSION_REQUEST_CODE)
     }
 
-
     fun showDialog(
         @StringRes title: Int,
         @StringRes msg: Int,
@@ -80,7 +81,6 @@ abstract class BaseActivity : AppCompatActivity() {
         showDialog(title, msg, positiveText, null, positiveListener, null)
     }
 
-
     fun showDialog(
         @StringRes title: Int,
         @StringRes msg: Int,
@@ -91,13 +91,12 @@ abstract class BaseActivity : AppCompatActivity() {
 
         }
     ) {
-        showDialog(
-            title,
+        showDialog(title,
             msg,
             positiveText,
             negativeText,
-            DialogInterface.OnClickListener { dialog, which -> dialog.onPositiveClick(which) },
-            DialogInterface.OnClickListener { dialog, which -> dialog.onNegativeClick(which) })
+            { dialog, which -> dialog.onPositiveClick(which) },
+            { dialog, which -> dialog.onNegativeClick(which) })
     }
 
     fun showDialog(
@@ -110,13 +109,12 @@ abstract class BaseActivity : AppCompatActivity() {
 
         }
     ) {
-        showDialog(
-            title,
+        showDialog(title,
             msg,
             positiveText,
             negativeText,
-            DialogInterface.OnClickListener { dialog, which -> dialog.onPositiveClick(which) },
-            DialogInterface.OnClickListener { dialog, which -> dialog.onNegativeClick(which) })
+            { dialog, which -> dialog.onPositiveClick(which) },
+            { dialog, which -> dialog.onNegativeClick(which) })
     }
 
     private fun showDialog(
@@ -163,8 +161,7 @@ abstract class BaseActivity : AppCompatActivity() {
         positiveListener: DialogInterface.OnClickListener,
         negativeListener: DialogInterface.OnClickListener?
     ) {
-        val builder = AlertDialog.Builder(this).setMessage(msg)
-            .setTitle(title)
+        val builder = AlertDialog.Builder(this).setMessage(msg).setTitle(title)
             .setPositiveButton(positiveText, positiveListener)
         if (negativeText.isNullOrEmpty().not()) {
             builder.setNegativeButton(negativeText, negativeListener)
@@ -173,9 +170,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
     ) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             val list = ArrayList<String>()
@@ -195,10 +190,16 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     abstract class PermissionCallback {
+
         abstract fun granted()
 
         open fun denied(permissions: List<String>) {
 
         }
+    }
+
+    protected fun <T : ViewBinding> T.inject(): T {
+        setContentView(this.root)
+        return this
     }
 }

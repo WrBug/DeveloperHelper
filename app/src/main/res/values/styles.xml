@@ -36,6 +36,13 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+
+    <style name="TextAppearance.ItemTitle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/item_title_text</item>
+    </style>
+
     <!--<style name="tabStyle">-->
     <!--<item name="app:tabBackground">@color/colorPrimaryDark</item>-->
     <!--<item name="app:tabIndicatorColor">@android:color/transparent</item>-->
