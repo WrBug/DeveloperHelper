@@ -7,7 +7,9 @@ import com.wrbug.developerhelper.commonutil.ShellUtils
 import com.wrbug.developerhelper.commonutil.entity.FragmentInfo
 import com.wrbug.developerhelper.commonutil.entity.LsFileInfo
 import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
+import com.wrbug.developerhelper.commonutil.runOnIO
 import com.wrbug.developerhelper.commonutil.toInt
+import io.reactivex.rxjava3.core.Single
 import java.io.File
 import java.util.regex.Pattern
 
@@ -33,20 +35,12 @@ object ShellManager {
     private val SHELL_OPEN_ADB_WIFI =
         arrayOf("setprop service.adb.tcp.port 5555", "stop adbd", "start adbd")
 
-    fun getTopActivity(callback: Callback<TopActivityInfo?>) {
-        ShellUtils.runWithSu(arrayOf(SHELL_TOP_ACTIVITY),
-            object : ShellUtils.ShellResultCallback() {
-                override fun onComplete(result: CommandResult) {
-                    val activityInfo = getTopActivity(result)
-                    activityInfo.fragments = getFragment(activityInfo.packageName)
-                    callback.onSuccess(activityInfo)
-                }
-
-                override fun onError(msg: String) {
-                    callback.onSuccess(null)
-                }
-            })
-
+    fun getTopActivity(): Single<TopActivityInfo> {
+        return ShellUtils.runWithSu(arrayOf(SHELL_TOP_ACTIVITY)).map {
+            getTopActivity(it).apply {
+                fragments = getFragment(packageName)
+            }
+        }.runOnIO()
     }
 
     private fun getFragment(packageName: String): Array<FragmentInfo> {
@@ -219,17 +213,10 @@ object ShellManager {
         return files.toTypedArray()
     }
 
-    fun openAccessibilityService(callback: Callback<Boolean>? = null) {
-        ShellUtils.runWithSu(SHELL_OPEN_ACCESSiBILITY_SERVICE,
-            object : ShellUtils.ShellResultCallback() {
-                override fun onComplete(result: CommandResult) {
-                    callback?.onSuccess(result.isSuccessful && result.getStdout().isEmpty())
-                }
-
-                override fun onError(msg: String) {
-                    callback?.onSuccess(false)
-                }
-            })
+    fun openAccessibilityService(): Single<Boolean> {
+        return ShellUtils.runWithSu(SHELL_OPEN_ACCESSiBILITY_SERVICE).map {
+            it.isSuccessful && it.getStdout().isEmpty()
+        }.onErrorReturn { false }.runOnIO()
     }
 
     fun catFile(filaPath: String): String {

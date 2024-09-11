@@ -16,6 +16,7 @@ import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
 import com.wrbug.developerhelper.util.OutSharedPreferenceManager
 import com.wrbug.developerhelper.util.XmlUtil
 import com.wrbug.developerhelper.commonutil.dp2px
+import com.wrbug.developerhelper.commonutil.dpInt
 import com.wrbug.developerhelper.databinding.ActivitySharedPreferenceEditBinding
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -66,7 +67,14 @@ class SharedPreferenceEditActivity : BaseActivity() {
         adapter.setOnValueChangedListener {
             saveMenuItem?.isVisible = it
         }
-        val spaceItemDecoration = SpaceItemDecoration(dp2px(10F))
+        val spaceItemDecoration = SpaceItemDecoration(
+            24.dpInt(context),
+            16.dpInt(context),
+            24.dpInt(context),
+            0,
+            16.dpInt(context),
+            40.dpInt(context)
+        )
         binding.sprefRv.addItemDecoration(spaceItemDecoration)
         parseXml()
 

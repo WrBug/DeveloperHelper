@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieDrawable
+import com.wrbug.developerhelper.commonutil.ClipboardUtils
 import com.wrbug.developerhelper.commonutil.print
+import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
 import com.wrbug.developerhelper.commonwidget.util.visible
 import com.wrbug.developerhelper.databinding.ItemInfoLoadingBinding
 import com.wrbug.developerhelper.databinding.ItemViewInfoBinding
@@ -64,23 +66,27 @@ class InfoAdapter(val context: Context, private val topItem: ItemInfo? = null) :
         notifyItemInserted(index)
     }
 
-    override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
-        if (p0 is InfoViewHolder) {
-            val itemInfo = list[p1] as ItemInfo
-            p0.binding.titleTv.text = itemInfo.title
-            p0.binding.contentTv.text = itemInfo.content.toString()
-            p0.binding.contentTv.setTextColor(itemInfo.textColor)
-            p0.binding.contentTv.setTextIsSelectable(itemInfo.clickListener == null)
-            p0.binding.contentTv.setOnClickListener {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is InfoViewHolder) {
+            val itemInfo = list[position] as ItemInfo
+            holder.binding.titleTv.text = itemInfo.title
+            holder.binding.contentTv.text = itemInfo.content.toString()
+            holder.binding.contentTv.setTextColor(itemInfo.textColor)
+            holder.binding.contentTv.setTextIsSelectable(itemInfo.clickListener == null)
+            holder.binding.ivCopy.visible = itemInfo.showCopy
+            holder.binding.ivCopy.setOnDoubleCheckClickListener {
+                ClipboardUtils.saveClipboardText(context, itemInfo.content.toString())
+            }
+            holder.binding.contentTv.setOnClickListener {
                 itemInfo.content.print()
                 itemInfo.clickListener?.run {
                     onClick(it)
                 }
             }
-        } else if (p0 is LoadingViewHolder) {
-            p0.binding.loadingView.visible = true
-            p0.binding.loadingView.playAnimation()
-            p0.binding.loadingView.repeatCount = LottieDrawable.INFINITE
+        } else if (holder is LoadingViewHolder) {
+            holder.binding.loadingView.visible = true
+            holder.binding.loadingView.playAnimation()
+            holder.binding.loadingView.repeatCount = LottieDrawable.INFINITE
         }
     }
 

@@ -21,11 +21,13 @@ import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.ItemInfo
 import com.wrbug.developerhelper.util.EnforceUtils
 import com.wrbug.developerhelper.commonutil.UiUtils
+import com.wrbug.developerhelper.commonutil.addTo
 import com.wrbug.developerhelper.commonutil.shell.Callback
 import com.wrbug.developerhelper.ipc.processshare.manager.AppXposedProcessDataManager
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.LoadingItem
 import com.wrbug.developerhelper.util.format
 import com.wrbug.developerhelper.util.getString
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.lang.StringBuilder
@@ -33,7 +35,7 @@ import java.util.ArrayList
 
 @Keep
 class AppInfoPagerAdapter(
-    private val dialog: AppInfoDialog
+    private val dialog: AppInfoDialog, private val disposable: CompositeDisposable
 ) : PagerAdapter() {
 
     private val context: Context = dialog.requireContext()
@@ -46,6 +48,7 @@ class AppInfoPagerAdapter(
     private val itemInfos = ArrayList<Any>()
     private val analyzeItem by lazy {
         ItemInfo(getString(R.string.page_analyze), getString(R.string.click_to_analyze)).apply {
+            showCopy = false
             textColor = context.resources.getColor(R.color.colorPrimaryDark)
             setOnClickListener(View.OnClickListener {
                 listener?.showHierachyView()
@@ -112,23 +115,18 @@ class AppInfoPagerAdapter(
     }
 
     private fun loadTopActivityInfo() {
-        ShellManager.getTopActivity(object : Callback<TopActivityInfo?> {
-            override fun onSuccess(data: TopActivityInfo?) {
-                uiThread {
-                    data?.activity?.takeIf { it.isNotEmpty() }?.let {
-                        itemInfos.add(0, ItemInfo("Activity", it))
-                    }
-                    data?.packageName?.takeIf { it.isNotEmpty() }?.let {
-                        itemInfos.add(0, ItemInfo("PackageName", it))
-                    }
-                    adapter.setItems(itemInfos)
-                }
+        ShellManager.getTopActivity().subscribe({ data ->
+            data.activity.takeIf { it.isNotEmpty() }?.let {
+                itemInfos.add(0, ItemInfo("Activity", it))
             }
+            data.packageName.takeIf { it.isNotEmpty() }?.let {
+                itemInfos.add(0, ItemInfo("PackageName", it))
+            }
+            adapter.setItems(itemInfos)
+        }, {
 
-            override fun onFailed(msg: String) {
-                adapter.setItems(itemInfos)
-            }
-        })
+        }).addTo(disposable)
+
     }
 
     override fun isViewFromObject(view: View, o: Any): Boolean {

@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.commonutil.addTo
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.commonutil.shell.Callback
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
@@ -18,8 +19,9 @@ import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
 import com.wrbug.developerhelper.ui.activity.main.MainActivity
 import com.yhao.floatwindow.FloatWindow
 import com.yhao.floatwindow.Screen
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 
-class FloatWindowService: Service() {
+class FloatWindowService : Service() {
 
     companion object {
 
@@ -52,37 +54,32 @@ class FloatWindowService: Service() {
             )
         }
     }
+    private lateinit var disposable: CompositeDisposable
     private lateinit var notification: Notification
     private val receiver = Receiver()
     override fun onCreate() {
         super.onCreate()
+        disposable = CompositeDisposable()
         initReceiver()
         LayoutInflater.from(this).inflate(R.layout.layout_float_window_button, null)?.let {
             it.setOnDoubleCheckClickListener {
                 if (!DeveloperHelperAccessibilityService.isAccessibilitySettingsOn()) {
-                    AccessibilityManager.startService(this, object: Callback<Boolean> {
-                        override fun onSuccess(data: Boolean) {
-                            if (data) {
-                                it.postDelayed({
-                                    sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))
-                                }, 500)
-                            }
+                    AccessibilityManager.startService(this).subscribe({ data ->
+                        if (data) {
+                            it.postDelayed({
+                                sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))
+                            }, 500)
                         }
+                    }, {
 
-                    })
+                    }).addTo(disposable)
                     return@setOnDoubleCheckClickListener
                 }
                 sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))
             }
-            FloatWindow
-                .with(applicationContext)
-                .setView(it)
-                .setWidth(Screen.width, 0.1f)                               //设置控件宽高
-                .setHeight(Screen.width, 0.1f)
-                .setY(Screen.height, 0.3f)
-                .setTag(FLOAT_BUTTON)
-                .setDesktopShow(true)                        //桌面显示
-                .build()
+            FloatWindow.with(applicationContext).setView(it).setWidth(Screen.width, 0.1f)
+                .setHeight(Screen.width, 0.1f).setY(Screen.height, 0.3f).setTag(FLOAT_BUTTON)
+                .setDesktopShow(true).build()
 
         }
     }
@@ -105,12 +102,9 @@ class FloatWindowService: Service() {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel =
-                NotificationChannel(
-                    CHANNEL_ID,
-                    getString(R.string.demon_process),
-                    NotificationManager.IMPORTANCE_LOW
-                )
+            val channel = NotificationChannel(
+                CHANNEL_ID, getString(R.string.demon_process), NotificationManager.IMPORTANCE_LOW
+            )
             channel.enableLights(true)
             channel.setShowBadge(true)
             notificationManager.createNotificationChannel(channel)
@@ -119,24 +113,18 @@ class FloatWindowService: Service() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.getActivity(
-                this,
-                0,
-                intent,
-                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         } else {
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         }
-        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setAutoCancel(false)
-            .setContentIntent(pendingIntent)
-            .setContentTitle(getString(R.string.app_name))
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID).setAutoCancel(false)
+            .setContentIntent(pendingIntent).setContentTitle(getString(R.string.app_name))
             .setContentText(getString(R.string.demon_process_content))
-            .setSmallIcon(R.drawable.ic_launcher_notify)
-            .setVibrate(null)
+            .setSmallIcon(R.drawable.ic_launcher_notify).setVibrate(null)
         notification = builder.build()
-        notification.flags = Notification.FLAG_ONGOING_EVENT or Notification.FLAG_NO_CLEAR or
-                Notification.FLAG_FOREGROUND_SERVICE
+        notification.flags =
+            Notification.FLAG_ONGOING_EVENT or Notification.FLAG_NO_CLEAR or Notification.FLAG_FOREGROUND_SERVICE
         updateNotification()
     }
 
@@ -162,6 +150,7 @@ class FloatWindowService: Service() {
 
     override fun onDestroy() {
         try {
+            disposable.dispose()
             FloatWindow.destroy(FLOAT_BUTTON)
             unregisterReceiver(receiver)
             stopForeground(true)
@@ -174,7 +163,7 @@ class FloatWindowService: Service() {
 
     override fun onBind(intent: Intent): IBinder = null!!
 
-    private inner class Receiver: BroadcastReceiver() {
+    private inner class Receiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
@@ -186,6 +175,7 @@ class FloatWindowService: Service() {
                         hideFloatButton()
                     }
                 }
+
                 ReceiverConstant.ACTION_ADB_WIFI_CLICKED -> {
                     updateNotificationContent("正在开启adb wifi")
                     val success = ShellManager.openAdbWifi()

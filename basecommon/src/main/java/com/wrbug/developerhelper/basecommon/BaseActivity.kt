@@ -13,7 +13,7 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
 import java.util.ArrayList
 
-abstract class BaseActivity: AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
     private lateinit var toastRootView: View
     protected lateinit var context: BaseActivity
@@ -64,12 +64,9 @@ abstract class BaseActivity: AppCompatActivity() {
     }
 
     fun showDialog(
-        @StringRes
-        title: Int,
-        @StringRes
-        msg: Int,
-        @StringRes
-        positiveText: Int,
+        @StringRes title: Int,
+        @StringRes msg: Int,
+        @StringRes positiveText: Int,
         positiveListener: DialogInterface.OnClickListener
     ) {
         showDialog(title, msg, positiveText, 0, positiveListener, null)
@@ -85,59 +82,46 @@ abstract class BaseActivity: AppCompatActivity() {
     }
 
     fun showDialog(
-        @StringRes
-        title: Int,
-        @StringRes
-        msg: Int,
-        @StringRes
-        positiveText: Int,
-        @StringRes
-        negativeText: Int,
+        @StringRes title: Int,
+        @StringRes msg: Int,
+        @StringRes positiveText: Int,
+        @StringRes negativeText: Int,
         onPositiveClick: DialogInterface?.(Int) -> Unit,
         onNegativeClick: DialogInterface?.(Int) -> Unit? = {
 
         }
     ) {
-        showDialog(
-            title,
+        showDialog(title,
             msg,
             positiveText,
             negativeText,
-            DialogInterface.OnClickListener { dialog, which -> dialog.onPositiveClick(which) },
-            DialogInterface.OnClickListener { dialog, which -> dialog.onNegativeClick(which) })
+            { dialog, which -> dialog.onPositiveClick(which) },
+            { dialog, which -> dialog.onNegativeClick(which) })
     }
 
     fun showDialog(
-        @StringRes
-        title: Int,
+        @StringRes title: Int,
         msg: String,
-        @StringRes
-        positiveText: Int,
-        @StringRes
-        negativeText: Int,
+        @StringRes positiveText: Int,
+        @StringRes negativeText: Int,
         onPositiveClick: DialogInterface?.(Int) -> Unit,
         onNegativeClick: DialogInterface?.(Int) -> Unit? = {
 
         }
     ) {
-        showDialog(
-            title,
+        showDialog(title,
             msg,
             positiveText,
             negativeText,
-            DialogInterface.OnClickListener { dialog, which -> dialog.onPositiveClick(which) },
-            DialogInterface.OnClickListener { dialog, which -> dialog.onNegativeClick(which) })
+            { dialog, which -> dialog.onPositiveClick(which) },
+            { dialog, which -> dialog.onNegativeClick(which) })
     }
 
     private fun showDialog(
-        @StringRes
-        title: Int,
-        @StringRes
-        msg: Int,
-        @StringRes
-        positiveText: Int,
-        @StringRes
-        negativeText: Int,
+        @StringRes title: Int,
+        @StringRes msg: Int,
+        @StringRes positiveText: Int,
+        @StringRes negativeText: Int,
         positiveListener: DialogInterface.OnClickListener,
         negativeListener: DialogInterface.OnClickListener?
     ) {
@@ -152,13 +136,10 @@ abstract class BaseActivity: AppCompatActivity() {
     }
 
     private fun showDialog(
-        @StringRes
-        title: Int,
+        @StringRes title: Int,
         msg: String,
-        @StringRes
-        positiveText: Int,
-        @StringRes
-        negativeText: Int,
+        @StringRes positiveText: Int,
+        @StringRes negativeText: Int,
         positiveListener: DialogInterface.OnClickListener,
         negativeListener: DialogInterface.OnClickListener?
     ) {
@@ -180,8 +161,7 @@ abstract class BaseActivity: AppCompatActivity() {
         positiveListener: DialogInterface.OnClickListener,
         negativeListener: DialogInterface.OnClickListener?
     ) {
-        val builder = AlertDialog.Builder(this).setMessage(msg)
-            .setTitle(title)
+        val builder = AlertDialog.Builder(this).setMessage(msg).setTitle(title)
             .setPositiveButton(positiveText, positiveListener)
         if (negativeText.isNullOrEmpty().not()) {
             builder.setNegativeButton(negativeText, negativeListener)
@@ -190,9 +170,7 @@ abstract class BaseActivity: AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
     ) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             val list = ArrayList<String>()
@@ -220,7 +198,7 @@ abstract class BaseActivity: AppCompatActivity() {
         }
     }
 
-    protected fun <T: ViewBinding> T.inject(): T {
+    protected fun <T : ViewBinding> T.inject(): T {
         setContentView(this.root)
         return this
     }

@@ -18,6 +18,7 @@ import com.wrbug.developerhelper.commonutil.shell.Callback
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.commonwidget.util.visible
 import com.wrbug.developerhelper.databinding.DialogApkInfoBinding
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 class AppInfoDialog : DialogFragment() {
 
@@ -26,8 +27,9 @@ class AppInfoDialog : DialogFragment() {
     }
     private var listener: AppInfoDialogEventListener? = null
     private lateinit var binding: DialogApkInfoBinding
+    private lateinit var disposable: CompositeDisposable
     private val pagerAdapter by lazy {
-        AppInfoPagerAdapter(this)
+        AppInfoPagerAdapter(this, disposable)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +47,7 @@ class AppInfoDialog : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+        disposable = CompositeDisposable()
         binding = DialogApkInfoBinding.inflate(inflater, container, false)
         dialog?.window?.run {
             val layoutParams = attributes
@@ -73,5 +76,6 @@ class AppInfoDialog : DialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         listener?.close()
+        disposable.dispose()
     }
 }

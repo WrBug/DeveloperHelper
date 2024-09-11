@@ -208,15 +208,6 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             showToast(getString(R.string.getting_app_info))
             val nodesInfo = readNode()
             HierarchyActivity.start(context, currentAppInfo, nodesInfo)
-//            ShellManager.getTopActivity(object : Callback<TopActivityInfo?> {
-//
-//                override fun onSuccess(data: TopActivityInfo?) {
-//                    topActivity = data
-//                    val nodesInfo = readNode()
-//                    HierarchyActivity.start(context, currentAppInfo, nodesInfo, topActivity)
-//                }
-//            })
-
         }
     }
 
