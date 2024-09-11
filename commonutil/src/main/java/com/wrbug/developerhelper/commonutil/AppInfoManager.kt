@@ -32,11 +32,7 @@ object AppInfoManager {
 
 
     fun getSharedPreferencesFiles(packageName: String): Array<File> {
-        val list = getSharedPreferencesFiles("/data/data", packageName)
-        if (list.isNotEmpty()) {
-            return list
-        }
-        return getSharedPreferencesFiles(Constant.DATA_MIRROR, packageName)
+        return getSharedPreferencesFiles(Constant.dataDir, packageName)
     }
 
     private fun getSharedPreferencesFiles(dir: String, packageName: String): Array<File> {

@@ -17,11 +17,15 @@ import com.wrbug.developerhelper.mmkv.manager.MMKVManager
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.widget.AppCompatButton
+import com.wrbug.developerhelper.BuildConfig
 import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.commonutil.zip
 import com.wrbug.developerhelper.util.BackupUtils
 import com.wrbug.developerhelper.commonutil.toUri
+import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
+import com.wrbug.developerhelper.commonwidget.util.setOnRootCheckClickListener
+import com.wrbug.developerhelper.commonwidget.util.visible
 import com.wrbug.developerhelper.databinding.ViewAppSettingBinding
 import gdut.bsx.share2.Share2
 import gdut.bsx.share2.ShareContentType
@@ -29,105 +33,51 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
 
-class AppSettingView: ScrollView {
+class AppSettingView : ScrollView {
 
-    var apkInfo: ApkInfo? = null
+    private var apkInfo: ApkInfo? = null
     private val configKv = MMKVManager.get(ConfigKv::class.java)
-    private var exportDexBtn: AppCompatButton? = null
     private lateinit var binding: ViewAppSettingBinding
 
-    constructor(context: Context): super(context) {
+    constructor(context: Context) : super(context) {
         initView()
     }
 
-    constructor(context: Context, attrs: AttributeSet): super(context, attrs) {
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         initView()
+    }
+
+    fun setApkInfo(apkInfo: ApkInfo?) {
+        this.apkInfo = apkInfo
+        if (apkInfo?.applicationInfo?.packageName == BuildConfig.APPLICATION_ID) {
+            binding.uninstallAppBtn.visible = false
+        }
     }
 
     private fun initView() {
         binding = ViewAppSettingBinding.inflate(LayoutInflater.from(context), this, true)
-        exportDexBtn = findViewById(R.id.exportDexBtn)
-        if (configKv.isOpenRoot().not()) {
-            binding.backupApkBtn.isEnabled = false
-            binding.backupApkDataDirBtn.isEnabled = false
-            binding.restartAppBtn.isEnabled = false
-            binding.stopAppBtn.isEnabled = false
-            binding.deleteAppDataBtn.isEnabled = false
-            exportDexBtn?.isEnabled = false
-        }
         initListener()
     }
 
     private fun initListener() {
-        binding.backupApkBtn.setOnClickListener {
+        binding.backupApkBtn.setOnRootCheckClickListener {
             doBackupApk()
         }
-        binding.backupApkDataDirBtn.setOnClickListener {
+        binding.backupApkDataDirBtn.setOnRootCheckClickListener {
             doBackupDataDir()
         }
-        binding.restartAppBtn.setOnClickListener {
+        binding.restartAppBtn.setOnRootCheckClickListener {
             doRestartApp()
         }
-        binding.stopAppBtn.setOnClickListener {
+        binding.stopAppBtn.setOnRootCheckClickListener {
             doStopApp()
         }
-        binding.deleteAppDataBtn.setOnClickListener {
+        binding.deleteAppDataBtn.setOnRootCheckClickListener {
             doDeleteAppData()
         }
-        binding.uninstallAppBtn.setOnClickListener {
+        binding.uninstallAppBtn.setOnRootCheckClickListener {
             doUninstallApp()
         }
-
-        exportDexBtn?.setOnClickListener {
-            doBackupDexData()
-        }
-    }
-
-    private fun doBackupDexData() {
-        apkInfo?.apply {
-            showToast(context.getString(R.string.packing_files))
-            doAsync {
-                val dir = File(context.externalCacheDir, "dex/${applicationInfo.packageName}")
-                if (dir.exists()) {
-                    ShellManager.rmFile(dir.absolutePath)
-                }
-                dir.mkdirs()
-                val dexDir = "/data/data/${applicationInfo.packageName}/dump"
-                val lsDir = ShellManager.lsDir(dexDir)
-                if (lsDir.isEmpty()) {
-                    uiThread {
-                        showToast(context.getString(R.string.no_dex_files))
-                    }
-                    return@doAsync
-                }
-                if (ShellManager.cpFile(dexDir, dir.absolutePath)) {
-                    val zipFile =
-                        File(context.externalCacheDir, "${apkInfo?.getAppName() ?: ""}-dex.zip")
-                    dir.zip(zipFile)
-                    val uri = zipFile.toUri(context)
-                    if (uri == null) {
-                        showToast(R.string.export_failed)
-                        return@doAsync
-                    }
-                    uiThread {
-                        showShareDexNotice(uri)
-                    }
-                } else {
-                    uiThread {
-                        showToast(context.getString(R.string.export_failed))
-                    }
-                }
-            }
-        }
-    }
-
-    private fun showShareDexNotice(uri: Uri) {
-        Share2.Builder(context as Activity)
-            .setContentType(ShareContentType.FILE)
-            .setShareFileUri(uri)
-            .setOnActivityResult(10)
-            .build()
-            .shareBySystem()
     }
 
     private fun doUninstallApp() {
@@ -142,13 +92,13 @@ class AppSettingView: ScrollView {
         }
         apkInfo?.apply {
             showNotice(
-                context.getString(R.string.confirm_delete_app_data),
-                DialogInterface.OnClickListener { _, _ ->
-                    if (AppManagerUtils.clearAppData(applicationInfo.packageName)) {
-                        activityFinish()
-                        showToast(context.getString(R.string.clear_complete))
-                    }
-                })
+                context.getString(R.string.confirm_delete_app_data)
+            ) { _, _ ->
+                if (AppManagerUtils.clearAppData(applicationInfo.packageName)) {
+                    activityFinish()
+                    showToast(context.getString(R.string.clear_complete))
+                }
+            }
 
         }
     }
@@ -158,13 +108,11 @@ class AppSettingView: ScrollView {
             return
         }
         apkInfo?.apply {
-            showNotice(
-                context.getString(R.string.confirm_stop_app),
-                DialogInterface.OnClickListener { _, _ ->
-                    if (AppManagerUtils.forceStopApp(applicationInfo.packageName)) {
-                        activityFinish()
-                    }
-                })
+            showNotice(context.getString(R.string.confirm_stop_app)) { _, _ ->
+                if (AppManagerUtils.forceStopApp(applicationInfo.packageName)) {
+                    activityFinish()
+                }
+            }
         }
     }
 
@@ -173,8 +121,7 @@ class AppSettingView: ScrollView {
             return
         }
         apkInfo?.apply {
-            showNotice(
-                context.getString(R.string.confirm_restart_app),
+            showNotice(context.getString(R.string.confirm_restart_app),
                 DialogInterface.OnClickListener { _, _ ->
                     AppManagerUtils.restartApp(context, applicationInfo.packageName)
                     activityFinish()
@@ -202,15 +149,13 @@ class AppSettingView: ScrollView {
     }
 
     private fun showShareDataNotice(backupAppData: File) {
-        showNotice(
-            context.getString(R.string.backup_success_and_share_msg),
+        showNotice(context.getString(R.string.backup_success_and_share_msg),
             DialogInterface.OnClickListener { _, _ ->
                 (context as BaseActivity).requestPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    object: BaseActivity.PermissionCallback() {
+                    object : BaseActivity.PermissionCallback() {
                         override fun granted() {
                             val zipFile = File(
-                                context.externalCacheDir,
-                                "${apkInfo?.getAppName() ?: ""}-data.zip"
+                                context.externalCacheDir, "${apkInfo?.getAppName() ?: ""}-data.zip"
                             )
                             backupAppData.zip(zipFile)
                             val uri = zipFile.toUri(context)
@@ -220,11 +165,8 @@ class AppSettingView: ScrollView {
                             }
                             activityFinish()
                             Share2.Builder(context as Activity)
-                                .setContentType(ShareContentType.FILE)
-                                .setShareFileUri(uri)
-                                .setOnActivityResult(10)
-                                .build()
-                                .shareBySystem()
+                                .setContentType(ShareContentType.FILE).setShareFileUri(uri)
+                                .setOnActivityResult(10).build().shareBySystem()
                         }
 
                     })
@@ -260,19 +202,14 @@ class AppSettingView: ScrollView {
             (context as BaseActivity).requestPermission(arrayOf(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ),
-                object: BaseActivity.PermissionCallback() {
-                    override fun granted() {
-                        activityFinish()
-                        Share2.Builder(context as Activity)
-                            .setContentType(ShareContentType.FILE)
-                            .setShareFileUri(uri)
-                            .setOnActivityResult(10)
-                            .build()
-                            .shareBySystem()
-                    }
+            ), object : BaseActivity.PermissionCallback() {
+                override fun granted() {
+                    activityFinish()
+                    Share2.Builder(context as Activity).setContentType(ShareContentType.FILE)
+                        .setShareFileUri(uri).setOnActivityResult(10).build().shareBySystem()
+                }
 
-                })
+            })
 
         }
     }
@@ -292,11 +229,8 @@ class AppSettingView: ScrollView {
     }
 
     private fun showNotice(msg: String, listener: DialogInterface.OnClickListener) {
-        AlertDialog.Builder(context)
-            .setTitle(R.string.notice)
-            .setMessage(msg)
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.ok, listener)
+        AlertDialog.Builder(context).setTitle(R.string.notice).setMessage(msg)
+            .setNegativeButton(R.string.cancel, null).setPositiveButton(R.string.ok, listener)
             .create().show()
     }
 }

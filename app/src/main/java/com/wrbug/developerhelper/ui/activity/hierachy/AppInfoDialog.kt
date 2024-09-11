@@ -74,8 +74,8 @@ class AppInfoDialog : DialogFragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         listener?.close()
         disposable.dispose()
+        super.onDestroyView()
     }
 }

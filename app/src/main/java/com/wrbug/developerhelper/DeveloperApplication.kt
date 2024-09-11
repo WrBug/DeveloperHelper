@@ -18,9 +18,10 @@ import java.io.FileOutputStream
 import com.wrbug.developerhelper.ipc.processshare.tcp.TcpManager
 import com.wrbug.developerhelper.ipcserver.IpcManager
 import com.wrbug.developerhelper.ui.activity.main.MainActivity
+import com.wrbug.developerhelper.util.AppStatusRegister
 import org.jetbrains.anko.doAsync
 
-class DeveloperApplication: BaseApp() {
+class DeveloperApplication : BaseApp() {
     companion object {
 
         private lateinit var instance: DeveloperApplication
@@ -45,6 +46,7 @@ class DeveloperApplication: BaseApp() {
         BaseModule.init(this)
         releaseAssetsFile()
         registerLifecycle()
+        AppStatusRegister.init(this)
     }
 
     private fun registerIpcServer() {
@@ -58,7 +60,7 @@ class DeveloperApplication: BaseApp() {
     }
 
     private fun registerLifecycle() {
-        registerActivityLifecycleCallbacks(object: ActivityLifecycleCallbacks {
+        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             private var count = 0
             override fun onActivityPaused(activity: Activity) {
 

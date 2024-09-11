@@ -29,6 +29,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':mmkv')
     testImplementation 'junit:junit:4.12'
     implementation project(':commonutil')
 }

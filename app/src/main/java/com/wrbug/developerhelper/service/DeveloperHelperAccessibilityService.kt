@@ -205,7 +205,6 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
 
     inner class DeveloperHelperAccessibilityReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, data: Intent?) {
-            showToast(getString(R.string.getting_app_info))
             val nodesInfo = readNode()
             HierarchyActivity.start(context, currentAppInfo, nodesInfo)
         }

@@ -5,48 +5,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.helper.widget.Flow
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        android:paddingTop="24dp"
+        app:constraint_referenced_ids="backupApkBtn,backupApkDataDirBtn,restartAppBtn,stopAppBtn,deleteAppDataBtn,uninstallAppBtn"
+        app:flow_verticalGap="16dp"
+        app:flow_wrapMode="aligned"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/backupApkBtn"
         style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
         android:text="@string/backup_apk_file"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintWidth_percent="0.45" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/backupApkDataDirBtn"
         style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="24dp"
         android:text="@string/backup_data_dir"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="@+id/backupApkBtn" />
+        app:layout_constraintWidth_percent="0.45" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/restartAppBtn"
         style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="@string/restart_app"
-        app:layout_constraintEnd_toEndOf="@+id/backupApkBtn"
-        app:layout_constraintStart_toStartOf="@+id/backupApkBtn"
-        app:layout_constraintTop_toBottomOf="@+id/backupApkBtn" />
+        app:layout_constraintWidth_percent="0.45" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/stopAppBtn"
@@ -54,20 +47,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/stop_app"
-        app:layout_constraintEnd_toEndOf="@+id/backupApkDataDirBtn"
-        app:layout_constraintStart_toStartOf="@+id/backupApkDataDirBtn"
-        app:layout_constraintTop_toTopOf="@+id/restartAppBtn" />
+        app:layout_constraintWidth_percent="0.45" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/deleteAppDataBtn"
         style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="@string/delete_app_data"
-        app:layout_constraintEnd_toEndOf="@+id/restartAppBtn"
-        app:layout_constraintStart_toStartOf="@+id/restartAppBtn"
-        app:layout_constraintTop_toBottomOf="@+id/restartAppBtn" />
+        app:layout_constraintWidth_percent="0.45" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/uninstallAppBtn"
@@ -75,20 +63,5 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/uninstall_app"
-        app:layout_constraintEnd_toEndOf="@+id/backupApkDataDirBtn"
-        app:layout_constraintStart_toStartOf="@+id/backupApkDataDirBtn"
-        app:layout_constraintTop_toTopOf="@+id/deleteAppDataBtn" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/exportDexBtn"
-        style="@style/PrimaryButtonStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/export_dex_data"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@+id/deleteAppDataBtn"
-        app:layout_constraintStart_toStartOf="@+id/deleteAppDataBtn"
-        app:layout_constraintTop_toBottomOf="@+id/deleteAppDataBtn"
-        tools:visibility="visible" />
+        app:layout_constraintWidth_percent="0.45" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -189,11 +189,7 @@ object ShellManager {
     }
 
     fun getSqliteFiles(packageName: String): Array<File> {
-        val list = getSqliteFiles("/data/data", packageName)
-        if (list.isNotEmpty()) {
-            return list
-        }
-        return getSqliteFiles(Constant.DATA_MIRROR, packageName)
+        return getSqliteFiles(Constant.dataDir, packageName)
     }
 
     private fun getSqliteFiles(dir: String, packageName: String): Array<File> {

@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">commonwidget</string>
+    <string name="open_root_notice">功能需要root权限，请开启后使用！</string>
+
 </resources>

@@ -2,7 +2,15 @@ package com.wrbug.developerhelper.commonwidget.util
 
 import android.os.SystemClock
 import android.view.View
+import android.widget.Toast
+import com.wrbug.developerhelper.commonutil.ShellUtils
 import com.wrbug.developerhelper.commonwidget.R
+import com.wrbug.developerhelper.mmkv.ConfigKv
+import com.wrbug.developerhelper.mmkv.manager.MMKVManager
+
+private val configKv by lazy {
+    MMKVManager.get(ConfigKv::class.java)
+}
 
 fun View?.setOnDoubleCheckClickListener(duration: Long = 800, clickListener: (View) -> Unit) {
     this?.setOnClickListener {
@@ -12,6 +20,17 @@ fun View?.setOnDoubleCheckClickListener(duration: Long = 800, clickListener: (Vi
             it.setTag(R.id.double_check_click, time)
             clickListener(it)
         }
+    }
+}
+
+
+fun View?.setOnRootCheckClickListener(clickListener: (View) -> Unit) {
+    setOnDoubleCheckClickListener {
+        if (!configKv.isOpenRoot()) {
+            Toast.makeText(it.context, R.string.open_root_notice, Toast.LENGTH_SHORT).show()
+            return@setOnDoubleCheckClickListener
+        }
+        clickListener(it)
     }
 }
 

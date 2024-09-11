@@ -67,7 +67,7 @@ class AppInfoPagerAdapter(
     private fun initAppSettingTab(apkInfo: ApkInfo?) {
         tabList.add(context.getString(R.string.app_setting))
         val view = AppSettingView(context)
-        view.apkInfo = apkInfo
+        view.setApkInfo(apkInfo)
         viewList.add(view)
     }
 
@@ -89,11 +89,11 @@ class AppInfoPagerAdapter(
         itemDecoration.setFirstTopPadding(UiUtils.dp2px(context, 10F))
         rv.addItemDecoration(itemDecoration)
         apkInfo?.let { it ->
-            itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
-            itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
             it.applicationInfo.className?.let { name ->
                 itemInfos.add(ItemInfo("Application", name))
             }
+            itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
+            itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
             itemInfos.add(ItemInfo("uid", it.applicationInfo.uid))
             ShellManager.getPid(it.packageInfo.packageName).takeUnless { it.isEmpty() }?.let {
                 itemInfos.add(ItemInfo("Pid", it))
