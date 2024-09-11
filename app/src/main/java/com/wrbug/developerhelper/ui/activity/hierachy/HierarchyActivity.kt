@@ -7,49 +7,43 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
-import com.google.gson.reflect.TypeToken
 import com.wrbug.developerhelper.basecommon.BaseActivity
-import com.wrbug.developerhelper.constant.ReceiverConstant
-import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.basecommon.entry.HierarchyNode
-import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
-import com.wrbug.developerhelper.ui.widget.hierarchyView.HierarchyView
-import com.wrbug.developerhelper.commonutil.JsonHelper
+import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.constant.ReceiverConstant.ACTION_FINISH_HIERACHY_Activity
 import com.wrbug.developerhelper.databinding.ActivityHierarchyBinding
 import com.wrbug.developerhelper.service.FloatWindowService
+import com.wrbug.developerhelper.ui.widget.hierarchyView.HierarchyView
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.LayoutInfoView
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.OnNodeChangedListener
 import java.lang.ref.WeakReference
 
-class HierarchyActivity: BaseActivity(), AppInfoDialogEventListener, OnNodeChangedListener {
+class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener, OnNodeChangedListener {
 
-    private var apkInfo: ApkInfo? = null
-    private var nodeList: ArrayList<HierarchyNode>? = null
-    private var nodeMap: HashMap<Long, HierarchyNode>? = null
+    private val apkInfo: ApkInfo? by lazy {
+        intent?.getParcelableExtra("apkInfo")
+    }
+    private val nodeList: ArrayList<HierarchyNode>? by lazy {
+        intent?.getParcelableArrayListExtra("node")
+    }
     private var showHierachyView = false
-    private var topActivity: TopActivityInfo? = null
     private lateinit var binding: ActivityHierarchyBinding
 
     companion object {
 
         fun start(
-            context: Context?,
-            apkInfo: ApkInfo?,
-            node: ArrayList<HierarchyNode>?,
-            topActivity: TopActivityInfo?
+            context: Context?, apkInfo: ApkInfo?, node: ArrayList<HierarchyNode>
         ) {
             val intent = Intent(context, HierarchyActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             val bundle = Bundle()
             bundle.putParcelable("apkInfo", apkInfo)
             bundle.putParcelableArrayList("node", node)
-            bundle.putParcelable("topActivity", topActivity)
             intent.putExtras(bundle)
             context?.startActivity(intent)
         }
 
-        private var receiver = object: BroadcastReceiver() {
+        private var receiver = object : BroadcastReceiver() {
             private var reference: WeakReference<Activity>? = null
             fun setActivity(activity: Activity) {
                 reference = WeakReference(activity)
@@ -57,7 +51,7 @@ class HierarchyActivity: BaseActivity(), AppInfoDialogEventListener, OnNodeChang
 
             override fun onReceive(context: Context?, intent: Intent?) {
                 when (intent?.action) {
-                    ReceiverConstant.ACTION_FINISH_HIERACHY_Activity -> {
+                    ACTION_FINISH_HIERACHY_Activity -> {
                         reference?.get()?.finish()
                     }
 
@@ -71,17 +65,7 @@ class HierarchyActivity: BaseActivity(), AppInfoDialogEventListener, OnNodeChang
         super.onCreate(savedInstanceState)
         binding = ActivityHierarchyBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        intent?.run {
-            apkInfo = getParcelableExtra("apkInfo")
-            nodeList = getParcelableArrayListExtra("node")
-            checkNodeList()
-            topActivity = getParcelableExtra("topActivity")
-            val json = getStringExtra("nodeMap")
-            nodeMap = JsonHelper.fromJson(
-                json,
-                object: TypeToken<HashMap<Long, HierarchyNode>>() {}.type
-            )
-        }
+        checkNodeList()
         val filter = IntentFilter(ACTION_FINISH_HIERACHY_Activity)
         receiver.setActivity(this)
         registerReceiver(receiver, filter)
@@ -112,7 +96,6 @@ class HierarchyActivity: BaseActivity(), AppInfoDialogEventListener, OnNodeChang
         val dialog = AppInfoDialog()
         val bundle = Bundle()
         bundle.putParcelable("apkInfo", apkInfo)
-        bundle.putParcelable("topActivity", topActivity)
         dialog.arguments = bundle
         dialog.show(supportFragmentManager, "")
     }
@@ -120,7 +103,7 @@ class HierarchyActivity: BaseActivity(), AppInfoDialogEventListener, OnNodeChang
     override fun showHierachyView() {
         showHierachyView = true
         binding.hierarchyView.setHierarchyNodes(nodeList)
-        binding.hierarchyView.setOnHierarchyNodeClickListener(object:
+        binding.hierarchyView.setOnHierarchyNodeClickListener(object :
             HierarchyView.OnHierarchyNodeClickListener {
             override fun onClick(node: HierarchyNode, parentNode: HierarchyNode?) {
                 binding.hierarchyDetailView.visibility = View.VISIBLE

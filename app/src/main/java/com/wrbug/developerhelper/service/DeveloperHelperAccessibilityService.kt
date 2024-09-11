@@ -113,7 +113,6 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     }
 
 
-
     override fun onDestroy() {
         super.onDestroy()
         nodeMap.clear()
@@ -207,14 +206,16 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     inner class DeveloperHelperAccessibilityReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, data: Intent?) {
             showToast(getString(R.string.getting_app_info))
-            ShellManager.getTopActivity(object : Callback<TopActivityInfo?> {
-
-                override fun onSuccess(data: TopActivityInfo?) {
-                    topActivity = data
-                    val nodesInfo = readNode()
-                    HierarchyActivity.start(context, currentAppInfo, nodesInfo, topActivity)
-                }
-            })
+            val nodesInfo = readNode()
+            HierarchyActivity.start(context, currentAppInfo, nodesInfo)
+//            ShellManager.getTopActivity(object : Callback<TopActivityInfo?> {
+//
+//                override fun onSuccess(data: TopActivityInfo?) {
+//                    topActivity = data
+//                    val nodesInfo = readNode()
+//                    HierarchyActivity.start(context, currentAppInfo, nodesInfo, topActivity)
+//                }
+//            })
 
         }
     }

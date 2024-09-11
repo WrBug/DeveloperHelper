@@ -4,22 +4,52 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieDrawable
 import com.wrbug.developerhelper.commonutil.print
+import com.wrbug.developerhelper.commonwidget.util.visible
+import com.wrbug.developerhelper.databinding.ItemInfoLoadingBinding
 import com.wrbug.developerhelper.databinding.ItemViewInfoBinding
 
-class InfoAdapter(val context: Context): RecyclerView.Adapter<InfoAdapter.ViewHolder>() {
+class InfoAdapter(val context: Context, private val topItem: ItemInfo? = null) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    companion object {
+        private const val VIEW_TYPE_ITEM = 0
+        private const val VIEW_TYPE_LOADING = 1
+    }
 
-    private val list = arrayListOf<ItemInfo>()
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        return ViewHolder(ItemViewInfoBinding.inflate(LayoutInflater.from(p0.context), p0, false))
+    private val list = arrayListOf<Any>()
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
+        if (p1 == VIEW_TYPE_LOADING) {
+            return LoadingViewHolder(
+                ItemInfoLoadingBinding.inflate(
+                    LayoutInflater.from(p0.context), p0, false
+                )
+            )
+        }
+        return InfoViewHolder(
+            ItemViewInfoBinding.inflate(
+                LayoutInflater.from(p0.context), p0, false
+            )
+        )
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (list[position] is LoadingItem) {
+            VIEW_TYPE_LOADING
+        } else {
+            VIEW_TYPE_ITEM
+        }
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    fun setItems(list: ArrayList<ItemInfo>) {
+    fun setItems(list: List<Any>) {
         this.list.clear()
+        topItem?.let {
+            this.list.add(it)
+        }
         if (list.isEmpty().not()) {
             this.list.addAll(list)
         }
@@ -34,17 +64,23 @@ class InfoAdapter(val context: Context): RecyclerView.Adapter<InfoAdapter.ViewHo
         notifyItemInserted(index)
     }
 
-    override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        val itemInfo = list[p1]
-        p0.binding.titleTv.text = itemInfo.title
-        p0.binding.contentTv.text = itemInfo.content.toString()
-        p0.binding.contentTv.setTextColor(itemInfo.textColor)
-        p0.binding.contentTv.setTextIsSelectable(itemInfo.clickListener == null)
-        p0.binding.contentTv.setOnClickListener {
-            itemInfo.content.print()
-            itemInfo.clickListener?.run {
-                onClick(it)
+    override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
+        if (p0 is InfoViewHolder) {
+            val itemInfo = list[p1] as ItemInfo
+            p0.binding.titleTv.text = itemInfo.title
+            p0.binding.contentTv.text = itemInfo.content.toString()
+            p0.binding.contentTv.setTextColor(itemInfo.textColor)
+            p0.binding.contentTv.setTextIsSelectable(itemInfo.clickListener == null)
+            p0.binding.contentTv.setOnClickListener {
+                itemInfo.content.print()
+                itemInfo.clickListener?.run {
+                    onClick(it)
+                }
             }
+        } else if (p0 is LoadingViewHolder) {
+            p0.binding.loadingView.visible = true
+            p0.binding.loadingView.playAnimation()
+            p0.binding.loadingView.repeatCount = LottieDrawable.INFINITE
         }
     }
 
@@ -55,7 +91,7 @@ class InfoAdapter(val context: Context): RecyclerView.Adapter<InfoAdapter.ViewHo
         }
     }
 
-    class ViewHolder(val binding: ItemViewInfoBinding): RecyclerView.ViewHolder(binding.root) {
-
-    }
+    class InfoViewHolder(val binding: ItemViewInfoBinding) : RecyclerView.ViewHolder(binding.root)
+    class LoadingViewHolder(val binding: ItemInfoLoadingBinding) :
+        RecyclerView.ViewHolder(binding.root)
 }

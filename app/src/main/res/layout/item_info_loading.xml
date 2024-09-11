@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.airbnb.lottie.LottieAnimationView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/loading_view"
+    android:layout_width="40dp"
+    android:layout_height="20dp"
+    android:layout_marginHorizontal="30dp"
+    android:layout_marginBottom="10dp"
+    android:scaleType="fitStart"
+    app:lottie_rawRes="@raw/lottie_loading" />

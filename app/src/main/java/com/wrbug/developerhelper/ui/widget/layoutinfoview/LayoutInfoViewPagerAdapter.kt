@@ -150,7 +150,7 @@ class LayoutInfoViewPagerAdapter(
                 "${resourceId.replace(packageName, "app")}[${idHex?.replace("#", "0x") ?: "NO_ID"}]"
             )
         )
-        if (!text.isEmpty()) {
+        if (text.isNotEmpty()) {
             list.add(ItemInfo("Text", text))
         }
         list.add(ItemInfo("Enable", enabled))
