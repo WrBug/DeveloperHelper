@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'//kapt 插件
 apply from: "${rootDir}/common.gradle"
 android {
+    namespace "com.wrbug.developerhelper"
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
@@ -17,11 +18,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    compileSdkVersion 28
+    compileSdk 34
     defaultConfig {
         applicationId "com.wrbug.developerhelper"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 34
         versionCode 100040
         versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -44,7 +45,6 @@ android {
     dataBinding {
         enabled = true
     }
-
     kotlinOptions {
         jvmTarget = '1.8'
     }

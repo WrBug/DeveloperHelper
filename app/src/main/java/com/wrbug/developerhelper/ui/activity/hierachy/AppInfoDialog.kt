@@ -6,7 +6,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo

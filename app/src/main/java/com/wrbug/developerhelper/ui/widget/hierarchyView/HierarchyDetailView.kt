@@ -50,7 +50,7 @@ class HierarchyDetailView: FrameLayout {
         setWillNotDraw(false)
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (hierarchyNode != null) {
             drawNode(canvas)

@@ -18,6 +18,7 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
     private var onHierarchyNodeClickListener: OnHierarchyNodeClickListener? = null
     private var selectedNode: HierarchyNode? = null
     private var selectedParentNode: HierarchyNode? = null
+    private var isFromLeftDown = false
 
     constructor(context: Context) : this(context, null)
 
@@ -36,7 +37,7 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
             mHierarchyNodes.addAll(it)
         }
         nodeMap.putAll(DeveloperHelperAccessibilityService.nodeMap)
-        visibility=View.VISIBLE
+        visibility = View.VISIBLE
         invalidate()
     }
 
@@ -47,15 +48,25 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
+                isFromLeftDown = event.x <= 10
+                if (isFromLeftDown) {
+                    return super.onTouchEvent(event)
+                }
                 getSelectedNode(event.x, event.y)
                 return true
             }
+
             MotionEvent.ACTION_MOVE -> {
-                getSelectedNode(event.x, event.y)
+                if (!isFromLeftDown) {
+                    getSelectedNode(event.x, event.y)
+                }
             }
+
             MotionEvent.ACTION_UP -> {
-                selectedNode?.let {
-                    onHierarchyNodeClickListener?.onClick(it, selectedParentNode)
+                if (!isFromLeftDown) {
+                    selectedNode?.let {
+                        onHierarchyNodeClickListener?.onClick(it, selectedParentNode)
+                    }
                 }
             }
         }
@@ -70,15 +81,17 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
             }
             selectedNode = hierarchyNode.selectedNode
             selectedParentNode = hierarchyNode.parentNode
-            onHierarchyNodeClickListener?.onSelectedNodeChanged(hierarchyNode.selectedNode, hierarchyNode.parentNode)
+            onHierarchyNodeClickListener?.onSelectedNodeChanged(
+                hierarchyNode.selectedNode, hierarchyNode.parentNode
+            )
         }
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         drawRect(canvas, mHierarchyNodes)
     }
 
-    private fun drawRect(canvas: Canvas?, hierarchyNodes: List<HierarchyNode>) {
+    private fun drawRect(canvas: Canvas, hierarchyNodes: List<HierarchyNode>) {
         for (hierarchyNode in hierarchyNodes) {
             drawWidget(canvas, hierarchyNode)
             drawRect(canvas, hierarchyNode.childId)
@@ -120,7 +133,9 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
         return info
     }
 
-    private fun getNode(x: Float, y: Float, hierarchyNode: HierarchyNode, list: ArrayList<SelectedNodeInfo>) {
+    private fun getNode(
+        x: Float, y: Float, hierarchyNode: HierarchyNode, list: ArrayList<SelectedNodeInfo>
+    ) {
         val rect = hierarchyNode.screenBounds ?: return
         if (rect.contains(x.toInt(), y.toInt())) {
             if (!hierarchyNode.childId.isEmpty()) {

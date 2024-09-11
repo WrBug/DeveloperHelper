@@ -41,7 +41,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
                     BaseApp.instance.applicationContext.contentResolver,
                     android.provider.Settings.Secure.ACCESSIBILITY_ENABLED
                 )
-            } catch (e: Settings.SettingNotFoundException) {
+            } catch (_: Settings.SettingNotFoundException) {
             }
 
             val mStringColonSplitter = TextUtils.SimpleStringSplitter(':')
