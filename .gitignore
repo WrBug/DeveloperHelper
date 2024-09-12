@@ -8,3 +8,4 @@
 .externalNativeBuild
 sign.jks
 signing.properties
+lint-baseline.xml
