@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 
 class ActResultRequest {
-    private lateinit var mFragment: OnActResultEventDispatcherFragment
+    private val mFragment: OnActResultEventDispatcherFragment
 
     constructor(activity: AppCompatActivity) {
         mFragment = getEventDispatchFragment(activity)
@@ -29,10 +29,12 @@ class ActResultRequest {
     }
 
     private fun addFragment(fragmentManager: FragmentManager): OnActResultEventDispatcherFragment {
-        var fragment: OnActResultEventDispatcherFragment? = this.findEventDispatchFragment(fragmentManager)
+        var fragment: OnActResultEventDispatcherFragment? =
+            this.findEventDispatchFragment(fragmentManager)
         if (fragment == null) {
             fragment = OnActResultEventDispatcherFragment()
-            fragmentManager.beginTransaction().add(fragment, "on_act_result_event_dispatcher").commitAllowingStateLoss()
+            fragmentManager.beginTransaction().add(fragment, "on_act_result_event_dispatcher")
+                .commitAllowingStateLoss()
             fragmentManager.executePendingTransactions()
         }
 

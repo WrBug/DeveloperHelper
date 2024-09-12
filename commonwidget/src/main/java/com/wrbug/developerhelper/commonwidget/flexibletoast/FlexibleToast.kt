@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.wrbug.developerhelper.commonutil.UiUtils
 import com.wrbug.developerhelper.commonwidget.R
+import com.wrbug.developerhelper.commonwidget.databinding.LayoutToastFlexibleBinding
 
 class FlexibleToast private constructor(private val mContext: Context) {
 
@@ -52,11 +53,13 @@ class FlexibleToast private constructor(private val mContext: Context) {
                 0,
                 0
             )
+
             builder.mGravity == GRAVITY_TOP -> flexibleToast.setGravity(
                 Gravity.TOP or Gravity.CENTER_VERTICAL,
                 0,
                 UiUtils.dp2px(mContext, 20F)
             )
+
             else -> flexibleToast.setGravity(
                 Gravity.BOTTOM or Gravity.CENTER_VERTICAL,
                 0,
@@ -71,7 +74,7 @@ class FlexibleToast private constructor(private val mContext: Context) {
         if (builder.hasCustomerView && builder.mCustomerView != null) {
             flexibleToast.view = builder.mCustomerView
         } else {
-            flexibleToast.view = builder.mDefaultView
+            flexibleToast.view = builder.binding.root
         }
         flexibleToast.show()
     }
@@ -80,46 +83,31 @@ class FlexibleToast private constructor(private val mContext: Context) {
      * 控制Toast的显示样式
      */
     class Builder(context: Context) {
-        val mDefaultView: View = LayoutInflater.from(context)
-            .inflate(R.layout.layout_toast_flexible, null)
+        val binding = LayoutToastFlexibleBinding.inflate(LayoutInflater.from(context))
         var mCustomerView: View? = null
-        private val mIvImage: ImageView
-        private val mTvFirst: TextView
-        private val mTvSecond: TextView
-
-        private val dividerFirst: View
-        private val dividerSecond: View
 
         var mDuration = Toast.LENGTH_SHORT// 0 short, 1 long
         var mGravity = 0
         var hasCustomerView = false // 是否使用自定义layout
 
 
-        init {
-            mIvImage = mDefaultView.findViewById(R.id.imgIv)
-            mTvFirst = mDefaultView.findViewById(R.id.firstTv)
-            mTvSecond = mDefaultView.findViewById(R.id.secondTv)
-            dividerFirst = mDefaultView.findViewById(R.id.firstDividerView)
-            dividerSecond = mDefaultView.findViewById(R.id.secondDividerView)
-        }
-
         fun setImageResource(resId: Int): Builder {
-            this.mIvImage.setImageResource(resId)
-            this.mIvImage.visibility = View.VISIBLE
-            this.dividerFirst.visibility = View.VISIBLE
+            binding.imgIv.setImageResource(resId)
+            binding.imgIv.visibility = View.VISIBLE
+            binding.firstDividerView.visibility = View.VISIBLE
             return this
         }
 
         fun setFirstText(firstText: String): Builder {
-            this.mTvFirst.text = firstText
-            this.mTvFirst.visibility = View.VISIBLE
-            this.dividerSecond.visibility = View.VISIBLE
+            binding.firstTv.text = firstText
+            binding.firstTv.visibility = View.VISIBLE
+            binding.secondDividerView.visibility = View.VISIBLE
             return this
         }
 
         fun setSecondText(secondText: String): Builder {
-            this.mTvSecond.text = secondText
-            this.mTvSecond.visibility = View.VISIBLE
+            binding.secondTv.text = secondText
+            binding.secondTv.visibility = View.VISIBLE
             return this
         }
 

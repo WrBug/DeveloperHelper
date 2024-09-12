@@ -21,10 +21,6 @@ object UiUtils {
         ).toInt()
     }
 
-    fun sp2px(context: Context = CommonUtils.application, spVal: Float): Int {
-        return TypedValue.applyDimension(2, spVal, context.resources?.displayMetrics).toInt()
-    }
-
     fun px2dp(context: Context = CommonUtils.application, pxVal: Float): Float {
         val scale = context.resources?.displayMetrics?.density!!
         return pxVal / scale
