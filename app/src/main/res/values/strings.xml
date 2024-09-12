@@ -57,8 +57,8 @@
     <string name="database_list">数据库列表</string>
     <string name="none">无</string>
     <string name="app_setting">应用设置</string>
-    <string name="backup_apk_file">备份Apk文件</string>
-    <string name="backup_data_dir">备份data目录</string>
+    <string name="backup_app_file">备份应用</string>
+    <string name="restore_app_file">还原应用</string>
     <string name="restart_app">重启应用</string>
     <string name="stop_app">停止应用</string>
     <string name="delete_app_data">清理应用数据</string>
@@ -85,4 +85,13 @@
     <string name="download">下载</string>
     <string name="open_notification_title">通知栏常驻</string>
     <string name="open_notification_summary">用于进程保活，当应用经常被杀死时，请打开该功能</string>
+    <string name="select_backup_content">请选择需要备份的内容,备份所有数据支持无损恢复</string>
+    <string name="backuping_data">正在备份数据</string>
+    <string name="backup_fail">备份失败</string>
+    <string name="ignore_backup">跳过该备份</string>
+    <string name="backuping_notice">备份正在进行中，请勿关闭该窗口</string>
+    <string name="item_backup_apk">应用安装包</string>
+    <string name="item_backup_data">Data目录</string>
+    <string name="item_backup_android_data">Android/Data目录</string>
+    <string name="backup_success_notice">备份已完成，您可以前往 <i>%1$s</i> 目录查看备份文件</string>
 </resources>

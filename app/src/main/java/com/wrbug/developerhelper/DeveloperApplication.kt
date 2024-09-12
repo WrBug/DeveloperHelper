@@ -44,7 +44,6 @@ class DeveloperApplication : BaseApp() {
         )
         registerIpcServer()
         BaseModule.init(this)
-        releaseAssetsFile()
         registerLifecycle()
         AppStatusRegister.init(this)
     }
@@ -90,19 +89,5 @@ class DeveloperApplication : BaseApp() {
             }
 
         })
-    }
-
-    private fun releaseAssetsFile() {
-        doAsync {
-            val inputStream = BaseApp.instance.assets.open("zip.dex")
-            val file = File(BaseApp.instance.cacheDir, "zip.dex")
-            if (file.exists().not()) {
-                file.createNewFile()
-            }
-            val fileOutputStream = FileOutputStream(file)
-            fileOutputStream.write(inputStream.readBytes())
-            fileOutputStream.flush()
-            fileOutputStream.close()
-        }
     }
 }

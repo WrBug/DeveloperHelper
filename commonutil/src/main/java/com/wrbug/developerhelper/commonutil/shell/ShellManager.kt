@@ -26,8 +26,6 @@ object ShellManager {
         "settings put secure accessibility_enabled 1"
     )
     private const val SHELL_LS_FILE = "ls -l %1\$s"
-    private const val SHELL_GET_ZIP_FILE_LIST =
-        "app_process -Djava.class.path=/data/local/tmp/zip.dex /data/local/tmp Zip %s"
     private const val SHELL_CHECK_IS_SQLITE = "od -An -tx %1\$s  |grep '694c5153'"
     private const val SHELL_UNINSTALL_APP = "pm uninstall %1\$s"
     private const val SHELL_CLEAR_APP_DATA = "pm clear %1\$s"
@@ -175,16 +173,6 @@ object ShellManager {
         return commandResult.isSuccessful
     }
 
-    fun getZipFileList(path: String): List<String?> {
-        val file = File(CommonUtils.application.cacheDir, "zip.dex")
-        if (file.exists()) {
-            ShellUtils.runWithSu(
-                "cp ${file.absolutePath} /data/local/tmp", "rm -rf ${file.absolutePath}"
-            )
-        }
-        val commandResult = ShellUtils.runWithSu(String.format(SHELL_GET_ZIP_FILE_LIST, path))
-        return commandResult.stdout
-    }
 
     fun lsDir(path: String): List<String?> {
         val commandResult = ShellUtils.runWithSu("ls $path")

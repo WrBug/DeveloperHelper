@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,7 +8,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingTop="24dp"
-        app:constraint_referenced_ids="backupApkBtn,backupApkDataDirBtn,restartAppBtn,stopAppBtn,deleteAppDataBtn,uninstallAppBtn"
+        app:constraint_referenced_ids="backupAppBtn,restoreAppBtn,restartAppBtn,stopAppBtn,deleteAppDataBtn,uninstallAppBtn"
         app:flow_verticalGap="16dp"
         app:flow_wrapMode="aligned"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,19 +17,19 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/backupApkBtn"
+        android:id="@+id/backupAppBtn"
         style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/backup_apk_file"
+        android:text="@string/backup_app_file"
         app:layout_constraintWidth_percent="0.45" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/backupApkDataDirBtn"
+        android:id="@+id/restoreAppBtn"
         style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/backup_data_dir"
+        android:text="@string/restore_app_file"
         app:layout_constraintWidth_percent="0.45" />
 
     <androidx.appcompat.widget.AppCompatButton
