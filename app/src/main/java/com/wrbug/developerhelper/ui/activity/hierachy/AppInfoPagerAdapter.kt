@@ -89,6 +89,7 @@ class AppInfoPagerAdapter(
         itemDecoration.setFirstTopPadding(UiUtils.dp2px(context, 10F))
         rv.addItemDecoration(itemDecoration)
         apkInfo?.let { it ->
+            itemInfos.add(ItemInfo("PackageName", it.packageInfo.packageName))
             it.applicationInfo.className?.let { name ->
                 itemInfos.add(ItemInfo("Application", name))
             }
@@ -110,17 +111,17 @@ class AppInfoPagerAdapter(
             )
             itemInfos.add(ItemInfo("DataDir", it.applicationInfo.dataDir))
             adapter.setItems(itemInfos)
-            loadTopActivityInfo()
+            loadTopActivityInfo(it)
         }
     }
 
-    private fun loadTopActivityInfo() {
+    private fun loadTopActivityInfo(apkInfo: ApkInfo) {
         ShellManager.getTopActivity().subscribe({ data ->
+            if (data.packageName != apkInfo.applicationInfo.packageName) {
+                return@subscribe
+            }
             data.activity.takeIf { it.isNotEmpty() }?.let {
                 itemInfos.add(0, ItemInfo("Activity", it))
-            }
-            data.packageName.takeIf { it.isNotEmpty() }?.let {
-                itemInfos.add(0, ItemInfo("PackageName", it))
             }
             adapter.setItems(itemInfos)
         }, {

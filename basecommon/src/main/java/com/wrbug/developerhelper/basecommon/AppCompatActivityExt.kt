@@ -31,7 +31,7 @@ import com.wrbug.developerhelper.basecommon.activityresultcallback.ActivityResul
  */
 
 
-fun AppCompatActivity.setupActionBar(@IdRes toolbarId: Int, action: ActionBar.() -> Unit) {
+fun AppCompatActivity.setupActionBar(@IdRes toolbarId: Int, action: ActionBar.() -> Unit = {}) {
     setSupportActionBar(findViewById(toolbarId))
     supportActionBar?.run {
         setDisplayHomeAsUpEnabled(false)

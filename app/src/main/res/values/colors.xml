@@ -3,6 +3,7 @@
     <color name="colorPrimary">#03a9f4</color>
     <color name="colorPrimaryDark">#0288d1</color>
     <color name="colorAccent">#ffab40</color>
+    <color name="iconPrimary">#2c2c2c</color>
     <color name="colorAccentLight">#ffc77f</color>
     <color name="hierachyBgColor">#30000000</color>
     <color name="indicator_selected">@android:color/white</color>

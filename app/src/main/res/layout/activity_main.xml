@@ -1,91 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.main.MainActivity">
 
-    <data>
 
-        <variable
-            name="presenter"
-            type="com.wrbug.developerhelper.ui.activity.main.MainActivity.Presenter" />
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <variable
-            name="mainVm"
-            type="com.wrbug.developerhelper.ui.activity.main.viewmodel.MainViewModel" />
-    </data>
+        <include layout="@layout/layout_toolbar" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.activity.main.MainActivity">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.google.android.material.appbar.AppBarLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp">
 
-            <include layout="@layout/layout_toolbar" />
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:text="@string/base_setting"
+                android:textColor="@color/colorAccent" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="@string/base_setting"
-                    android:textColor="@color/colorAccent" />
+            <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
+                android:id="@+id/accessibilitySettingView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:checkable="false"
+                app:icoTint="@color/iconPrimary"
+                app:src="@drawable/ic_accessibility"
+                app:title="@string/open_accessibility_service" />
 
-                <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
-                    android:id="@+id/accessibilitySettingView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{()->presenter.onAccessibilityClick()}"
-                    app:checkable="false"
-                    app:checked="@{mainVm.openAccessibility}"
-                    app:src="@drawable/ic_accessibility_666666"
-                    app:title="@string/open_accessibility_service" />
+            <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
+                android:id="@+id/floatWindowSettingView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:checkable="false"
+                app:icoTint="@color/iconPrimary"
+                app:src="@drawable/ic_float_air_bubble"
+                app:title="@string/open_float_window" />
 
-                <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
-                    android:id="@+id/floatWindowSettingView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{()->presenter.onFloatWindowClick()}"
-                    app:checkable="false"
-                    app:checked="@{mainVm.openFloatWindow}"
-                    app:src="@drawable/ic_float_air_bubble_666666"
-                    app:title="@string/open_float_window" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_text_color_black_divider" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/material_text_color_black_divider" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:text="@string/advance_setting"
+                android:textColor="@color/colorAccent" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="@string/advance_setting"
-                    android:textColor="@color/colorAccent" />
+            <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
+                android:id="@+id/rootSettingView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:checkable="false"
+                app:icoTint="@color/iconPrimary"
+                app:src="@drawable/ic_sheldon_root"
+                app:summary="@string/open_root_permission_summary"
+                app:title="@string/open_root_permission_title" />
 
-                <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
-                    android:id="@+id/rootSettingView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{()->presenter.onRootClick()}"
-                    app:checkable="false"
-                    app:checked="@{mainVm.openRoot}"
-                    app:src="@drawable/ic_root_666666"
-                    app:summary="@string/open_root_permission_summary"
-                    app:title="@string/open_root_permission_title" />
-            </LinearLayout>
-        </ScrollView>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</layout>
+            <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
+                android:id="@+id/notificationSettingView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:checkable="false"
+                app:icoTint="@color/iconPrimary"
+                app:src="@drawable/ic_notification"
+                app:summary="@string/open_notification_summary"
+                app:title="@string/open_notification_title"
+                tools:visibility="visible" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -169,6 +169,14 @@ abstract class BaseActivity : AppCompatActivity() {
         builder.show()
     }
 
+    fun hasPermission(permissions: String): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkSelfPermission(permissions) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>, grantResults: IntArray
     ) {

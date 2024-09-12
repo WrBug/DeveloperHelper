@@ -14,7 +14,7 @@
     <string name="advance_setting">高级功能设置</string>
     <string name="open_accessibility_service">开启无障碍辅助</string>
     <string name="open_float_window">开启悬浮窗权限</string>
-    <string name="open_root_permission_summary">推荐开启，用于获取应用SharedPreference、数据库等数据，不开启部分信息无法显示</string>
+    <string name="open_root_permission_summary">推荐开启，用于获取应用SharedPreference、数据库等数据，关闭后部分信息无法显示</string>
     <string name="open_root_permission_title">开启root权限</string>
     <string name="open_xposed_title">启用Xposed特性</string>
     <string name="open_xposed_summary">支持脱壳，更多功能持续开发中，点击进入管理</string>
@@ -83,4 +83,6 @@
     <string name="check_update_failed">检查失败…</string>
     <string name="find_new_version">发现新版本</string>
     <string name="download">下载</string>
+    <string name="open_notification_title">通知栏常驻</string>
+    <string name="open_notification_summary">用于进程保活，按需开启</string>
 </resources>

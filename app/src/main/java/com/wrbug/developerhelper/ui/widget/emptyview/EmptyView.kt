@@ -3,7 +3,6 @@ package com.wrbug.developerhelper.ui.widget.emptyview
 import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
-import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -13,7 +12,7 @@ import com.wrbug.developerhelper.commonutil.UiUtils
 class EmptyView : LinearLayout {
     val icoIv: ImageView by lazy {
         val icoIv = ImageView(context)
-        icoIv.setImageResource(R.drawable.ic_ic_empty_666666)
+        icoIv.setImageResource(R.drawable.ic_ic_empty)
         icoIv
     }
     val textTv: TextView by lazy {

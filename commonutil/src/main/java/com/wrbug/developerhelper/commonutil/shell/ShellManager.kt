@@ -37,91 +37,15 @@ object ShellManager {
 
     fun getTopActivity(): Single<TopActivityInfo> {
         return ShellUtils.runWithSu(arrayOf(SHELL_TOP_ACTIVITY)).map {
-            getTopActivity(it).apply {
-                fragments = getFragment(packageName)
-            }
+            getTopActivity(it)
         }.runOnIO()
-    }
-
-    private fun getFragment(packageName: String): Array<FragmentInfo> {
-        val lines =
-            ShellUtils.runWithSu(String.format(SHELL_APP_ACTIVITY, packageName)).stdout.toList()
-        val splitIndex = lines.indexOfFirst { it.trim().isEmpty() }
-        val (tasks, insetsController) = if (splitIndex == -1) {
-            lines to emptyList()
-        } else {
-            lines.subList(0, splitIndex) to lines.subList(splitIndex + 1, lines.size)
-        }
-
-        val list = ArrayList<FragmentInfo>()
-        val map = getFragments(insetsController.ifEmpty { tasks })
-        map.forEach {
-            val info = FragmentInfo(
-                name = it.key,
-                containerId = it.value["mContainerId"].orEmpty(),
-                tag = it.value["mTag"].orEmpty(),
-                state = it.value["mState"].toInt(),
-                who = it.value["mWho"].orEmpty(),
-                backStackNesting = it.value["mBackStackNesting"].toInt(),
-                added = it.value["mAdded"].toBoolean(),
-                removing = it.value["mRemoving"].toBoolean(),
-                fromLayout = it.value["mFromLayout"].toBoolean(),
-                inLayout = it.value["mInLayout"].toBoolean(),
-                hidden = it.value["mHidden"].toBoolean(),
-                detached = it.value["mDetached"].toBoolean(),
-            )
-            list.add(info)
-        }
-        return list.toTypedArray()
-    }
-
-    private fun getFragments(list: List<String>): Map<String, Map<String, String>> {
-        val index = list.indexOfFirst { tabCount(it) == 2 && it.trim() == "Added Fragments:" }
-        if (index == -1) {
-            return emptyMap()
-        }
-        val fragmentNameList = arrayListOf<String>()
-        for (i in index + 1 until list.size) {
-            val line = list[i]
-            if (tabCount(line) != 3) {
-                break
-            }
-            fragmentNameList.add(line.trim().split(" ")[1])
-        }
-        val fragmentMap = hashMapOf<String, Map<String, String>>()
-        list.forEachIndexed { index, str ->
-            if (tabCount(str) == 2) {
-                val name = str.trim().split(" ")[0]
-                if (!fragmentNameList.contains(name)) {
-                    return@forEachIndexed
-                }
-                val map = hashMapOf<String, String>()
-                for (i in index + 1 until list.size) {
-                    val line = list[i].trim()
-                    if (!line.startsWith("m")) {
-                        break
-                    }
-                    line.split(" ").forEach {
-                        val pair = it.split("=")
-                        if (pair.size == 2) {
-                            map[pair[0]] = pair[1]
-                        }
-                    }
-                }
-                val pureName = name.substring(0, name.indexOf("{"))
-                if (pureName != "ReportFragment") {
-                    fragmentMap[pureName] = map
-                }
-            }
-        }
-        return fragmentMap
     }
 
     private fun tabCount(str: String): Int {
         return (str.length - str.trimStart().length) / 2
     }
 
-    fun getTopActivity(result: CommandResult): TopActivityInfo {
+    private fun getTopActivity(result: CommandResult): TopActivityInfo {
         val stdout = result.getStdout()
         val topActivityInfo = TopActivityInfo()
         val task_s = stdout.split("TASK ")
