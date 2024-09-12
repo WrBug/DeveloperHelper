@@ -1,6 +1,6 @@
 package com.wrbug.developerhelper.ipc.processshare.data
 
-import com.jaredrummler.android.shell.Shell
+import com.jaredrummler.ktsh.Shell
 import com.wrbug.developerhelper.commonutil.Base64
 import com.wrbug.developerhelper.commonutil.fromJson
 import com.wrbug.developerhelper.commonutil.toJson

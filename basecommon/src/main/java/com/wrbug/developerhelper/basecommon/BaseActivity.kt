@@ -29,8 +29,14 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun setContentView(layoutResID: Int) {
-        toastRootView = layoutInflater.inflate(layoutResID, null)
-        setContentView(toastRootView)
+        setContentView(layoutInflater.inflate(layoutResID, null))
+    }
+
+    override fun setContentView(view: View?) {
+        view?.let {
+            toastRootView = view
+        }
+        super.setContentView(view)
     }
 
     fun showSnack(msg: String) {

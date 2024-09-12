@@ -9,7 +9,11 @@ import com.wrbug.developerhelper.commonutil.CommonUtils
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class ApkInfo(val packageInfo: PackageInfo, val applicationInfo: ApplicationInfo) : Parcelable {
+class ApkInfo(
+    val packageInfo: PackageInfo,
+    val applicationInfo: ApplicationInfo,
+    var topActivity: String = ""
+) : Parcelable {
 
     fun getIco(): Drawable {
         return applicationInfo.loadIcon(CommonUtils.application.packageManager)

@@ -82,6 +82,9 @@ class AppInfoPagerAdapter(
             it.applicationInfo.className?.let { name ->
                 itemInfos.add(ItemInfo("Application", name))
             }
+            it.topActivity.takeIf { it.isNotEmpty() }?.let {
+                itemInfos.add(ItemInfo("Activity", it))
+            }
             itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
             itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
             itemInfos.add(ItemInfo("uid", it.applicationInfo.uid))
@@ -100,23 +103,7 @@ class AppInfoPagerAdapter(
             )
             itemInfos.add(ItemInfo("DataDir", it.applicationInfo.dataDir))
             adapter.setItems(itemInfos)
-            loadTopActivityInfo(it)
         }
-    }
-
-    private fun loadTopActivityInfo(apkInfo: ApkInfo) {
-        ShellManager.getTopActivity().subscribe({ data ->
-            if (data.packageName != apkInfo.applicationInfo.packageName) {
-                return@subscribe
-            }
-            data.activity.takeIf { it.isNotEmpty() }?.let {
-                itemInfos.add(0, ItemInfo("Activity", it))
-            }
-            adapter.setItems(itemInfos)
-        }, {
-
-        }).addTo(disposable)
-
     }
 
     override fun isViewFromObject(view: View, o: Any): Boolean {
