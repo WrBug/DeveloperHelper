@@ -160,6 +160,17 @@ object ShellManager {
             .contains("Operation not permitted")
     }
 
+    fun tarCF(tarPath: String, srcPath: String): Boolean {
+        val dir = tarPath.substring(0, tarPath.lastIndexOf("/"))
+        var result = ShellUtils.runWithSu("mkdir -p $dir")
+        if (result.isSuccess.not()) {
+            return false
+        }
+        result = ShellUtils.runWithSu("tar -cf  $tarPath -C $srcPath .")
+        return result.isSuccess || result.stderr()
+            .contains("Operation not permitted")
+    }
+
     fun catFile(source: String, dst: String, mod: String? = null): Boolean {
         val cmds = arrayListOf<String>()
         cmds.add("cat $source  > $dst")

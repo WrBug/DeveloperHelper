@@ -25,7 +25,7 @@ class ApkInfo(
     }
 
     fun generateBackupApkFileName(): String {
-        return getAppName() + "_" + packageInfo.versionName + ".apk"
+        return packageInfo.versionName + ".apk"
     }
 
 }

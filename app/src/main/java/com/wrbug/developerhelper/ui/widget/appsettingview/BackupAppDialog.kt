@@ -16,6 +16,7 @@ import com.wrbug.developerhelper.commonutil.addTo
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.commonutil.observeOnMain
 import com.wrbug.developerhelper.commonutil.runOnIO
+import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
 import com.wrbug.developerhelper.databinding.DialogBackupAppBinding
 import com.wrbug.developerhelper.ui.widget.backupprogress.BackupProgressView
@@ -73,15 +74,27 @@ class BackupAppDialog : BottomSheetDialogFragment() {
             field = value
             checkIsAllSuccess()
         }
+    private var hasError = false
+        set(value) {
+            field = value
+            checkIsAllSuccess()
+        }
 
     private fun checkIsAllSuccess() {
+        if (hasError) {
+            binding.tvNotice.isVisible = false
+            binding.btnExit.isVisible = true
+        }
         if (successCount < 3) {
             return
         }
         binding.btnExit.isVisible = true
         binding.tvNotice.text = getString(
             R.string.backup_success_notice,
-            BackupUtils.backupDir.absolutePath + "/" + apkInfo?.applicationInfo?.packageName + "/" + dateDir
+            BackupUtils.getCurrentAppBackupDir(
+                apkInfo?.packageInfo?.packageName.orEmpty(),
+                dateDir
+            ).absolutePath
         )
         binding.tvNotice.setTextColor(
             ContextCompat.getColor(
@@ -144,7 +157,7 @@ class BackupAppDialog : BottomSheetDialogFragment() {
             successCount++
             binding.apkProgress.setStatus(BackupProgressView.Status.Success, it)
         }, {
-            successCount++
+            hasError = true
             binding.apkProgress.setStatus(BackupProgressView.Status.Failed)
         }).addTo(disposable)
     }
@@ -154,12 +167,38 @@ class BackupAppDialog : BottomSheetDialogFragment() {
         disposable.dispose()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (hasError) {
+            ShellManager.rmFile(
+                BackupUtils.getCurrentAppBackupDir(
+                    apkInfo?.packageInfo?.packageName.orEmpty(),
+                    dateDir
+                ).absolutePath
+            )
+        }
+    }
+
     private fun backupAndroidData() {
         if (!backupAndroidData) {
             successCount++
             binding.androidDataProgress.setStatus(BackupProgressView.Status.Ignore)
             return
         }
+        binding.androidDataProgress.setStatus(BackupProgressView.Status.Processing)
+        runOnIo().map {
+            BackupUtils.backupAppAndroidData(dateDir, it.applicationInfo.packageName)
+                ?: throw Exception()
+        }.observeOnMain().subscribe({
+            successCount++
+            binding.androidDataProgress.setStatus(
+                BackupProgressView.Status.Success,
+                it.absolutePath
+            )
+        }, {
+            hasError = true
+            binding.androidDataProgress.setStatus(BackupProgressView.Status.Failed)
+        }).addTo(disposable)
     }
 
     private fun backupData() {
@@ -175,7 +214,7 @@ class BackupAppDialog : BottomSheetDialogFragment() {
             successCount++
             binding.dataProgress.setStatus(BackupProgressView.Status.Success, it.absolutePath)
         }, {
-            successCount++
+            hasError = true
             binding.dataProgress.setStatus(BackupProgressView.Status.Failed)
         }).addTo(disposable)
     }
