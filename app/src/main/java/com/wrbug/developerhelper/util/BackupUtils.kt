@@ -1,33 +1,53 @@
 package com.wrbug.developerhelper.util
 
-import android.net.Uri
 import android.os.Environment
-import com.wrbug.developerhelper.basecommon.BaseApp
+import com.wrbug.developerhelper.commonutil.Constant
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
-import com.wrbug.developerhelper.commonutil.toUri
 import java.io.File
 
 object BackupUtils {
-    private val backupDir: File by lazy {
-        val file = File(Environment.getExternalStorageDirectory(), "com.wrbug.developerHelper/backup")
+    private val backupRootDir: File by lazy {
+        val file =
+            File(Environment.getExternalStorageDirectory(), "DeveloperHelper/backup")
         if (file.exists().not()) {
             file.mkdirs()
         }
         file
     }
 
-    fun backupApk(packageName: String, apkPath: String, fileName: String): Uri? {
-        val apkDir = File(backupDir, "apks/$packageName/$fileName")
+    fun getCurrentAppBackupDir(packageName: String, dateDir: String): File {
+        return File(backupRootDir, "$packageName/$dateDir")
+    }
+
+    fun backupApk(
+        packageName: String,
+        dateDir: String,
+        apkPath: String,
+        fileName: String
+    ): String? {
+        val apkDir = File(getCurrentAppBackupDir(packageName, dateDir), fileName)
         if (ShellManager.cpFile(apkPath, apkDir.absolutePath)) {
-            return apkDir.toUri(BaseApp.instance)
+            return apkDir.absolutePath
         }
         return null
     }
 
-    fun backupAppData(packageName: String, dataDir: String): File? {
-        val backupDataDir =
-            File(backupDir, "datas/$packageName/${System.currentTimeMillis().format("yyyy-MM-dd-HH_mm_ss")}")
-        if (ShellManager.cpFile(dataDir, backupDataDir.absolutePath)) {
+    fun backupAppData(dateDir: String, packageName: String): File? {
+        val backupDataDir = File(getCurrentAppBackupDir(packageName, dateDir), "data.tar")
+        val dataDir = Constant.getDataDir(packageName)
+        if (ShellManager.tarCF(backupDataDir.absolutePath, dataDir)) {
+            return backupDataDir
+        }
+        return null
+    }
+
+    fun backupAppAndroidData(dateDir: String, packageName: String): File? {
+        val backupDataDir = File(
+            getCurrentAppBackupDir(packageName, dateDir), "android_data.tar"
+        )
+        val dataDir =
+            Environment.getExternalStorageDirectory().absolutePath + "/Android/data/" + packageName
+        if (ShellManager.tarCF(backupDataDir.absolutePath, dataDir)) {
             return backupDataDir
         }
         return null

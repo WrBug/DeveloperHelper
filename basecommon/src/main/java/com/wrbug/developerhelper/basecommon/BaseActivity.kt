@@ -20,7 +20,6 @@ abstract class BaseActivity : AppCompatActivity() {
     private var mPermissionCallback: PermissionCallback? = null
 
     companion object {
-
         private const val PERMISSION_REQUEST_CODE = 0xAADF1
     }
 
@@ -30,8 +29,14 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun setContentView(layoutResID: Int) {
-        toastRootView = layoutInflater.inflate(layoutResID, null)
-        setContentView(toastRootView)
+        setContentView(layoutInflater.inflate(layoutResID, null))
+    }
+
+    override fun setContentView(view: View?) {
+        view?.let {
+            toastRootView = view
+        }
+        super.setContentView(view)
     }
 
     fun showSnack(msg: String) {
@@ -42,12 +47,7 @@ abstract class BaseActivity : AppCompatActivity() {
         Snackbar.make(toastRootView, id, Snackbar.LENGTH_SHORT).show()
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     fun requestPermission(permissions: Array<String>, callback: PermissionCallback) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            callback.granted()
-            return
-        }
         val list = ArrayList<String>()
         for (permission in permissions) {
             val hasPermission = checkSelfPermission(permission)
@@ -167,6 +167,10 @@ abstract class BaseActivity : AppCompatActivity() {
             builder.setNegativeButton(negativeText, negativeListener)
         }
         builder.show()
+    }
+
+    fun hasPermission(permissions: String): Boolean {
+        return checkSelfPermission(permissions) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onRequestPermissionsResult(

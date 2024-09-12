@@ -1,6 +1,7 @@
 package com.wrbug.developerhelper.ui.widget.settingitemview
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.util.AttributeSet
@@ -8,10 +9,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.commonutil.dpInt
+import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
 import com.wrbug.developerhelper.databinding.ViewSettingItemBinding
 
-class SettingItemView: FrameLayout {
+class SettingItemView @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null
+) : ConstraintLayout(context, attrs) {
 
     var checkable: Boolean = true
         set(value) {
@@ -25,28 +34,25 @@ class SettingItemView: FrameLayout {
             binding.switcher.isChecked = checked
         }
     private var switcherMaskViewClicked = false
-    private val binding: ViewSettingItemBinding by lazy {
-        ViewSettingItemBinding.inflate(LayoutInflater.from(context), this, true)
-    }
+    private val binding = ViewSettingItemBinding.inflate(LayoutInflater.from(context), this)
 
-    constructor(context: Context): super(context) {
-        initView()
-    }
-
-    constructor(context: Context, attrs: AttributeSet): super(context, attrs) {
+    init {
         initView()
         initAttrs(attrs)
     }
 
     private fun initView() {
+        updatePadding(top = 8.dpInt(context), bottom = 8.dpInt(context))
         setBackgroundResource(R.drawable.ripple_with_color_mask)
     }
 
-    private fun initAttrs(attrs: AttributeSet) {
+    private fun initAttrs(attrs: AttributeSet?) {
+        attrs ?: return
         with(context.obtainStyledAttributes(attrs, R.styleable.SettingItemView)) {
             val src = getDrawable(R.styleable.SettingItemView_src)
-            src?.let {
-                setImage(it)
+            setImage(src)
+            getColorStateList(R.styleable.SettingItemView_icoTint)?.let {
+                setIconTint(it)
             }
             val title = getString(R.styleable.SettingItemView_title)
             binding.titleTv.text = title
@@ -60,6 +66,10 @@ class SettingItemView: FrameLayout {
 
     }
 
+    private fun setIconTint(colorStateList: ColorStateList?) {
+        binding.icoIv.imageTintList = colorStateList
+    }
+
     override fun setOnClickListener(l: OnClickListener?) {
         super.setOnClickListener(l)
         if (switcherMaskViewClicked.not()) {
@@ -69,37 +79,27 @@ class SettingItemView: FrameLayout {
 
     fun setOnSwitcherClickListener(listener: View.() -> Unit) {
         switcherMaskViewClicked = true
-        binding.switcherMaskView.setOnClickListener(listener)
+        binding.switcherMaskView.setOnDoubleCheckClickListener(clickListener = listener)
     }
 
     fun isChecked() = binding.switcher.isChecked
 
     private fun setSwitchCheckable() {
-        if (checkable) {
-//            switcher.setOnTouchListener(null)
-            binding.switcherMaskView.visibility = View.GONE
-        } else {
-//            switcher.setOnTouchListener { _, _ -> true }
-            binding.switcherMaskView.visibility = View.VISIBLE
-        }
+        binding.switcherMaskView.isGone = checkable
     }
 
     fun setOnCheckedChangeListener(listener: CompoundButton.OnCheckedChangeListener) {
         binding.switcher.setOnCheckedChangeListener(listener)
     }
 
-    fun setImage(drawable: Drawable) {
+    fun setImage(drawable: Drawable?) {
         binding.icoIv.setImageDrawable(drawable)
-        binding.icoIv.visibility = View.VISIBLE
+        binding.icoIv.isVisible = drawable != null
     }
 
     fun setSummary(summary: String?) {
-        summary.takeIf {
-            !TextUtils.isEmpty(it)
-        }?.let {
-            binding.summaryTv.text = it
-            binding.summaryTv.visibility = View.VISIBLE
-        }
+        binding.summaryTv.text = summary
+        binding.summaryTv.isVisible = !summary.isNullOrEmpty()
     }
 
 }

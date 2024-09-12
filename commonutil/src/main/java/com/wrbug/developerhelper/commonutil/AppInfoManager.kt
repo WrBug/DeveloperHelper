@@ -1,8 +1,11 @@
 package com.wrbug.developerhelper.commonutil
 
+import android.app.ActivityManager
+import android.content.Context
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import java.io.File
+
 
 object AppInfoManager {
     private val appMap = HashMap<String, ApkInfo>()
@@ -28,6 +31,21 @@ object AppInfoManager {
         appMap.putAll(getAllApps())
 
         return appMap[packageName]
+    }
+
+
+    fun getTopActivityClassName(context: Context): String? {
+        var topActivityClass: String? = null
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        try {
+            val runningTaskInfos = activityManager.getRunningTasks(1)
+            if (runningTaskInfos != null && runningTaskInfos.size > 0) {
+                val f = runningTaskInfos[0].topActivity
+                topActivityClass = f!!.className
+            }
+        } catch (e: Exception) {
+        }
+        return topActivityClass
     }
 
 

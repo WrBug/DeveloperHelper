@@ -10,6 +10,10 @@ fun <T : Any> Single<T>.runOnIO(): Single<T> {
     return this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 }
 
+fun <T : Any> Single<T>.observeOnMain(): Single<T> {
+    return this.observeOn(AndroidSchedulers.mainThread())
+}
+
 fun Disposable.addTo(compositeDisposable: CompositeDisposable) {
     compositeDisposable.add(this)
 }

@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="SettingItemView">
         <attr name="src" format="dimension" />
+        <attr name="icoTint" format="color" />
         <attr name="title" format="string" />
         <attr name="summary" format="string" />
         <attr name="switchVisible" format="boolean" />

@@ -17,7 +17,7 @@ android {
     compileSdk 34
     defaultConfig {
         applicationId "com.wrbug.developerhelper"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 34
         versionCode 100040
         versionName "1.0.4"
@@ -44,14 +44,14 @@ android {
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     implementation 'com.google.code.gson:gson:2.10'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.github.yhaolpz:FloatWindow:1.0.9'
-    implementation project(':basecommon')
+    api project(':basecommon')
     kapt "com.android.databinding:compiler:3.1.4"
     implementation 'com.elvishew:xlog:1.6.1'
     implementation 'org.jetbrains.anko:anko-commons:0.10.8'
@@ -64,6 +64,7 @@ dependencies {
     implementation 'gdut.bsx:share2:0.9.3'
     kapt 'com.google.dagger:dagger-compiler:2.16'
     implementation 'de.blox:graphview:0.5.0'
+    implementation "com.google.android.material:material:1.12.0"
     implementation project(':basemoduleimport')
     implementation project(":commonwidget")
     implementation project(':ipc')

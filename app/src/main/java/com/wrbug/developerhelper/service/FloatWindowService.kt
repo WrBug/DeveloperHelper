@@ -5,11 +5,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import android.view.LayoutInflater
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.commonutil.addTo
 import com.wrbug.developerhelper.constant.ReceiverConstant
@@ -85,7 +87,16 @@ class FloatWindowService : Service() {
     }
 
     private fun updateNotification() {
-        startForeground(0x10000, notification)
+        val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+        } else {
+            0
+        }
+        runCatching {
+            ServiceCompat.startForeground(this, 0x10000, notification, type)
+        }.getOrElse {
+            it.printStackTrace()
+        }
     }
 
     private fun updateNotificationContent(text: String) {

@@ -2,12 +2,14 @@ package com.wrbug.developerhelper.service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Rect
 import android.provider.Settings
 import android.text.TextUtils
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.wrbug.developerhelper.R
@@ -29,6 +31,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     private var nodeId = 0L
     private var currentAppInfo: ApkInfo? = null
     private var topActivity: TopActivityInfo? = null
+    private val activityMap = hashMapOf<String, String>()
 
     companion object {
         internal var serviceRunning = false
@@ -72,7 +75,18 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-
+        if (event?.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED || event.className.isNullOrEmpty() || event.packageName.isNullOrEmpty()) {
+            return
+        }
+        runCatching {
+            val info = packageManager.getActivityInfo(
+                ComponentName(
+                    event.packageName.toString(),
+                    event.className.toString()
+                ), 0
+            )
+            activityMap[info.packageName] = info.name
+        }
     }
 
     fun readNode(): ArrayList<HierarchyNode> {
@@ -87,6 +101,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
         }
         return hierarchyNodes
     }
+
 
     private fun getDecorViewNode(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
         for (index in 0 until node.childCount) {
@@ -204,8 +219,10 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
 
 
     inner class DeveloperHelperAccessibilityReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, data: Intent?) {
+        override fun onReceive(context: Context, data: Intent?) {
             val nodesInfo = readNode()
+            currentAppInfo?.topActivity =
+                activityMap[currentAppInfo?.packageInfo?.packageName].orEmpty()
             HierarchyActivity.start(context, currentAppInfo, nodesInfo)
         }
     }

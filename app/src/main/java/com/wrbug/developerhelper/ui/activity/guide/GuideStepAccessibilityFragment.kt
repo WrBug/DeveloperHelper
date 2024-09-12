@@ -13,7 +13,7 @@ class GuideStepAccessibilityFragment : GuideStepFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         checkIsOpen()
-        binding.icoIv.setImageResource(R.drawable.ic_accessibility_black)
+        binding.icoIv.setImageResource(R.drawable.ic_accessibility)
         binding.contentTv.setOnClickListener {
             if (DeveloperHelperAccessibilityService.serviceRunning) {
                 return@setOnClickListener

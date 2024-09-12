@@ -1,8 +1,6 @@
 package com.wrbug.developerhelper.ui.activity.hierachy
 
 import android.content.Context
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageInfo
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Keep
@@ -10,27 +8,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.uiThread
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
-import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
 import com.wrbug.developerhelper.ui.widget.appdatainfoview.AppDataInfoView
 import com.wrbug.developerhelper.ui.widget.appsettingview.AppSettingView
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.ItemInfo
-import com.wrbug.developerhelper.util.EnforceUtils
 import com.wrbug.developerhelper.commonutil.UiUtils
 import com.wrbug.developerhelper.commonutil.addTo
-import com.wrbug.developerhelper.commonutil.shell.Callback
-import com.wrbug.developerhelper.ipc.processshare.manager.AppXposedProcessDataManager
-import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.LoadingItem
 import com.wrbug.developerhelper.util.format
 import com.wrbug.developerhelper.util.getString
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import java.lang.StringBuilder
 import java.util.ArrayList
 
 @Keep
@@ -89,8 +78,12 @@ class AppInfoPagerAdapter(
         itemDecoration.setFirstTopPadding(UiUtils.dp2px(context, 10F))
         rv.addItemDecoration(itemDecoration)
         apkInfo?.let { it ->
+            itemInfos.add(ItemInfo("PackageName", it.packageInfo.packageName))
             it.applicationInfo.className?.let { name ->
                 itemInfos.add(ItemInfo("Application", name))
+            }
+            it.topActivity.takeIf { it.isNotEmpty() }?.let {
+                itemInfos.add(ItemInfo("Activity", it))
             }
             itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
             itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
@@ -110,23 +103,7 @@ class AppInfoPagerAdapter(
             )
             itemInfos.add(ItemInfo("DataDir", it.applicationInfo.dataDir))
             adapter.setItems(itemInfos)
-            loadTopActivityInfo()
         }
-    }
-
-    private fun loadTopActivityInfo() {
-        ShellManager.getTopActivity().subscribe({ data ->
-            data.activity.takeIf { it.isNotEmpty() }?.let {
-                itemInfos.add(0, ItemInfo("Activity", it))
-            }
-            data.packageName.takeIf { it.isNotEmpty() }?.let {
-                itemInfos.add(0, ItemInfo("PackageName", it))
-            }
-            adapter.setItems(itemInfos)
-        }, {
-
-        }).addTo(disposable)
-
     }
 
     override fun isViewFromObject(view: View, o: Any): Boolean {

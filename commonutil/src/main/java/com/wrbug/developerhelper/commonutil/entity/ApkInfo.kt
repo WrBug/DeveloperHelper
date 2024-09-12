@@ -6,13 +6,14 @@ import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
 import com.wrbug.developerhelper.commonutil.CommonUtils
+import kotlinx.parcelize.Parcelize
 
-class ApkInfo(val packageInfo: PackageInfo, val applicationInfo: ApplicationInfo) : Parcelable {
-
-    constructor(parcel: Parcel) : this(
-        parcel.readParcelable(PackageInfo::class.java.classLoader)!!,
-        parcel.readParcelable(ApplicationInfo::class.java.classLoader)!!
-    )
+@Parcelize
+class ApkInfo(
+    val packageInfo: PackageInfo,
+    val applicationInfo: ApplicationInfo,
+    var topActivity: String = ""
+) : Parcelable {
 
     fun getIco(): Drawable {
         return applicationInfo.loadIcon(CommonUtils.application.packageManager)
@@ -23,23 +24,8 @@ class ApkInfo(val packageInfo: PackageInfo, val applicationInfo: ApplicationInfo
         return label.toString()
     }
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(packageInfo, flags)
-        parcel.writeParcelable(applicationInfo, flags)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<ApkInfo> {
-        override fun createFromParcel(parcel: Parcel): ApkInfo {
-            return ApkInfo(parcel)
-        }
-
-        override fun newArray(size: Int): Array<ApkInfo?> {
-            return arrayOfNulls(size)
-        }
+    fun generateBackupApkFileName(): String {
+        return packageInfo.versionName + ".apk"
     }
 
 }

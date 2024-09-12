@@ -1,39 +1,35 @@
 package com.wrbug.developerhelper.commonutil
 
-import com.jaredrummler.android.shell.CommandResult
-import com.jaredrummler.android.shell.Shell
-import io.reactivex.rxjava3.core.Scheduler
+import com.jaredrummler.ktsh.Shell
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
-import org.jetbrains.anko.doAsync
 
 object ShellUtils {
-    fun run(vararg cmds: String): CommandResult {
-        return Shell.SH.run(*cmds)
+    fun run(cmd: String): Shell.Command.Result {
+        return Shell.SH.run(cmd)
     }
 
-    fun runWithSu(cmds: Array<String>): Single<CommandResult> {
+    fun runWithSuAsync(cmds: Array<String>): Single<Shell.Command.Result> {
+        return runWithSuAsync(cmds.joinToString(" && "))
+    }
+
+    fun runWithSuAsync(cmds: String): Single<Shell.Command.Result> {
         return Single.just(cmds).map {
             if (!RootUtils.isRoot()) {
                 throw ShellException("未开启root权限")
             }
-            Shell.SU.run(*it)
+            Shell.SU.run(it)
         }
     }
 
-    fun runWithSuIgnoreSetting(vararg cmds: String): CommandResult {
-        return Shell.SU.run(*cmds)
+    fun runWithSu(vararg cmd: String): Shell.Command.Result {
+        return runWithSu(cmd.joinToString(" && "))
     }
 
-
-    fun runWithSu(vararg cmds: String): CommandResult {
-        if (RootUtils.isRoot().not()) {
-            return CommandResult(arrayListOf("未开启root权限"), arrayListOf("未开启root权限"), 1)
-        }
-        return Shell.SU.run(*cmds)
+    fun runWithSu(cmd: String): Shell.Command.Result {
+        return Shell.SU.run(cmd)
     }
 
     fun isRoot(): Boolean {
-        return Shell.SU.available()
+        return Shell.SU.isAlive()
     }
 }
