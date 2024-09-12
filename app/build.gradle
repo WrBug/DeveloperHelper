@@ -51,7 +51,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.github.yhaolpz:FloatWindow:1.0.9'
-    implementation project(':basecommon')
+    api project(':basecommon')
     kapt "com.android.databinding:compiler:3.1.4"
     implementation 'com.elvishew:xlog:1.6.1'
     implementation 'org.jetbrains.anko:anko-commons:0.10.8'

@@ -15,9 +15,16 @@
  */
 package com.wrbug.developerhelper.basecommon
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.Settings
 import androidx.annotation.IdRes
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -56,12 +63,54 @@ fun AppCompatActivity.startActivityForResult(intent: Intent, callback: ActivityR
 }
 
 fun AppCompatActivity.startActivityForResultOk(
-    intent: Intent,
-    action: Intent?.() -> Unit
+    intent: Intent, action: Intent?.() -> Unit
 ) {
     ActResultRequest(this).startForResult(intent, object : ActivityResultCallback() {
         override fun onActivityResultOk(data: Intent?) {
             action(data)
         }
     })
+}
+
+
+fun Context.requestStoragePermission(callback: () -> Unit) {
+    if (this !is BaseActivity) {
+        return
+    }
+    when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+            if (!Environment.isExternalStorageManager()) {
+                AlertDialog.Builder(this).setTitle(R.string.notice)
+                    .setMessage("该功能需要读写内部存储权限，点击前往设置")
+                    .setNegativeButton(R.string.cancel, null).setPositiveButton(
+                        R.string.ok
+                    ) { _, _ ->
+                        try {
+                            val intent =
+                                Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                            intent.addCategory("android.intent.category.DEFAULT")
+                            intent.data = Uri.parse(String.format("package:%s", packageName))
+                            startActivity(intent)
+                        } catch (e: Exception) {
+                            val intent = Intent()
+                            intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
+                            startActivity(intent)
+                        }
+                    }.create().show()
+            } else {
+                callback()
+            }
+        }
+
+        else -> {
+            requestPermission(arrayOf(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ), object : BaseActivity.PermissionCallback() {
+                override fun granted() {
+                    callback()
+                }
+            })
+        }
+    }
 }

@@ -3,13 +3,15 @@ package com.wrbug.developerhelper.util
 import android.net.Uri
 import android.os.Environment
 import com.wrbug.developerhelper.basecommon.BaseApp
+import com.wrbug.developerhelper.commonutil.Constant
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.commonutil.toUri
 import java.io.File
 
 object BackupUtils {
     private val backupDir: File by lazy {
-        val file = File(Environment.getExternalStorageDirectory(), "com.wrbug.developerHelper/backup")
+        val file =
+            File(Environment.getExternalStorageDirectory(), "com.wrbug.developerHelper/backup")
         if (file.exists().not()) {
             file.mkdirs()
         }
@@ -24,9 +26,12 @@ object BackupUtils {
         return null
     }
 
-    fun backupAppData(packageName: String, dataDir: String): File? {
-        val backupDataDir =
-            File(backupDir, "datas/$packageName/${System.currentTimeMillis().format("yyyy-MM-dd-HH_mm_ss")}")
+    fun backupAppData(packageName: String): File? {
+        val backupDataDir = File(
+            backupDir,
+            "datas/$packageName/${System.currentTimeMillis().format("yyyy-MM-dd-HH_mm_ss")}"
+        )
+        val dataDir = Constant.getDataDir(packageName)
         if (ShellManager.cpFile(dataDir, backupDataDir.absolutePath)) {
             return backupDataDir
         }
