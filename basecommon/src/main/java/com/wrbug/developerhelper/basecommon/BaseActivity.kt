@@ -20,7 +20,6 @@ abstract class BaseActivity : AppCompatActivity() {
     private var mPermissionCallback: PermissionCallback? = null
 
     companion object {
-
         private const val PERMISSION_REQUEST_CODE = 0xAADF1
     }
 
@@ -42,12 +41,7 @@ abstract class BaseActivity : AppCompatActivity() {
         Snackbar.make(toastRootView, id, Snackbar.LENGTH_SHORT).show()
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     fun requestPermission(permissions: Array<String>, callback: PermissionCallback) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            callback.granted()
-            return
-        }
         val list = ArrayList<String>()
         for (permission in permissions) {
             val hasPermission = checkSelfPermission(permission)
@@ -170,11 +164,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun hasPermission(permissions: String): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkSelfPermission(permissions) == PackageManager.PERMISSION_GRANTED
-        } else {
-            true
-        }
+        return checkSelfPermission(permissions) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onRequestPermissionsResult(

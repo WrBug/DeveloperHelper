@@ -84,5 +84,5 @@
     <string name="find_new_version">发现新版本</string>
     <string name="download">下载</string>
     <string name="open_notification_title">通知栏常驻</string>
-    <string name="open_notification_summary">用于进程保活，按需开启</string>
+    <string name="open_notification_summary">用于进程保活，当应用经常被杀死时，请打开该功能</string>
 </resources>

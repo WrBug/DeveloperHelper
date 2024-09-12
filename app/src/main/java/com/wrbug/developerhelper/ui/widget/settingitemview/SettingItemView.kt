@@ -9,13 +9,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.commonutil.dpInt
 import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
 import com.wrbug.developerhelper.databinding.ViewSettingItemBinding
 
-class SettingItemView : FrameLayout {
+class SettingItemView @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null
+) : ConstraintLayout(context, attrs) {
 
     var checkable: Boolean = true
         set(value) {
@@ -29,24 +34,20 @@ class SettingItemView : FrameLayout {
             binding.switcher.isChecked = checked
         }
     private var switcherMaskViewClicked = false
-    private val binding: ViewSettingItemBinding by lazy {
-        ViewSettingItemBinding.inflate(LayoutInflater.from(context), this, true)
-    }
+    private val binding = ViewSettingItemBinding.inflate(LayoutInflater.from(context), this)
 
-    constructor(context: Context) : super(context) {
-        initView()
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+    init {
         initView()
         initAttrs(attrs)
     }
 
     private fun initView() {
+        updatePadding(top = 8.dpInt(context), bottom = 8.dpInt(context))
         setBackgroundResource(R.drawable.ripple_with_color_mask)
     }
 
-    private fun initAttrs(attrs: AttributeSet) {
+    private fun initAttrs(attrs: AttributeSet?) {
+        attrs ?: return
         with(context.obtainStyledAttributes(attrs, R.styleable.SettingItemView)) {
             val src = getDrawable(R.styleable.SettingItemView_src)
             setImage(src)
