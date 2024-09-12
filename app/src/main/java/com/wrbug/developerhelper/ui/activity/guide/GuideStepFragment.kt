@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseFragment
 import com.wrbug.developerhelper.databinding.FragmentGuideBinding
