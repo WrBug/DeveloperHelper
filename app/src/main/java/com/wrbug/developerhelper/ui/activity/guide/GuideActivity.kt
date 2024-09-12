@@ -4,7 +4,6 @@ import android.animation.ArgbEvaluator
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity
