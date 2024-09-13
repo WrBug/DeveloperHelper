@@ -17,6 +17,7 @@ import androidx.core.view.isVisible
 import com.wrbug.developerhelper.BuildConfig
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.base.BaseActivity
+import com.wrbug.developerhelper.base.requestStoragePermission
 import com.wrbug.developerhelper.base.setupActionBar
 import com.wrbug.developerhelper.commonutil.ClipboardUtils
 import com.wrbug.developerhelper.commonutil.shell.Callback
@@ -30,6 +31,7 @@ import com.wrbug.developerhelper.model.entity.VersionInfo
 import com.wrbug.developerhelper.service.AccessibilityManager
 import com.wrbug.developerhelper.service.DeveloperHelperAccessibilityService
 import com.wrbug.developerhelper.service.FloatWindowService
+import com.wrbug.developerhelper.ui.activity.appbackup.BackupAppActivity
 import com.wrbug.developerhelper.util.DeviceUtils
 import com.wrbug.developerhelper.util.UpdateUtils
 
@@ -71,6 +73,11 @@ class MainActivity : BaseActivity() {
                 FloatWindowService.start(this)
             } else {
                 FloatWindowService.stop(this)
+            }
+        }
+        binding.backupAppSettingView.setOnDoubleCheckClickListener {
+            requestStoragePermission {
+                startActivity(Intent(this, BackupAppActivity::class.java))
             }
         }
         binding.accessibilitySettingView.setOnDoubleCheckClickListener {

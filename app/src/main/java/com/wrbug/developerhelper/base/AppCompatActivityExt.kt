@@ -26,6 +26,7 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.wrbug.developerhelper.R
@@ -38,7 +39,11 @@ import com.wrbug.developerhelper.base.activityresultcallback.ActivityResultCallb
 
 
 fun AppCompatActivity.setupActionBar(@IdRes toolbarId: Int, action: ActionBar.() -> Unit = {}) {
-    setSupportActionBar(findViewById(toolbarId))
+    setupActionBar(findViewById(toolbarId), action)
+}
+
+fun AppCompatActivity.setupActionBar(toolbar: Toolbar, action: ActionBar.() -> Unit = {}) {
+    setSupportActionBar(toolbar)
     supportActionBar?.run {
         setDisplayHomeAsUpEnabled(false)
         action()

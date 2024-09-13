@@ -62,17 +62,14 @@
             android:exported="true"
             android:foregroundServiceType="dataSync"
             android:process=":floatWindow" />
-
-        <activity
-            android:name=".ui.activity.guide.GuideActivity"
-            android:exported="false"
-            android:label="@string/title_activity_guide"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.databaseedit.DatabaseEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.appbackup.BackupAppActivity"
             android:exported="false" />
 
         <provider

@@ -5,9 +5,11 @@ import android.os.Environment
 import com.wrbug.developerhelper.commonutil.Constant
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.commonutil.fromJson
+import com.wrbug.developerhelper.commonutil.safeCreateSingle
 import com.wrbug.developerhelper.commonutil.safeRead
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.commonutil.toJson
+import com.wrbug.developerhelper.model.entity.BackupAppData
 import com.wrbug.developerhelper.model.entity.BackupAppInfo
 import com.wrbug.developerhelper.model.entity.BackupAppItemInfo
 import io.reactivex.rxjava3.core.Single
@@ -19,6 +21,7 @@ object BackupUtils {
     private const val ANDROID_DATA_TAR = "android_data.tar"
     private const val DATA_TAR = "data.tar"
     private const val CONFIG_JSON = "config.json"
+    private const val ICON_PNG = "icon.png"
     private val backupRootDir: File by lazy {
         val file =
             File(Environment.getExternalStorageDirectory(), "DeveloperHelper/backup")
@@ -84,10 +87,7 @@ object BackupUtils {
         ShellManager.cpFile(apkFile, tmpApkFile.absolutePath)
         runCatching {
             ApkFile(tmpApkFile).allIcons.find { it.isFile }?.data?.let {
-                File(
-                    getAppBackupDir(apkInfo.applicationInfo.packageName),
-                    "icon.png"
-                ).writeBytes(it)
+                File(getAppBackupDir(apkInfo.applicationInfo.packageName), ICON_PNG).writeBytes(it)
             }
         }
         tmpApkFile.delete()
@@ -110,6 +110,23 @@ object BackupUtils {
             return target
         }
         return null
+    }
+
+    fun getAllBackupInfo(): Single<List<BackupAppData>> {
+        return safeCreateSingle {
+            val list = arrayListOf<BackupAppData>()
+            backupRootDir.listFiles()?.forEach { root ->
+                val configJson = File(root, CONFIG_JSON)
+                if (!configJson.exists()) {
+                    return@forEach
+                }
+                val info = configJson.safeRead().fromJson<BackupAppInfo>() ?: return@forEach
+                val map = info.backupMap.filter { File(root, it.key).exists() }
+                val icoFile = File(root, ICON_PNG).takeIf { it.exists() }
+                list.add(BackupAppData(info.appName, root, map, icoFile))
+            }
+            it.onSuccess(list)
+        }
     }
 
 

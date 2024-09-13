@@ -5,10 +5,12 @@ import android.os.SystemClock
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.airbnb.lottie.LottieAnimationView
 import com.airbnb.lottie.LottieDrawable
+import com.bumptech.glide.Glide
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.mmkv.ConfigKv
 import com.wrbug.developerhelper.mmkv.manager.MMKVManager
@@ -58,6 +60,10 @@ fun FrameLayout.stopPageLoading() {
     lottieView?.cancelAnimation()
     removeAllViews()
     isVisible = false
+}
+
+fun ImageView.loadImage(url: Any) {
+    Glide.with(this).load(url).into(this)
 }
 
 

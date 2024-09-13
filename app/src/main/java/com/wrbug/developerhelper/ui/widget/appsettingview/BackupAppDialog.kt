@@ -101,6 +101,7 @@ class BackupAppDialog : BottomSheetDialogFragment() {
                 ?: throw Exception()
         }.map {
             val info = BackupAppItemInfo(
+                it.second.name,
                 backupApk,
                 backupData,
                 backupAndroidData,

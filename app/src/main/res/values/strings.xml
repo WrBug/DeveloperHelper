@@ -12,7 +12,7 @@
     <string name="accessibility_service_opened">无障碍功能已开启</string>
     <string name="devices_is_not_root">该设备未root，无法开启</string>
     <string name="base_setting">基本设置</string>
-    <string name="advance_setting">高级功能设置</string>
+    <string name="advance_setting">高级功能</string>
     <string name="open_accessibility_service">开启无障碍辅助</string>
     <string name="open_float_window">开启悬浮窗权限</string>
     <string name="open_root_permission_summary">推荐开启，用于获取应用SharedPreference、数据库等数据，关闭后部分信息无法显示</string>
@@ -99,4 +99,7 @@
     <string name="backup_waiting">等待中</string>
     <string name="item_zip_backup_file">打包备份文件</string>
     <string name="no_data">暂无数据</string>
+    <string name="app_info_backup_count">%1$d个备份</string>
+    <string name="last_backup_time">上一次：%1$s</string>
+    <string name="other_function">其他功能</string>
 </resources>

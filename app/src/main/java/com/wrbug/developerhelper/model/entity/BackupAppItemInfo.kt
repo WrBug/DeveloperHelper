@@ -3,6 +3,8 @@ package com.wrbug.developerhelper.model.entity
 import com.google.gson.annotations.SerializedName
 
 data class BackupAppItemInfo(
+    @SerializedName("backupFile")
+    var backupFile: String = "",
     @SerializedName("backupApk")
     var backupApk: Boolean = false,
     @SerializedName("backupData")

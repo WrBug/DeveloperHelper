@@ -85,6 +85,30 @@
                 app:summary="@string/open_notification_summary"
                 app:title="@string/open_notification_title"
                 tools:visibility="visible" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_text_color_black_divider" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:text="@string/other_function"
+                android:textColor="@color/colorAccent" />
+
+            <com.wrbug.developerhelper.ui.widget.settingitemview.SettingItemView
+                android:id="@+id/backupAppSettingView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:checkable="false"
+                app:icoTint="@color/iconPrimary"
+                app:src="@drawable/ic_application"
+                app:summary="管理/恢复已备份的应用"
+                app:switchVisible="false"
+                app:title="备份管理" />
         </LinearLayout>
     </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

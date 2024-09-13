@@ -17,4 +17,7 @@ class EmptyView @JvmOverloads constructor(
 ) : ConstraintLayout(context, attrs) {
     private val binding = ViewEmptyViewBinding.inflate(LayoutInflater.from(context), this)
 
+    fun setTitle(title: String) {
+        binding.tvTitle.text = title
+    }
 }

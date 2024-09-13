@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="title" format="string" />
     <declare-styleable name="SettingItemView">
         <attr name="src" format="dimension" />
+        <attr name="title" />
         <attr name="icoTint" format="color" />
-        <attr name="title" format="string" />
         <attr name="summary" format="string" />
         <attr name="switchVisible" format="boolean" />
         <attr name="checked" format="boolean" />
         <attr name="checkable" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="AppBar">
+        <attr name="title" />
+        <attr name="showBack" format="boolean" />
     </declare-styleable>
 </resources>
