@@ -42,7 +42,7 @@
             android:contentDescription="@string/onboarding_pre_button_description"
             android:padding="@dimen/activity_horizontal_margin"
             android:src="@drawable/ic_chevron_left_24dp"
-            android:tint="@android:color/white"
+            app:tint="@android:color/white"
             android:visibility="gone" />
 
         <!--圆形指示器-->

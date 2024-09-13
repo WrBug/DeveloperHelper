@@ -1,12 +1,14 @@
 package com.wrbug.developerhelper.service
 
 import android.accessibilityservice.AccessibilityService
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Rect
+import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
 import android.view.accessibility.AccessibilityEvent
@@ -115,11 +117,16 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
         return null
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate() {
         super.onCreate()
         val filter = IntentFilter()
         filter.addAction(ReceiverConstant.ACTION_HIERARCHY_VIEW)
-        registerReceiver(receiver, filter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(receiver, filter)
+        }
         sendStatusBroadcast(true)
         serviceRunning = true
         nodeMap.clear()

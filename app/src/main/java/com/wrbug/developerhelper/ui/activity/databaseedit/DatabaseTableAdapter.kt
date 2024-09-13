@@ -1,5 +1,6 @@
 package com.wrbug.developerhelper.ui.activity.databaseedit
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +56,7 @@ class DatabaseTableAdapter(val context: Context) : AbstractTableAdapter<String, 
         return CellViewHolder(layout)
     }
 
+    @SuppressLint("InflateParams")
     override fun onCreateCornerView(): View {
         return LayoutInflater.from(context).inflate(R.layout.table_view_corner_layout, null)
     }

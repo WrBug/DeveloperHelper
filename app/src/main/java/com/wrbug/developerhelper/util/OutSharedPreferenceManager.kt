@@ -1,5 +1,6 @@
 package com.wrbug.developerhelper.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.wrbug.developerhelper.commonutil.Constant
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
@@ -31,6 +32,7 @@ class OutSharedPreference(private val context: Context, private val filePath: St
         }
     }
 
+    @SuppressLint("ApplySharedPref")
     fun saveToFile(context: Context, list: Array<SharedPreferenceItemInfo>): Single<Boolean> {
         return Single.just(list).map {
             val sp = context.applicationContext.getSharedPreferences(fileName, Context.MODE_PRIVATE)

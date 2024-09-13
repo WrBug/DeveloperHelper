@@ -8,6 +8,9 @@ android {
         jvmTarget = '1.8'
     }
     lintOptions {
+        abortOnError true
+        disable 'UnusedResources'
+        ignoreWarnings true
         baseline file("lint-baseline.xml")
     }
     compileOptions {

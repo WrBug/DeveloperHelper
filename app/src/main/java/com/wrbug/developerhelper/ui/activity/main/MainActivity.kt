@@ -1,6 +1,7 @@
 package com.wrbug.developerhelper.ui.activity.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -38,6 +39,7 @@ class MainActivity : BaseActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (DeviceUtils.isFloatWindowOpened()) {

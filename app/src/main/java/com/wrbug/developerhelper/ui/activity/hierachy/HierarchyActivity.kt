@@ -1,5 +1,6 @@
 package com.wrbug.developerhelper.ui.activity.hierachy
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -61,6 +62,7 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener, OnNodeChan
         }
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHierarchyBinding.inflate(layoutInflater)

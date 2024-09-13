@@ -10,7 +10,7 @@ class SharedPreferenceItemInfo {
 
 
     fun isValueValid(): Boolean {
-        when (type.toLowerCase()) {
+        when (type.lowercase()) {
             "string" -> {
                 return JsonHelper.fromJson(value) == null || JsonHelper.fromJson(newValue) != null
             }

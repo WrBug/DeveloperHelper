@@ -1,5 +1,6 @@
 package com.wrbug.developerhelper.service
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -68,7 +69,11 @@ class FloatWindowService : Service() {
                     AccessibilityManager.startService(this).subscribe({ data ->
                         if (data) {
                             it.postDelayed({
-                                sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))
+                                sendBroadcast(
+                                    Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW).setPackage(
+                                        packageName
+                                    )
+                                )
                             }, 500)
                         }
                     }, {
@@ -76,7 +81,7 @@ class FloatWindowService : Service() {
                     }).addTo(disposable)
                     return@setOnDoubleCheckClickListener
                 }
-                sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW))
+                sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW).setPackage(packageName))
             }
             FloatWindow.with(applicationContext).setView(it).setWidth(Screen.width, 0.1f)
                 .setHeight(Screen.width, 0.1f).setY(Screen.height, 0.3f).setTag(FLOAT_BUTTON)
@@ -108,6 +113,7 @@ class FloatWindowService : Service() {
         updateNotification()
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     private fun initNotification() {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -146,6 +152,7 @@ class FloatWindowService : Service() {
         FloatWindow.get(FLOAT_BUTTON).hide()
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun initReceiver() {
         val filter = IntentFilter(ReceiverConstant.ACTION_SET_FLOAT_BUTTON_VISIBLE)
         filter.addAction(ReceiverConstant.ACTION_ADB_WIFI_CLICKED)

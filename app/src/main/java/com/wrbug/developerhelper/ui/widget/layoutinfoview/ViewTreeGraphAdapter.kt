@@ -9,7 +9,7 @@ import androidx.cardview.widget.CardView
 import com.wrbug.developerhelper.R
 import de.blox.graphview.BaseGraphAdapter
 
-class ViewTreeGraphAdapter(@NonNull val context: Context, @LayoutRes val layoutRes: Int) :
+class ViewTreeGraphAdapter(val context: Context, @LayoutRes val layoutRes: Int) :
     BaseGraphAdapter<ViewTreeGraphAdapter.ViewHolder>(context, layoutRes) {
     private var listener: OnItemClickListener? = null
     override fun onCreateViewHolder(view: View?) = ViewHolder(view!!)
