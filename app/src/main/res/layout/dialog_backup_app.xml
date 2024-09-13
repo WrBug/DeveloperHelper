@@ -35,6 +35,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/data_progress" />
 
+
+    <com.wrbug.developerhelper.ui.widget.backupprogress.BackupProgressView
+        android:id="@+id/zip_file_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/android_data_progress" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_notice"
         android:layout_width="0dp"
@@ -45,7 +55,7 @@
         android:textColor="@color/material_color_red_800"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/android_data_progress" />
+        app:layout_constraintTop_toBottomOf="@+id/zip_file_progress" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_exit"

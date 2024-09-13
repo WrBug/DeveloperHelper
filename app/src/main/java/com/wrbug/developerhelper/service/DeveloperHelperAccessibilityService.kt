@@ -67,7 +67,6 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
             return false
         }
 
-        //todo java.lang.RuntimeException:android.os.TransactionTooLargeException
         val nodeMap: HashMap<Long, HierarchyNode> = hashMapOf()
     }
 
@@ -75,7 +74,11 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        if (event?.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED || event.className.isNullOrEmpty() || event.packageName.isNullOrEmpty()) {
+        if (event?.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
+            || event.className.isNullOrEmpty()
+            || event.className?.startsWith("android.") == true
+            || event.packageName.isNullOrEmpty()
+        ) {
             return
         }
         runCatching {

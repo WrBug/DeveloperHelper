@@ -48,7 +48,7 @@ class HierarchyView(context: Context, attrs: AttributeSet?) : View(context, attr
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
-                isFromLeftDown = event.x <= 10
+                isFromLeftDown = event.x <= 15
                 if (isFromLeftDown) {
                     return super.onTouchEvent(event)
                 }

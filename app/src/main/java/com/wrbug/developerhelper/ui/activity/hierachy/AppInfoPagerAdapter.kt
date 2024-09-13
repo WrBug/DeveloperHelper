@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.basecommon.versionCodeLong
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
@@ -86,7 +87,7 @@ class AppInfoPagerAdapter(
                 itemInfos.add(ItemInfo("Activity", it))
             }
             itemInfos.add(ItemInfo("VersionName", it.packageInfo.versionName))
-            itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCode))
+            itemInfos.add(ItemInfo("VersionCode", it.packageInfo.versionCodeLong))
             itemInfos.add(ItemInfo("uid", it.applicationInfo.uid))
             ShellManager.getPid(it.packageInfo.packageName).takeUnless { it.isEmpty() }?.let {
                 itemInfos.add(ItemInfo("Pid", it))

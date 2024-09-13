@@ -18,6 +18,7 @@ package com.wrbug.developerhelper.basecommon
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -29,7 +30,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProviders
 import com.wrbug.developerhelper.basecommon.activityresultcallback.ActResultRequest
 import com.wrbug.developerhelper.basecommon.activityresultcallback.ActivityResultCallback
 
@@ -45,9 +45,6 @@ fun AppCompatActivity.setupActionBar(@IdRes toolbarId: Int, action: ActionBar.()
         action()
     }
 }
-
-fun <T : ViewModel> AppCompatActivity.obtainViewModel(viewModelClass: Class<T>) =
-    ViewModelProviders.of(this).get(viewModelClass)
 
 /**
  * Runs a FragmentTransaction, then calls commit().
@@ -72,16 +69,15 @@ fun AppCompatActivity.startActivityForResultOk(
     })
 }
 
-
 fun Context.requestStoragePermission(callback: () -> Unit) {
     if (this !is BaseActivity) {
         return
     }
     when {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
             if (!Environment.isExternalStorageManager()) {
                 AlertDialog.Builder(this).setTitle(R.string.notice)
-                    .setMessage("该功能需要读写内部存储权限，点击前往设置")
+                    .setMessage(getString(R.string.request_write_sdcard_notice))
                     .setNegativeButton(R.string.cancel, null).setPositiveButton(
                         R.string.ok
                     ) { _, _ ->

@@ -1,9 +1,7 @@
 package com.wrbug.developerhelper.ui.widget.appsettingview
 
-import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.ScrollView
@@ -11,29 +9,24 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import com.wrbug.developerhelper.BuildConfig
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.basecommon.requestStoragePermission
 import com.wrbug.developerhelper.basecommon.showToast
 import com.wrbug.developerhelper.commonutil.AppManagerUtils
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
-import com.wrbug.developerhelper.commonutil.toUri
-import com.wrbug.developerhelper.commonutil.zip
 import com.wrbug.developerhelper.commonwidget.util.setOnRootCheckClickListener
 import com.wrbug.developerhelper.commonwidget.util.visible
 import com.wrbug.developerhelper.databinding.DialogBackupAppSelectBinding
 import com.wrbug.developerhelper.databinding.ViewAppSettingBinding
 import com.wrbug.developerhelper.mmkv.ConfigKv
 import com.wrbug.developerhelper.mmkv.manager.MMKVManager
-import com.wrbug.developerhelper.util.BackupUtils
-import gdut.bsx.share2.Share2
-import gdut.bsx.share2.ShareContentType
-import java.io.File
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 class AppSettingView : ScrollView {
 
     private var apkInfo: ApkInfo? = null
     private val configKv = MMKVManager.get(ConfigKv::class.java)
     private lateinit var binding: ViewAppSettingBinding
+    private lateinit var disposable: CompositeDisposable
 
     constructor(context: Context) : super(context) {
         initView()
@@ -57,12 +50,10 @@ class AppSettingView : ScrollView {
 
     private fun initListener() {
         binding.backupAppBtn.setOnRootCheckClickListener {
-            showBackSelect()
-//            doBackupApk()
+            showBackupSelect()
         }
-//        binding.backupApkDataDirBtn.setOnRootCheckClickListener {
-//            doBackupDataDir()
-//        }
+        binding.restoreAppBtn.setOnRootCheckClickListener {
+        }
         binding.restartAppBtn.setOnRootCheckClickListener {
             doRestartApp()
         }
@@ -77,27 +68,39 @@ class AppSettingView : ScrollView {
         }
     }
 
-    private fun showBackSelect() {
-        val selected = booleanArrayOf(false, false, false)
-        val binding = DialogBackupAppSelectBinding.inflate(LayoutInflater.from(context))
-        binding.cbApk.setOnCheckedChangeListener { _, isChecked ->
-            selected[0] = isChecked
+    private fun showBackupSelect() {
+        context.requestStoragePermission {
+            val selected = booleanArrayOf(false, false, false)
+            val binding = DialogBackupAppSelectBinding.inflate(LayoutInflater.from(context))
+            binding.cbApk.setOnCheckedChangeListener { _, isChecked ->
+                selected[0] = isChecked
+            }
+            binding.cbData.setOnCheckedChangeListener { _, isChecked ->
+                selected[1] = isChecked
+            }
+            binding.cbAndroidData.setOnCheckedChangeListener { _, isChecked ->
+                selected[2] = isChecked
+            }
+            AlertDialog.Builder(context)
+                .setTitle(R.string.backup_app_file)
+                .setView(binding.root)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(
+                    R.string.ok
+                ) { _, _ ->
+                    doBackup(selected)
+                }.create().show()
         }
-        binding.cbData.setOnCheckedChangeListener { _, isChecked ->
-            selected[1] = isChecked
-        }
-        binding.cbAndroidData.setOnCheckedChangeListener { _, isChecked ->
-            selected[2] = isChecked
-        }
-        AlertDialog.Builder(context)
-            .setTitle(R.string.backup_app_file)
-            .setView(binding.root)
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(
-                R.string.ok
-            ) { _, _ ->
-                doBackup(selected)
-            }.create().show()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        disposable = CompositeDisposable()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        disposable.dispose()
     }
 
     private fun doBackup(selected: BooleanArray) {

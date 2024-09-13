@@ -11,14 +11,14 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.ExtraKey
-import com.wrbug.developerhelper.commonutil.Constant
+import com.wrbug.developerhelper.basecommon.versionCodeLong
 import com.wrbug.developerhelper.commonutil.addTo
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.commonutil.observeOnMain
-import com.wrbug.developerhelper.commonutil.runOnIO
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
 import com.wrbug.developerhelper.databinding.DialogBackupAppBinding
+import com.wrbug.developerhelper.model.entity.BackupAppItemInfo
 import com.wrbug.developerhelper.ui.widget.backupprogress.BackupProgressView
 import com.wrbug.developerhelper.util.BackupUtils
 import com.wrbug.developerhelper.util.format
@@ -50,6 +50,7 @@ class BackupAppDialog : BottomSheetDialogFragment() {
     private lateinit var binding: DialogBackupAppBinding
     private lateinit var disposable: CompositeDisposable
     private lateinit var dateDir: String
+    private var backupTimeStamp: Long = 0
 
     private val apkInfo: ApkInfo? by lazy {
         arguments?.getParcelable(ExtraKey.DATA)
@@ -84,16 +85,52 @@ class BackupAppDialog : BottomSheetDialogFragment() {
         if (hasError) {
             binding.tvNotice.isVisible = false
             binding.btnExit.isVisible = true
+            return
         }
         if (successCount < 3) {
             return
         }
+        createInfoFile()
+    }
+
+    private fun createInfoFile() {
+        binding.zipFileProgress.setStatus(BackupProgressView.Status.Processing)
+        runOnIo().map { apkInfo ->
+            BackupUtils.zipBackupFile(apkInfo.packageInfo.packageName.orEmpty(), dateDir)
+                ?.let { apkInfo to it }
+                ?: throw Exception()
+        }.map {
+            val info = BackupAppItemInfo(
+                backupApk,
+                backupData,
+                backupAndroidData,
+                it.first.generateBackupApkFileName(),
+                it.first.packageInfo.versionName.orEmpty(),
+                it.first.packageInfo.versionCodeLong,
+                it.first.packageInfo.packageName.orEmpty(),
+                backupTimeStamp
+            )
+            val success =
+                BackupUtils.saveBackupInfo(it.first, info, it.second.name)
+            if (success) {
+                return@map it.second.absolutePath
+            }
+            throw Exception()
+        }.observeOnMain().subscribe({
+            binding.zipFileProgress.setStatus(BackupProgressView.Status.Success, it)
+            showSuccess()
+        }, {
+            hasError = true
+            binding.zipFileProgress.setStatus(BackupProgressView.Status.Failed)
+        }).addTo(disposable)
+    }
+
+    private fun showSuccess() {
         binding.btnExit.isVisible = true
         binding.tvNotice.text = getString(
             R.string.backup_success_notice,
-            BackupUtils.getCurrentAppBackupDir(
-                apkInfo?.packageInfo?.packageName.orEmpty(),
-                dateDir
+            BackupUtils.getAppBackupDir(
+                apkInfo?.packageInfo?.packageName.orEmpty()
             ).absolutePath
         )
         binding.tvNotice.setTextColor(
@@ -107,7 +144,8 @@ class BackupAppDialog : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         successCount = 0
-        dateDir = System.currentTimeMillis().format("yyyy-MM-dd-HH_mm_ss")
+        backupTimeStamp = System.currentTimeMillis()
+        dateDir = backupTimeStamp.format("yyyy-MM-dd-HH_mm_ss")
     }
 
     override fun onCreateView(
@@ -131,6 +169,8 @@ class BackupAppDialog : BottomSheetDialogFragment() {
         binding.apkProgress.setTitle(R.string.item_backup_apk)
         binding.androidDataProgress.setTitle(R.string.item_backup_android_data)
         binding.dataProgress.setTitle(R.string.item_backup_data)
+        binding.zipFileProgress.setTitle(R.string.item_zip_backup_file)
+        binding.zipFileProgress.setStatus(BackupProgressView.Status.Waiting)
         binding.btnExit.setOnDoubleCheckClickListener {
             dismissAllowingStateLoss()
         }

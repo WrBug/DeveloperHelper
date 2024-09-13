@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.util.ArrayList
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -18,6 +19,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private lateinit var toastRootView: View
     protected lateinit var context: BaseActivity
     private var mPermissionCallback: PermissionCallback? = null
+    protected lateinit var disposable: CompositeDisposable
 
     companion object {
         private const val PERMISSION_REQUEST_CODE = 0xAADF1
@@ -26,10 +28,16 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         context = this
         super.onCreate(savedInstanceState)
+        disposable = CompositeDisposable()
     }
 
     override fun setContentView(layoutResID: Int) {
         setContentView(layoutInflater.inflate(layoutResID, null))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 
     override fun setContentView(view: View?) {

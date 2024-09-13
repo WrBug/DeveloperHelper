@@ -11,15 +11,12 @@ import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity
 import com.wrbug.developerhelper.basecommon.setupActionBar
 import com.wrbug.developerhelper.commonutil.AppManagerUtils
-import com.wrbug.developerhelper.commonutil.shell.ShellManager
-import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
-import com.wrbug.developerhelper.util.OutSharedPreferenceManager
-import com.wrbug.developerhelper.util.XmlUtil
-import com.wrbug.developerhelper.commonutil.dp2px
+import com.wrbug.developerhelper.commonutil.addTo
 import com.wrbug.developerhelper.commonutil.dpInt
+import com.wrbug.developerhelper.commonutil.runOnIO
 import com.wrbug.developerhelper.databinding.ActivitySharedPreferenceEditBinding
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
+import com.wrbug.developerhelper.util.OutSharedPreference
 import java.io.File
 
 class SharedPreferenceEditActivity : BaseActivity() {
@@ -36,6 +33,7 @@ class SharedPreferenceEditActivity : BaseActivity() {
     private lateinit var adapter: SharedPreferenceListAdapter
     private var saveMenuItem: MenuItem? = null
     private lateinit var binding: ActivitySharedPreferenceEditBinding
+    private lateinit var outSharedPreference: OutSharedPreference
 
     companion object {
 
@@ -60,7 +58,7 @@ class SharedPreferenceEditActivity : BaseActivity() {
                 title = File(filePath).name
             }
         }
-
+        outSharedPreference = OutSharedPreference(this, filePath)
         binding.sprefRv.layoutManager = LinearLayoutManager(this)
         adapter = SharedPreferenceListAdapter(this)
         binding.sprefRv.adapter = adapter
@@ -77,18 +75,15 @@ class SharedPreferenceEditActivity : BaseActivity() {
         )
         binding.sprefRv.addItemDecoration(spaceItemDecoration)
         parseXml()
-
     }
 
     private fun parseXml() {
-        doAsync {
-            val xml = ShellManager.catFile(filePath)
-            val list = XmlUtil.parseSharedPreference(xml)
-            uiThread {
-                saveMenuItem?.isVisible = false
-                adapter.setData(list)
-            }
-        }
+        outSharedPreference.parse().runOnIO().subscribe({
+            saveMenuItem?.isVisible = false
+            adapter.setData(it)
+        }, {
+
+        }).addTo(disposable)
     }
 
     override fun onBackPressed() {
@@ -104,43 +99,16 @@ class SharedPreferenceEditActivity : BaseActivity() {
     private fun showSaveDialog() {
         AlertDialog.Builder(this).setMessage(getString(R.string.confirm_shared_preference_save))
             .setTitle(R.string.notice).setPositiveButton(R.string.save_and_exit) { _, _ ->
-                if (doSave()) {
-                    showDialog(R.string.notice,
-                        getString(R.string.save_shared_preference_success, appName),
-                        R.string.ok,
-                        R.string.cancel,
-                        {
-                            AppManagerUtils.restartApp(
-                                this@SharedPreferenceEditActivity, filePackageName
-                            )
-                            finish()
-                        },
-                        {
-                            finish()
-                        })
-                } else {
-                    showSnack(getString(R.string.save_shared_preference_failed))
-                }
+                doSave()
             }.setNegativeButton(getString(R.string.do_not_save)) { _, _ ->
                 finish()
             }.show()
     }
 
-    private fun doSave(): Boolean {
+    private fun doSave() {
         val data = adapter.getData()
-        val file = OutSharedPreferenceManager.saveToFile(this, data)
-        val success = ShellManager.catFile(file.absolutePath, filePath, "666")
-        file.delete()
-        return success
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.save_menu -> {
-                if (!doSave()) {
-                    showSnack(getString(R.string.save_shared_preference_failed))
-                    return super.onOptionsItemSelected(item)
-                }
+        outSharedPreference.saveToFile(this, data).runOnIO().subscribe({
+            if (it) {
                 parseXml()
                 showDialog(R.string.notice,
                     getString(R.string.save_shared_preference_success, appName),
@@ -152,9 +120,26 @@ class SharedPreferenceEditActivity : BaseActivity() {
                         )
                         finish()
                     })
+            } else {
+                showSnack(getString(R.string.save_shared_preference_failed))
+            }
+        }, {
+
+        }).addTo(disposable)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.save_menu -> {
+                doSave()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        outSharedPreference.deleteTmpFile()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

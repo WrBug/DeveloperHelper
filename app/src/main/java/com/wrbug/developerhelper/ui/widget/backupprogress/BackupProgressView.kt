@@ -68,11 +68,24 @@ class BackupProgressView @JvmOverloads constructor(
                     )
                 )
             }
+
+            Status.Waiting -> {
+                binding.progress.isVisible = true
+                binding.ivStatus.isVisible = true
+                binding.tvStatus.text = context.getString(R.string.backup_waiting)
+                binding.ivStatus.setImageResource(R.drawable.ic_waiting)
+                binding.ivStatus.imageTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.material_color_grey_400
+                    )
+                )
+            }
         }
     }
 
 
     enum class Status {
-        Processing, Success, Failed, Ignore
+        Processing, Success, Failed, Ignore, Waiting
     }
 }

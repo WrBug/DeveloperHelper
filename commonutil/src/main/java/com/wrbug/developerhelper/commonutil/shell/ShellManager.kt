@@ -166,10 +166,11 @@ object ShellManager {
         if (result.isSuccess.not()) {
             return false
         }
-        result = ShellUtils.runWithSu("tar -cf  $tarPath -C $srcPath .")
+        result = ShellUtils.runWithSu("tar -pcf  $tarPath -C $srcPath .")
         return result.isSuccess || result.stderr()
             .contains("Operation not permitted")
     }
+
 
     fun catFile(source: String, dst: String, mod: String? = null): Boolean {
         val cmds = arrayListOf<String>()
