@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieDrawable
 import com.wrbug.developerhelper.commonutil.ClipboardUtils
 import com.wrbug.developerhelper.commonutil.print
-import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
-import com.wrbug.developerhelper.commonwidget.util.visible
+import com.wrbug.developerhelper.util.setOnDoubleCheckClickListener
+import com.wrbug.developerhelper.util.visible
 import com.wrbug.developerhelper.databinding.ItemInfoLoadingBinding
 import com.wrbug.developerhelper.databinding.ItemViewInfoBinding
 

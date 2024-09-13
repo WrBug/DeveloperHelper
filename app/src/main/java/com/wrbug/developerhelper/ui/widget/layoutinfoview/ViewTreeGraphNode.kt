@@ -1,6 +1,6 @@
 package com.wrbug.developerhelper.ui.widget.layoutinfoview
 
-import com.wrbug.developerhelper.basecommon.entry.HierarchyNode
+import com.wrbug.developerhelper.base.entry.HierarchyNode
 
 class ViewTreeGraphNode(val node: HierarchyNode) {
     var selected: Boolean = false

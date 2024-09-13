@@ -15,9 +15,8 @@ import androidx.core.app.ServiceCompat
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.commonutil.addTo
 import com.wrbug.developerhelper.constant.ReceiverConstant
-import com.wrbug.developerhelper.commonutil.shell.Callback
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
-import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
+import com.wrbug.developerhelper.util.setOnDoubleCheckClickListener
 import com.wrbug.developerhelper.ui.activity.main.MainActivity
 import com.yhao.floatwindow.FloatWindow
 import com.yhao.floatwindow.Screen

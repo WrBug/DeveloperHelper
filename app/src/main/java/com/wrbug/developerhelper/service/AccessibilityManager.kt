@@ -4,8 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.showToast
-import com.wrbug.developerhelper.commonutil.shell.Callback
+import com.wrbug.developerhelper.base.showToast
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.util.getString
 import io.reactivex.rxjava3.core.Single

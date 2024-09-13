@@ -2,7 +2,7 @@ package com.wrbug.developerhelper.ui.widget.layoutinfoview
 
 import android.content.Context
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.wrbug.developerhelper.basecommon.entry.HierarchyNode
+import com.wrbug.developerhelper.base.entry.HierarchyNode
 import com.wrbug.developerhelper.commonutil.UiUtils
 import com.wrbug.developerhelper.databinding.ViewLayoutInfoBinding
 

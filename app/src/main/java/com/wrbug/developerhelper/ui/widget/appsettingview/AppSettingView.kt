@@ -9,12 +9,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import com.wrbug.developerhelper.BuildConfig
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.requestStoragePermission
-import com.wrbug.developerhelper.basecommon.showToast
+import com.wrbug.developerhelper.base.requestStoragePermission
+import com.wrbug.developerhelper.base.showToast
 import com.wrbug.developerhelper.commonutil.AppManagerUtils
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
-import com.wrbug.developerhelper.commonwidget.util.setOnRootCheckClickListener
-import com.wrbug.developerhelper.commonwidget.util.visible
+import com.wrbug.developerhelper.util.setOnRootCheckClickListener
+import com.wrbug.developerhelper.util.visible
 import com.wrbug.developerhelper.databinding.DialogBackupAppSelectBinding
 import com.wrbug.developerhelper.databinding.ViewAppSettingBinding
 import com.wrbug.developerhelper.mmkv.ConfigKv

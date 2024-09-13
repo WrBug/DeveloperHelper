@@ -4,8 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.BaseFragment
+import com.wrbug.developerhelper.base.BaseFragment
 import com.wrbug.developerhelper.databinding.FragmentGuideBinding
 
 abstract class GuideStepFragment: BaseFragment() {

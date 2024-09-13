@@ -6,8 +6,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.BaseActivity
-import com.wrbug.developerhelper.databinding.ActivityDatabaseEditBinding
+import com.wrbug.developerhelper.base.BaseActivity
 import com.wrbug.developerhelper.databinding.ActivityGuideBinding
 
 class GuideActivity: BaseActivity() {

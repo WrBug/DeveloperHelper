@@ -1,6 +1,6 @@
 package com.wrbug.developerhelper.ipcserver
 
-import com.wrbug.developerhelper.basecommon.BaseApp
+import com.wrbug.developerhelper.base.BaseApp
 import com.wrbug.developerhelper.commonutil.Base64
 import com.wrbug.developerhelper.ipc.processshare.TcpUrl
 import com.wrbug.developerhelper.ipcserver.annotation.Controller

@@ -3,19 +3,17 @@ package com.wrbug.developerhelper.ui.widget.settingitemview
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
-import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.commonutil.dpInt
-import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
+import com.wrbug.developerhelper.util.setOnDoubleCheckClickListener
 import com.wrbug.developerhelper.databinding.ViewSettingItemBinding
 
 class SettingItemView @JvmOverloads constructor(

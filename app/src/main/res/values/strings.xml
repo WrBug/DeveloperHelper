@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">易开发</string>
+    <string name="request_write_sdcard_notice">该功能需要读写内部存储权限，点击前往设置</string>
     <string name="title_activity_guide">GuideActivity</string>
     <string name="action_settings">Settings</string>
     <string name="onboarding_pre_button_description">上一步</string>
@@ -22,6 +23,7 @@
     <string name="about">关于</string>
     <string name="about_content">软件开发中，交流群：627962572</string>
     <string name="page_analyze">界面布局</string>
+    <string name="open_root_notice">功能需要root权限，请开启后使用！</string>
     <string name="click_to_analyze">点击查看</string>
     <string name="first_install_time">首次安装时间</string>
     <string name="last_update_time">最后更新时间</string>

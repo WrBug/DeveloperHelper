@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.evrencoskun.tableview.listener.ITableViewListener
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.*
+import com.wrbug.developerhelper.base.*
 import com.wrbug.developerhelper.model.entity.DatabaseTableInfo
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.util.DatabaseUtils

@@ -15,12 +15,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.wrbug.developerhelper.BuildConfig
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.BaseActivity
-import com.wrbug.developerhelper.basecommon.setupActionBar
+import com.wrbug.developerhelper.base.BaseActivity
+import com.wrbug.developerhelper.base.setupActionBar
 import com.wrbug.developerhelper.commonutil.ClipboardUtils
 import com.wrbug.developerhelper.commonutil.shell.Callback
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
-import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
+import com.wrbug.developerhelper.util.setOnDoubleCheckClickListener
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.databinding.ActivityMainBinding
 import com.wrbug.developerhelper.mmkv.ConfigKv

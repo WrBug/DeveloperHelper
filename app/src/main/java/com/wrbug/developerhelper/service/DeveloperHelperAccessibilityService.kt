@@ -9,19 +9,14 @@ import android.content.IntentFilter
 import android.graphics.Rect
 import android.provider.Settings
 import android.text.TextUtils
-import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.BaseApp
-import com.wrbug.developerhelper.basecommon.entry.HierarchyNode
-import com.wrbug.developerhelper.basecommon.showToast
+import com.wrbug.developerhelper.base.BaseApp
+import com.wrbug.developerhelper.base.entry.HierarchyNode
 import com.wrbug.developerhelper.commonutil.AppInfoManager
 import com.wrbug.developerhelper.commonutil.UiUtils
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
-import com.wrbug.developerhelper.commonutil.shell.Callback
-import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.ui.activity.hierachy.HierarchyActivity
 

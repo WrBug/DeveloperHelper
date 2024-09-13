@@ -8,18 +8,12 @@ import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
 import com.elvishew.xlog.internal.DefaultsFactory
-import com.wrbug.developerhelper.basecommon.BaseApp
-import com.wrbug.developerhelper.basewidgetimport.BaseModule
+import com.wrbug.developerhelper.base.BaseApp
 import com.wrbug.developerhelper.commonutil.ProcessUtil
 import com.wrbug.developerhelper.commonutil.print
-import com.wrbug.developerhelper.ipc.processshare.tcp.MessageHandler
-import java.io.File
-import java.io.FileOutputStream
-import com.wrbug.developerhelper.ipc.processshare.tcp.TcpManager
 import com.wrbug.developerhelper.ipcserver.IpcManager
 import com.wrbug.developerhelper.ui.activity.main.MainActivity
 import com.wrbug.developerhelper.util.AppStatusRegister
-import org.jetbrains.anko.doAsync
 
 class DeveloperApplication : BaseApp() {
     companion object {

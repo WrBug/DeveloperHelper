@@ -3,8 +3,7 @@ package com.wrbug.developerhelper.util
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
-import android.text.TextUtils
-import com.wrbug.developerhelper.basecommon.BaseApp
+import com.wrbug.developerhelper.base.BaseApp
 import com.wrbug.developerhelper.commonutil.ShellUtils
 
 

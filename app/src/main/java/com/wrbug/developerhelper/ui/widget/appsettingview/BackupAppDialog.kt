@@ -10,13 +10,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.ExtraKey
-import com.wrbug.developerhelper.basecommon.versionCodeLong
+import com.wrbug.developerhelper.base.ExtraKey
+import com.wrbug.developerhelper.base.versionCodeLong
 import com.wrbug.developerhelper.commonutil.addTo
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.commonutil.observeOnMain
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
-import com.wrbug.developerhelper.commonwidget.util.setOnDoubleCheckClickListener
+import com.wrbug.developerhelper.util.setOnDoubleCheckClickListener
 import com.wrbug.developerhelper.databinding.DialogBackupAppBinding
 import com.wrbug.developerhelper.model.entity.BackupAppItemInfo
 import com.wrbug.developerhelper.ui.widget.backupprogress.BackupProgressView

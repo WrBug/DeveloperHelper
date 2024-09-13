@@ -21,4 +21,4 @@ dependencyResolutionManagement {
     }
 }
 
-include ':app', ':basecommon', ':commonutil', ':mmkv', ':commonwidget', ':basemoduleimport',":ipc"
+include ':app', ':commonutil', ':mmkv', ":ipc"

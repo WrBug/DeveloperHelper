@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.versionCodeLong
+import com.wrbug.developerhelper.base.versionCodeLong
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
@@ -17,7 +17,6 @@ import com.wrbug.developerhelper.ui.widget.appsettingview.AppSettingView
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.InfoAdapter
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.infopage.ItemInfo
 import com.wrbug.developerhelper.commonutil.UiUtils
-import com.wrbug.developerhelper.commonutil.addTo
 import com.wrbug.developerhelper.util.format
 import com.wrbug.developerhelper.util.getString
 import io.reactivex.rxjava3.disposables.CompositeDisposable

@@ -7,16 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.airbnb.lottie.LottieDrawable
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.basecommon.uiThread
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
-import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
 import com.wrbug.developerhelper.commonutil.UiUtils
 import com.wrbug.developerhelper.commonutil.dp2px
-import com.wrbug.developerhelper.commonutil.shell.Callback
-import com.wrbug.developerhelper.commonutil.shell.ShellManager
-import com.wrbug.developerhelper.commonwidget.util.visible
 import com.wrbug.developerhelper.databinding.DialogApkInfoBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
