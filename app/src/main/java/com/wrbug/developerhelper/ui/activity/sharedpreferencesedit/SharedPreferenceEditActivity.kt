@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.basecommon.BaseActivity
@@ -14,6 +15,8 @@ import com.wrbug.developerhelper.commonutil.AppManagerUtils
 import com.wrbug.developerhelper.commonutil.addTo
 import com.wrbug.developerhelper.commonutil.dpInt
 import com.wrbug.developerhelper.commonutil.runOnIO
+import com.wrbug.developerhelper.commonwidget.util.startPageLoading
+import com.wrbug.developerhelper.commonwidget.util.stopPageLoading
 import com.wrbug.developerhelper.databinding.ActivitySharedPreferenceEditBinding
 import com.wrbug.developerhelper.ui.decoration.SpaceItemDecoration
 import com.wrbug.developerhelper.util.OutSharedPreference
@@ -78,11 +81,15 @@ class SharedPreferenceEditActivity : BaseActivity() {
     }
 
     private fun parseXml() {
+        binding.flLoading.startPageLoading()
         outSharedPreference.parse().runOnIO().subscribe({
+            binding.emptyView.isVisible = it.isEmpty()
+            binding.sprefRv.isVisible = it.isNotEmpty()
             saveMenuItem?.isVisible = false
             adapter.setData(it)
+            binding.flLoading.stopPageLoading()
         }, {
-
+            binding.flLoading.stopPageLoading()
         }).addTo(disposable)
     }
 

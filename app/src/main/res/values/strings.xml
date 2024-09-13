@@ -96,4 +96,5 @@
     <string name="backup_success_notice">备份已完成，您可以前往 <i>%1$s</i> 目录查看备份文件</string>
     <string name="backup_waiting">等待中</string>
     <string name="item_zip_backup_file">打包备份文件</string>
+    <string name="no_data">暂无数据</string>
 </resources>

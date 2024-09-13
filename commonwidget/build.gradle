@@ -30,6 +30,9 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':mmkv')
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.12'
+    implementation 'com.airbnb.android:lottie:6.5.2'
     implementation project(':commonutil')
 }

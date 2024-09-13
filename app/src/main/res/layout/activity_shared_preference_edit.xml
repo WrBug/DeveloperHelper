@@ -8,6 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <include layout="@layout/layout_toolbar" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -18,4 +19,17 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/item_shared_preference_info" />
+
+    <com.wrbug.developerhelper.ui.widget.emptyview.EmptyView
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/fl_loading"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

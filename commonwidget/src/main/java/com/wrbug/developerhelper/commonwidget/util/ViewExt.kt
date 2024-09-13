@@ -1,8 +1,14 @@
 package com.wrbug.developerhelper.commonwidget.util
 
+import android.app.ActionBar.LayoutParams
 import android.os.SystemClock
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.core.view.isVisible
+import com.airbnb.lottie.LottieAnimationView
+import com.airbnb.lottie.LottieDrawable
 import com.wrbug.developerhelper.commonutil.ShellUtils
 import com.wrbug.developerhelper.commonwidget.R
 import com.wrbug.developerhelper.mmkv.ConfigKv
@@ -32,6 +38,27 @@ fun View?.setOnRootCheckClickListener(clickListener: (View) -> Unit) {
         }
         clickListener(it)
     }
+}
+
+fun FrameLayout.startPageLoading() {
+    val lottieView = LottieAnimationView(context)
+    lottieView.id = R.id.lottie_loading
+    lottieView.setAnimation(R.raw.lottie_page_loading)
+    lottieView.playAnimation()
+    lottieView.repeatCount = LottieDrawable.INFINITE
+    removeAllViews()
+    isVisible = true
+    addView(
+        lottieView,
+        FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+    )
+}
+
+fun FrameLayout.stopPageLoading() {
+    val lottieView: LottieAnimationView? = findViewById(R.id.lottie_loading)
+    lottieView?.cancelAnimation()
+    removeAllViews()
+    isVisible = false
 }
 
 
