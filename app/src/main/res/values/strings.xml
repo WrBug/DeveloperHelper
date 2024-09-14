@@ -102,4 +102,5 @@
     <string name="app_info_backup_count">%1$d个备份</string>
     <string name="last_backup_time">上一次：%1$s</string>
     <string name="other_function">其他功能</string>
+    <string name="no_need_to_backup">无需备份</string>
 </resources>

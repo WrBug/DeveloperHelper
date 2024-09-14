@@ -7,8 +7,9 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="56dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_default_app_ico_place_holder" />
@@ -26,13 +27,26 @@
         tools:text="@string/app_name" />
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_app_package_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.ItemContent"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tv_app_name"
+        app:layout_constraintTop_toBottomOf="@id/tv_app_name"
+        tools:text="com.wrbug.developerhelper" />
+
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_backup_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
         android:textAppearance="@style/TextAppearance.ItemContent"
         app:layout_constraintStart_toStartOf="@id/tv_app_name"
-        app:layout_constraintTop_toBottomOf="@id/tv_app_name"
+        app:layout_constraintTop_toBottomOf="@id/tv_app_package_name"
         tools:text="@string/app_info_backup_count" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -40,9 +54,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:textStyle="italic"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.ItemContent"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_backup_count"
         app:layout_constraintTop_toTopOf="@+id/tv_backup_count"

@@ -15,6 +15,7 @@ class BackupInfoItemDelegate :
     BaseItemViewBindingDelegate<BackupAppData, ItemBackupAppInfoBinding>() {
     override fun onBindViewHolder(binding: ItemBackupAppInfoBinding, item: BackupAppData) {
         binding.tvAppName.text = item.appName
+        binding.tvAppPackageName.text = item.packageName
         val size = item.backupMap.size
         binding.tvBackupCount.text = SpannableBuilder.with(
             binding.root.context,

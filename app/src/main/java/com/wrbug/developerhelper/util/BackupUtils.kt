@@ -65,14 +65,17 @@ object BackupUtils {
         return null
     }
 
-    fun backupAppAndroidData(dateDir: String, packageName: String): File? {
+    fun backupAppAndroidData(dateDir: String, packageName: String): String? {
         val backupDataDir = File(
             getCurrentAppBackupDir(packageName, dateDir), ANDROID_DATA_TAR
         )
         val dataDir =
             Environment.getExternalStorageDirectory().absolutePath + "/Android/data/" + packageName
+        if (!File(dataDir).exists()) {
+            return ""
+        }
         if (ShellManager.tarCF(backupDataDir.absolutePath, dataDir)) {
-            return backupDataDir
+            return backupDataDir.absolutePath
         }
         return null
     }
@@ -96,6 +99,7 @@ object BackupUtils {
         val configFile = File(getAppBackupDir(apkInfo.applicationInfo.packageName), CONFIG_JSON)
         val info = configFile.safeRead().fromJson<BackupAppInfo>() ?: BackupAppInfo()
         info.appName = apkInfo.getAppName()
+        info.packageName = apkInfo.applicationInfo.packageName
         info.backupMap[tarFile] = backupAppItemInfo
         configFile.writeText(info.toJson().orEmpty())
         return true
@@ -123,7 +127,7 @@ object BackupUtils {
                 val info = configJson.safeRead().fromJson<BackupAppInfo>() ?: return@forEach
                 val map = info.backupMap.filter { File(root, it.key).exists() }
                 val icoFile = File(root, ICON_PNG).takeIf { it.exists() }
-                list.add(BackupAppData(info.appName, root, map, icoFile))
+                list.add(BackupAppData(info.appName, info.packageName, root, map, icoFile))
             }
             it.onSuccess(list)
         }

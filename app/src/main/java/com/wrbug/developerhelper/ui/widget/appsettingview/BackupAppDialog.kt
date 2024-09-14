@@ -234,7 +234,7 @@ class BackupAppDialog : BottomSheetDialogFragment() {
             successCount++
             binding.androidDataProgress.setStatus(
                 BackupProgressView.Status.Success,
-                it.absolutePath
+                it.ifEmpty { getString(R.string.no_need_to_backup) }
             )
         }, {
             hasError = true
