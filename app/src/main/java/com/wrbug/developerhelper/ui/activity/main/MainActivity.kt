@@ -17,6 +17,7 @@ import androidx.core.view.isVisible
 import com.wrbug.developerhelper.BuildConfig
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.base.BaseActivity
+import com.wrbug.developerhelper.base.registerReceiverComp
 import com.wrbug.developerhelper.base.requestStoragePermission
 import com.wrbug.developerhelper.base.setupActionBar
 import com.wrbug.developerhelper.commonutil.ClipboardUtils
@@ -41,7 +42,6 @@ class MainActivity : BaseActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (DeviceUtils.isFloatWindowOpened()) {
@@ -53,7 +53,7 @@ class MainActivity : BaseActivity() {
         initView()
         initListener()
         val filter = IntentFilter(ReceiverConstant.ACTION_ACCESSIBILITY_SERVICE_STATUS_CHANGED)
-        registerReceiver(receiver, filter)
+        registerReceiverComp(receiver, filter)
     }
 
     private fun initView() {

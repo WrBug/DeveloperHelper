@@ -9,19 +9,25 @@ import android.content.IntentFilter
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.base.registerReceiverComp
+import com.wrbug.developerhelper.commonutil.UiUtils
 import com.wrbug.developerhelper.commonutil.addTo
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.util.setOnDoubleCheckClickListener
 import com.wrbug.developerhelper.ui.activity.main.MainActivity
+import com.wrbug.developerhelper.util.DeviceUtils
+import com.wrbug.developerhelper.util.isPortrait
 import com.yhao.floatwindow.FloatWindow
 import com.yhao.floatwindow.Screen
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import org.jetbrains.anko.toast
 
 class FloatWindowService : Service() {
 
@@ -83,8 +89,13 @@ class FloatWindowService : Service() {
                 }
                 sendBroadcast(Intent(ReceiverConstant.ACTION_HIERARCHY_VIEW).setPackage(packageName))
             }
-            FloatWindow.with(applicationContext).setView(it).setWidth(Screen.width, 0.1f)
-                .setHeight(Screen.width, 0.1f).setY(Screen.height, 0.3f).setTag(FLOAT_BUTTON)
+            val screen = if (isPortrait()) {
+                UiUtils.getDeviceWidth() * 0.1
+            } else {
+                UiUtils.getDeviceHeight() * 0.1
+            }.toInt()
+            FloatWindow.with(applicationContext).setView(it).setWidth(screen)
+                .setHeight(screen).setY(Screen.height, 0.3f).setTag(FLOAT_BUTTON)
                 .setDesktopShow(true).build()
 
         }
@@ -152,11 +163,10 @@ class FloatWindowService : Service() {
         FloatWindow.get(FLOAT_BUTTON).hide()
     }
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun initReceiver() {
         val filter = IntentFilter(ReceiverConstant.ACTION_SET_FLOAT_BUTTON_VISIBLE)
         filter.addAction(ReceiverConstant.ACTION_ADB_WIFI_CLICKED)
-        registerReceiver(receiver, filter)
+        registerReceiverComp(receiver, filter)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

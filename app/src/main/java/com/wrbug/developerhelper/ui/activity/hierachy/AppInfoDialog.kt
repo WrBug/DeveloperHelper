@@ -12,6 +12,7 @@ import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.commonutil.UiUtils
 import com.wrbug.developerhelper.commonutil.dp2px
 import com.wrbug.developerhelper.databinding.DialogApkInfoBinding
+import com.wrbug.developerhelper.util.isPortrait
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 class AppInfoDialog : DialogFragment() {
@@ -28,7 +29,7 @@ class AppInfoDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog)
+        setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
     }
 
     override fun onAttach(activity: Activity) {
@@ -45,10 +46,16 @@ class AppInfoDialog : DialogFragment() {
         binding = DialogApkInfoBinding.inflate(inflater, container, false)
         dialog?.window?.run {
             val layoutParams = attributes
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-            layoutParams.height = UiUtils.getDeviceHeight() / 2 + dp2px(40F)
+            if (isPortrait()) {
+                layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                layoutParams.height = UiUtils.getDeviceHeight() / 2 + dp2px(40F)
+                setGravity(Gravity.TOP)
+            } else {
+                layoutParams.width = UiUtils.getDeviceWidth() / 2
+                layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+                setGravity(Gravity.END)
+            }
             attributes = layoutParams
-            setGravity(Gravity.TOP)
         }
         return binding.root
     }

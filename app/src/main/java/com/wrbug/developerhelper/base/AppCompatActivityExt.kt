@@ -16,8 +16,10 @@
 package com.wrbug.developerhelper.base
 
 import android.Manifest
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -112,5 +114,17 @@ fun Context.requestStoragePermission(callback: () -> Unit) {
                 }
             })
         }
+    }
+}
+
+fun Context.registerReceiverComp(
+    broadcastReceiver: BroadcastReceiver,
+    intentFilter: IntentFilter,
+    flags: Int = AppCompatActivity.RECEIVER_NOT_EXPORTED
+) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        registerReceiver(broadcastReceiver, intentFilter, flags)
+    } else {
+        registerReceiver(broadcastReceiver, intentFilter)
     }
 }

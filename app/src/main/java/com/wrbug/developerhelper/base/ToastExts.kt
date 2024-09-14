@@ -18,7 +18,6 @@ fun View.showToast(id: Int) {
 
 fun Context.showToast(msg: CharSequence?) {
     FlexibleToast.toastShow(this, msg.toString())
-
 }
 
 

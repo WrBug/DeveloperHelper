@@ -1,6 +1,5 @@
 package com.wrbug.developerhelper.ui.activity.hierachy
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -10,16 +9,16 @@ import android.os.Bundle
 import android.view.View
 import com.wrbug.developerhelper.base.BaseActivity
 import com.wrbug.developerhelper.base.entry.HierarchyNode
+import com.wrbug.developerhelper.base.registerReceiverComp
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.constant.ReceiverConstant.ACTION_FINISH_HIERACHY_Activity
 import com.wrbug.developerhelper.databinding.ActivityHierarchyBinding
 import com.wrbug.developerhelper.service.FloatWindowService
 import com.wrbug.developerhelper.ui.widget.hierarchyView.HierarchyView
-import com.wrbug.developerhelper.ui.widget.layoutinfoview.LayoutInfoView
-import com.wrbug.developerhelper.ui.widget.layoutinfoview.OnNodeChangedListener
+import com.wrbug.developerhelper.ui.widget.layoutinfoview.LayoutInfoDialog
 import java.lang.ref.WeakReference
 
-class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener, OnNodeChangedListener {
+class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
 
     private val apkInfo: ApkInfo? by lazy {
         intent?.getParcelableExtra("apkInfo")
@@ -62,7 +61,6 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener, OnNodeChan
         }
     }
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHierarchyBinding.inflate(layoutInflater)
@@ -70,7 +68,7 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener, OnNodeChan
         checkNodeList()
         val filter = IntentFilter(ACTION_FINISH_HIERACHY_Activity)
         receiver.setActivity(this)
-        registerReceiver(receiver, filter)
+        registerReceiverComp(receiver, filter)
         showAppInfoDialog()
         FloatWindowService.setFloatButtonVisible(this, false)
     }
@@ -110,9 +108,9 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener, OnNodeChan
             override fun onClick(node: HierarchyNode, parentNode: HierarchyNode?) {
                 binding.hierarchyDetailView.visibility = View.VISIBLE
                 binding.hierarchyDetailView.setNode(node, parentNode)
-                val layoutInfoView = LayoutInfoView(context, nodeList, node)
-                layoutInfoView.setOnNodeChangedListener(this@HierarchyActivity)
-                layoutInfoView.show()
+                LayoutInfoDialog.show(supportFragmentManager, nodeList, node) { node, parentNode ->
+                    binding.hierarchyDetailView.setNode(node, parentNode)
+                }
             }
 
             override fun onSelectedNodeChanged(node: HierarchyNode, parentNode: HierarchyNode?) {
@@ -120,10 +118,6 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener, OnNodeChan
                 binding.hierarchyDetailView.setNode(node, parentNode)
             }
         })
-    }
-
-    override fun onChanged(node: HierarchyNode, parentNode: HierarchyNode?) {
-        binding.hierarchyDetailView.setNode(node, parentNode)
     }
 
     override fun onDestroy() {

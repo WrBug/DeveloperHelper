@@ -14,7 +14,6 @@ object AccessibilityManager {
         return ShellManager.openAccessibilityService().doOnSuccess {
             if (!it) {
                 context?.showToast(getString(R.string.please_open_accessbility_service))
-                startAccessibilitySetting(context)
             }
         }
     }

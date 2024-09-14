@@ -15,6 +15,7 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.wrbug.developerhelper.base.BaseApp
 import com.wrbug.developerhelper.base.entry.HierarchyNode
+import com.wrbug.developerhelper.base.registerReceiverComp
 import com.wrbug.developerhelper.commonutil.AppInfoManager
 import com.wrbug.developerhelper.commonutil.UiUtils
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
@@ -122,11 +123,7 @@ class DeveloperHelperAccessibilityService : AccessibilityService() {
         super.onCreate()
         val filter = IntentFilter()
         filter.addAction(ReceiverConstant.ACTION_HIERARCHY_VIEW)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
-        } else {
-            registerReceiver(receiver, filter)
-        }
+        registerReceiverComp(receiver, filter)
         sendStatusBroadcast(true)
         serviceRunning = true
         nodeMap.clear()
