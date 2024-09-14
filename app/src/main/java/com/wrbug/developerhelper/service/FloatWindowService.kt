@@ -18,6 +18,7 @@ import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.base.registerReceiverComp
 import com.wrbug.developerhelper.commonutil.UiUtils
 import com.wrbug.developerhelper.commonutil.addTo
+import com.wrbug.developerhelper.commonutil.dpInt
 import com.wrbug.developerhelper.constant.ReceiverConstant
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.util.setOnDoubleCheckClickListener
@@ -26,6 +27,8 @@ import com.wrbug.developerhelper.util.DeviceUtils
 import com.wrbug.developerhelper.util.isPortrait
 import com.yhao.floatwindow.FloatWindow
 import com.yhao.floatwindow.Screen
+import com.yhao.floatwindow.ViewStateListener
+import com.yhao.floatwindow.ViewStateListenerAdapter
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.jetbrains.anko.toast
 
@@ -96,7 +99,19 @@ class FloatWindowService : Service() {
             }.toInt()
             FloatWindow.with(applicationContext).setView(it).setWidth(screen)
                 .setHeight(screen).setY(Screen.height, 0.3f).setTag(FLOAT_BUTTON)
-                .setDesktopShow(true).build()
+                .setDesktopShow(true).setViewStateListener(object : ViewStateListenerAdapter() {
+                    override fun onPositionUpdate(x: Int, y: Int) {
+                        val minY = UiUtils.getStatusHeight() + 10.dpInt(applicationContext)
+                        val maxY = UiUtils.getDeviceHeight() - 60.dpInt(applicationContext)
+                        if (y < minY) {
+                            FloatWindow.get(FLOAT_BUTTON).updateY(y)
+                            return
+                        }
+                        if (y > maxY) {
+                            FloatWindow.get(FLOAT_BUTTON).updateY(maxY)
+                        }
+                    }
+                }).build()
 
         }
     }
