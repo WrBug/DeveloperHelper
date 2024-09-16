@@ -3,6 +3,7 @@ package com.wrbug.developerhelper.ui.decoration
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.wrbug.developerhelper.commonutil.dpInt
 
 /**
  * SpaceItemDecoration
@@ -18,7 +19,16 @@ class SpaceItemDecoration(
     private var firstTopSpace: Int = 0,
     private var lastBottomSpace: Int = 0,
 ) : RecyclerView.ItemDecoration() {
-
+    companion object {
+        val standard = SpaceItemDecoration(
+            24.dpInt(),
+            12.dpInt(),
+            24.dpInt(),
+            12.dpInt(),
+            24.dpInt(),
+            40.dpInt()
+        )
+    }
 
     constructor(space: Int) : this(
         bottomSpace = space,

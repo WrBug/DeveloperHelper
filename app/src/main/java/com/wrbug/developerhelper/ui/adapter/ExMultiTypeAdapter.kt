@@ -7,6 +7,13 @@ import com.wrbug.developerhelper.ui.adapter.delegate.EmptyViewItemDelegate
 import com.wrbug.developerhelper.ui.adapter.delegate.LoadingItemDelegate
 
 class ExMultiTypeAdapter : MultiTypeAdapter() {
+
+    companion object {
+        fun get() = lazy {
+            ExMultiTypeAdapter()
+        }
+    }
+
     init {
         register(EmptyViewItemDelegate())
         register(LoadingItemDelegate())

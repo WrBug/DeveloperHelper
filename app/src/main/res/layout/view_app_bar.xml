@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
+    tools:background="@color/colorPrimaryDark"
     tools:layout_height="?attr/actionBarSize"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
@@ -20,32 +20,44 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@android:color/white" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_title"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:maxLines="1"
+        android:orientation="vertical"
         android:paddingHorizontal="56dp"
-        android:text="@string/app_name"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/iv_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/iv_back"
-        app:layout_constraintTop_toTopOf="@+id/iv_back" />
+        app:layout_constraintTop_toTopOf="@+id/iv_back">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_right_btn"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            tools:text="@string/app_name" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_sub_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/material_text_color_white_secondary_text"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:text="@string/app_name" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <FrameLayout
+        android:id="@+id/fl_right"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginEnd="24dp"
-        android:gravity="center"
-        android:text="功能"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-</merge>
+</androidx.constraintlayout.widget.ConstraintLayout>

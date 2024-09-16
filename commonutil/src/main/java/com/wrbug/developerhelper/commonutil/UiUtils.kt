@@ -11,7 +11,7 @@ fun Fragment.dp2px(dpVal: Float): Int = UiUtils.dp2px(activity!!, dpVal)
 fun Dialog.dp2px(dpVal: Float): Int = UiUtils.dp2px(context, dpVal)
 fun View.dp2px(dpVal: Float): Int = UiUtils.dp2px(context, dpVal)
 fun Float.dpInt(context: Context) = UiUtils.dp2px(context, this)
-fun Int.dpInt(context: Context) = UiUtils.dp2px(context, toFloat())
+fun Int.dpInt(context: Context = CommonUtils.application) = UiUtils.dp2px(context, toFloat())
 
 object UiUtils {
     private var statusBarHeight: Int = -1

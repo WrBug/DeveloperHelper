@@ -62,8 +62,13 @@ fun FrameLayout.stopPageLoading() {
     isVisible = false
 }
 
-fun ImageView.loadImage(url: Any) {
-    Glide.with(this).load(url).into(this)
+
+fun ImageView.loadImage(url: Any?, default: Int? = null) {
+    Glide.with(this).load(url).apply {
+        if (default != null) {
+            error(default)
+        }
+    }.into(this)
 }
 
 

@@ -62,6 +62,7 @@
             android:exported="true"
             android:foregroundServiceType="dataSync"
             android:process=":floatWindow" />
+
         <activity
             android:name=".ui.activity.sharedpreferencesedit.SharedPreferenceEditActivity"
             android:exported="false" />
@@ -70,6 +71,9 @@
             android:exported="false" />
         <activity
             android:name=".ui.activity.appbackup.BackupAppActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.appbackup.AppBackupDetailActivity"
             android:exported="false" />
 
         <provider

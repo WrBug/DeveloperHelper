@@ -10,8 +10,9 @@ import com.wrbug.developerhelper.ui.adapter.delegate.BaseItemViewBindingDelegate
 import com.wrbug.developerhelper.util.format
 import com.wrbug.developerhelper.util.getString
 import com.wrbug.developerhelper.util.loadImage
+import com.wrbug.developerhelper.util.setOnDoubleCheckClickListener
 
-class BackupInfoItemDelegate :
+class BackupInfoItemDelegate(private val listener: (BackupAppData) -> Unit) :
     BaseItemViewBindingDelegate<BackupAppData, ItemBackupAppInfoBinding>() {
     override fun onBindViewHolder(binding: ItemBackupAppInfoBinding, item: BackupAppData) {
         binding.tvAppName.text = item.appName
@@ -23,10 +24,9 @@ class BackupInfoItemDelegate :
         ).addSpanWithBold(size.toString()).build()
         val time = item.backupMap.values.maxByOrNull { it.time }?.time ?: 0
         binding.tvLastBackupTime.text = R.string.last_backup_time.getString(time.format())
-        if (item.iconPath != null) {
-            binding.ivIcon.loadImage(item.iconPath)
-        } else {
-            binding.ivIcon.setImageResource(R.drawable.ic_default_app_ico_place_holder)
+        binding.ivIcon.loadImage(item.iconPath, R.drawable.ic_default_app_ico_place_holder)
+        binding.root.setOnDoubleCheckClickListener {
+            listener(item)
         }
     }
 

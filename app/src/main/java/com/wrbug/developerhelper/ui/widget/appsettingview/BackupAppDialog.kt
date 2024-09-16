@@ -264,6 +264,6 @@ class BackupAppDialog : BottomSheetDialogFragment() {
     private fun runOnIo() = if (apkInfo == null) {
         Single.error(Exception())
     } else {
-        Single.just(apkInfo!!).subscribeOn(Schedulers.io())
+        Single.just(apkInfo!!).subscribeOn(Schedulers.newThread())
     }
 }

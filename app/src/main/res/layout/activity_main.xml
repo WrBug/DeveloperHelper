@@ -106,9 +106,9 @@
                 app:checkable="false"
                 app:icoTint="@color/iconPrimary"
                 app:src="@drawable/ic_application"
-                app:summary="管理/恢复已备份的应用"
+                app:summary="@string/backup_managet_summary"
                 app:switchVisible="false"
-                app:title="备份管理" />
+                app:title="@string/backup_manager" />
         </LinearLayout>
     </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

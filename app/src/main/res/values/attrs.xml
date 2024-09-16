@@ -12,6 +12,7 @@
     </declare-styleable>
     <declare-styleable name="AppBar">
         <attr name="title" />
+        <attr name="subTitle" format="string" />
         <attr name="showBack" format="boolean" />
     </declare-styleable>
 </resources>

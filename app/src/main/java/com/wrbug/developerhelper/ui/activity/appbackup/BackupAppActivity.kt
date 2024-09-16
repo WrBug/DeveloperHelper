@@ -18,9 +18,7 @@ class BackupAppActivity : BaseActivity() {
     private val binding by lazy {
         ActivityBackupAppBinding.inflate(layoutInflater)
     }
-    private val adapter by lazy {
-        ExMultiTypeAdapter()
-    }
+    private val adapter by ExMultiTypeAdapter.get()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,17 +30,10 @@ class BackupAppActivity : BaseActivity() {
     private fun initView() {
         binding.rvAppList.layoutManager = LinearLayoutManager(this)
         binding.rvAppList.adapter = adapter
-        binding.rvAppList.addItemDecoration(
-            SpaceItemDecoration(
-                24.dpInt(this),
-                12.dpInt(this),
-                24.dpInt(this),
-                12.dpInt(this),
-                24.dpInt(this),
-                40.dpInt(this)
-            )
-        )
-        adapter.register(BackupInfoItemDelegate())
+        binding.rvAppList.addItemDecoration(SpaceItemDecoration.standard)
+        adapter.register(BackupInfoItemDelegate {
+            AppBackupDetailActivity.start(this, it)
+        })
     }
 
     private fun loadData() {
