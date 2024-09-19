@@ -1,8 +1,6 @@
 package com.wrbug.developerhelper.commonutil.shell
 
-import com.jaredrummler.android.shell.CommandResult
 import com.wrbug.developerhelper.commonutil.Constant
-import com.wrbug.developerhelper.commonutil.ShellUtils
 import com.wrbug.developerhelper.commonutil.entity.LsFileInfo
 import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
 import com.wrbug.developerhelper.commonutil.runOnIO
@@ -31,7 +29,7 @@ object ShellManager {
         arrayOf("setprop service.adb.tcp.port 5555", "stop adbd", "start adbd")
 
     fun getTopActivity(): Single<TopActivityInfo> {
-        return ShellUtils.runWithSuAsync(SHELL_TOP_ACTIVITY).map {
+        return ShellUtils.runWithSuAsync(SHELL_TOP_ACTIVITY, useBusyBox = false).map {
             getTopActivity(it)
         }.runOnIO()
     }
@@ -93,13 +91,22 @@ object ShellManager {
 
     fun getPid(packageName: String): String {
         var result: CommandResult =
-            ShellUtils.runWithSu(String.format(SHELL_PROCESS_PID_1, packageName))
+            ShellUtils.runWithSu(
+                String.format(SHELL_PROCESS_PID_1, packageName),
+                useBusyBox = false
+            )
         if (result.isSuccessful) {
             return result.getStdout()
         }
-        result = ShellUtils.runWithSu(String.format(SHELL_PROCESS_PID_2, packageName))
+        result = ShellUtils.runWithSu(
+            String.format(SHELL_PROCESS_PID_2, packageName),
+            useBusyBox = false
+        )
         if (result.isSuccessful.not()) {
-            result = ShellUtils.runWithSu(String.format(SHELL_PROCESS_PID_3, packageName))
+            result = ShellUtils.runWithSu(
+                String.format(SHELL_PROCESS_PID_3, packageName),
+                useBusyBox = false
+            )
         }
         if (result.isSuccessful.not()) {
             return ""
@@ -129,9 +136,10 @@ object ShellManager {
     }
 
     fun openAccessibilityService(): Single<Boolean> {
-        return ShellUtils.runWithSuAsync(*SHELL_OPEN_ACCESSiBILITY_SERVICE).map {
-            it.isSuccessful && it.getStdout().isEmpty()
-        }.onErrorReturn { false }.runOnIO()
+        return ShellUtils.runWithSuAsync(*SHELL_OPEN_ACCESSiBILITY_SERVICE, useBusyBox = false)
+            .map {
+                it.isSuccessful && it.getStdout().isEmpty()
+            }.onErrorReturn { false }.runOnIO()
     }
 
     fun catFile(filaPath: String): String {
@@ -188,29 +196,24 @@ object ShellManager {
         return result.stdout
     }
 
-    fun findApkDir(packageName: String): String {
-        val cmd = "ls /data/app/|grep $packageName"
-        val dir = ShellUtils.runWithSu(cmd).getStdout()
-        return "/data/app/$dir/base.apk"
-    }
-
-    fun uninstallApp(packageName: String): Boolean {
-        val result = ShellUtils.runWithSu(String.format(SHELL_UNINSTALL_APP, packageName))
-        return result.isSuccessful
-    }
-
     fun clearAppData(packageName: String): Boolean {
-        val result = ShellUtils.runWithSu(String.format(SHELL_CLEAR_APP_DATA, packageName))
+        val result = ShellUtils.runWithSu(
+            String.format(SHELL_CLEAR_APP_DATA, packageName),
+            useBusyBox = false
+        )
         return result.isSuccessful
     }
 
     fun forceStopApp(packageName: String): Boolean {
-        val result = ShellUtils.runWithSu(String.format(SHELL_FORCE_STOP_APP, packageName))
+        val result = ShellUtils.runWithSu(
+            String.format(SHELL_FORCE_STOP_APP, packageName),
+            useBusyBox = false
+        )
         return result.isSuccessful
     }
 
     fun openAdbWifi(): Boolean {
-        val result = ShellUtils.runWithSu(*SHELL_OPEN_ADB_WIFI)
-        return result.isSuccessful
+//        val result = ShellUtils.runWithSu(*SHELL_OPEN_ADB_WIFI)
+        return false
     }
 }

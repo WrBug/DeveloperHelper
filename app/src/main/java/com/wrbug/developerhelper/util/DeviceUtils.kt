@@ -6,7 +6,7 @@ import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.WindowManager
 import com.wrbug.developerhelper.base.BaseApp
-import com.wrbug.developerhelper.commonutil.ShellUtils
+import com.wrbug.developerhelper.commonutil.shell.ShellUtils
 
 
 object DeviceUtils {

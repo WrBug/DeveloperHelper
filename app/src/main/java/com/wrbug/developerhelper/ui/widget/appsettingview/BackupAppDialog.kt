@@ -85,6 +85,7 @@ class BackupAppDialog : BottomSheetDialogFragment() {
         if (hasError) {
             binding.tvNotice.isVisible = false
             binding.btnExit.isVisible = true
+            binding.zipFileProgress.setStatus(BackupProgressView.Status.Canceled)
             return
         }
         if (successCount < 3) {

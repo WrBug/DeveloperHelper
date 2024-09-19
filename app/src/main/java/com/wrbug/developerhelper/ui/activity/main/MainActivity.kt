@@ -1,7 +1,6 @@
 package com.wrbug.developerhelper.ui.activity.main
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -14,14 +13,12 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
-import com.wrbug.developerhelper.BuildConfig
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.base.BaseActivity
 import com.wrbug.developerhelper.base.registerReceiverComp
 import com.wrbug.developerhelper.base.requestStoragePermission
 import com.wrbug.developerhelper.base.setupActionBar
 import com.wrbug.developerhelper.commonutil.ClipboardUtils
-import com.wrbug.developerhelper.commonutil.shell.Callback
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.util.setOnDoubleCheckClickListener
 import com.wrbug.developerhelper.constant.ReceiverConstant
@@ -34,7 +31,6 @@ import com.wrbug.developerhelper.service.DeveloperHelperAccessibilityService
 import com.wrbug.developerhelper.service.FloatWindowService
 import com.wrbug.developerhelper.ui.activity.appbackup.BackupAppActivity
 import com.wrbug.developerhelper.util.DeviceUtils
-import com.wrbug.developerhelper.util.UpdateUtils
 
 class MainActivity : BaseActivity() {
     private val configKv: ConfigKv = MMKVManager.get(ConfigKv::class.java)
@@ -183,24 +179,24 @@ class MainActivity : BaseActivity() {
         }.create().show()
 
     private fun checkUpdate(showSnack: Boolean = false) {
-        if (showSnack) {
-            showSnack(getString(R.string.checking_update))
-        }
-        UpdateUtils.checkUpdate(object : Callback<VersionInfo> {
-            override fun onSuccess(data: VersionInfo) {
-                if (BuildConfig.VERSION_NAME == data.versionName) {
-                    showSnack(getString(R.string.no_new_version))
-                    return
-                }
-                showUpdateDialog(data)
-            }
-
-            override fun onFailed(msg: String) {
-                if (showSnack) {
-                    showSnack(getString(R.string.check_update_failed))
-                }
-            }
-        })
+//        if (showSnack) {
+//            showSnack(getString(R.string.checking_update))
+//        }
+//        UpdateUtils.checkUpdate(object : Callback<VersionInfo> {
+//            override fun onSuccess(data: VersionInfo) {
+//                if (BuildConfig.VERSION_NAME == data.versionName) {
+//                    showSnack(getString(R.string.no_new_version))
+//                    return
+//                }
+//                showUpdateDialog(data)
+//            }
+//
+//            override fun onFailed(msg: String) {
+//                if (showSnack) {
+//                    showSnack(getString(R.string.check_update_failed))
+//                }
+//            }
+//        })
     }
 
     private fun showUpdateDialog(data: VersionInfo) =

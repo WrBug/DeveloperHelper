@@ -75,10 +75,17 @@ class BackupProgressView @JvmOverloads constructor(
                 binding.tvStatus.text = context.getString(R.string.backup_waiting)
                 binding.ivStatus.setImageResource(R.drawable.ic_waiting)
                 binding.ivStatus.imageTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.material_color_grey_400
-                    )
+                    ContextCompat.getColor(context, R.color.material_color_grey_400)
+                )
+            }
+
+            Status.Canceled -> {
+                binding.progress.isVisible = false
+                binding.ivStatus.isVisible = true
+                binding.ivStatus.setImageResource(R.drawable.ic_canceled)
+                binding.tvStatus.text = context.getString(R.string.canceled)
+                binding.ivStatus.imageTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(context, R.color.material_color_grey_400)
                 )
             }
         }
@@ -86,6 +93,6 @@ class BackupProgressView @JvmOverloads constructor(
 
 
     enum class Status {
-        Processing, Success, Failed, Ignore, Waiting
+        Processing, Success, Failed, Ignore, Waiting, Canceled
     }
 }

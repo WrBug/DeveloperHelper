@@ -105,4 +105,5 @@
     <string name="no_need_to_backup">无需备份</string>
     <string name="backup_manager">备份管理</string>
     <string name="backup_managet_summary">管理/恢复已备份的应用</string>
+    <string name="canceled">已取消</string>
 </resources>
