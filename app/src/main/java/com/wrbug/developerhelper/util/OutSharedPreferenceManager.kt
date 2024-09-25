@@ -73,6 +73,13 @@ class OutSharedPreference(private val context: Context, private val filePath: St
                             sharedPreferenceItemInfo.getValidValue().toFloat()
                         )
                     }
+
+                    "set" -> {
+                        edit.putStringSet(
+                            sharedPreferenceItemInfo.key,
+                            sharedPreferenceItemInfo.getValidValue().split(",").toSet()
+                        )
+                    }
                 }
             }
             edit.commit()

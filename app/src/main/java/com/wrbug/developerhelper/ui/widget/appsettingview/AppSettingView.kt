@@ -175,7 +175,7 @@ class AppSettingView : ScrollView {
         return true
     }
 
-    fun activityFinish() {
+    private fun activityFinish() {
         if (context is Activity) {
             (context as Activity).finish()
         }

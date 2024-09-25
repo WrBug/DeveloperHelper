@@ -24,7 +24,7 @@ class SharedPreferenceListAdapter(val context: Context) :
     fun setData(array: Array<SharedPreferenceItemInfo>) {
         data.clear()
         changedFlag = 0
-        data.addAll(array.sortedBy { it.key })
+        data.addAll(array.sortedBy { it.key.lowercase() })
         notifyDataSetChanged()
     }
 

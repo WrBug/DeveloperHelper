@@ -23,7 +23,7 @@ object AppManagerUtils {
     }
 
     fun restartApp(context: Context, packageName: String) {
-        if (!AppManagerUtils.forceStopApp(packageName)) {
+        if (!forceStopApp(packageName)) {
             Toast.makeText(context, "重启失败", Toast.LENGTH_SHORT).show()
             return
         }

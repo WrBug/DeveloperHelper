@@ -3,6 +3,7 @@ package com.wrbug.developerhelper.util
 import com.wrbug.developerhelper.model.entity.SharedPreferenceItemInfo
 import org.dom4j.DocumentHelper
 import org.dom4j.Element
+import org.dom4j.tree.DefaultElement
 
 /**
  * xml相关的工具类
@@ -28,6 +29,11 @@ object XmlUtil {
                 if (type == "string") {
                     info.value = child.text
                     info.newValue = child.text
+                } else if (type == "set") {
+                    info.value = child.content().filterIsInstance(DefaultElement::class.java)
+                        .joinToString(",") { it.text }
+                    info.newValue = child.content().filterIsInstance(DefaultElement::class.java)
+                        .joinToString(",") { it.text }
                 } else {
                     info.value = child.attributeValue("value")
                     info.newValue = child.attributeValue("value")
