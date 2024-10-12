@@ -11,11 +11,11 @@ import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.ui.widget.helper.CanvasHelper
 import com.wrbug.developerhelper.commonutil.UiUtils
 
-class HierarchyDetailView: FrameLayout {
+class HierarchyDetailView : FrameLayout {
 
     private val paint: Paint by lazy {
         val paint = Paint()
-        paint.color = context.resources.getColor(R.color.colorAccent)
+        paint.color = context.resources.getColor(R.color.material_color_blue_800)
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = 3F
         paint
@@ -31,11 +31,11 @@ class HierarchyDetailView: FrameLayout {
     private var parentHierarchyNode: HierarchyNode? = null
     private var hierarchyNode: HierarchyNode? = null
 
-    constructor(context: Context): super(context) {
+    constructor(context: Context) : super(context) {
         initView()
     }
 
-    constructor(context: Context, attrs: AttributeSet): super(context, attrs) {
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         initView()
     }
 
@@ -53,10 +53,10 @@ class HierarchyDetailView: FrameLayout {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (hierarchyNode != null) {
-            drawNode(canvas)
             if (hierarchyNode?.parentId!! > -1) {
                 drawParentNode(canvas)
             }
+            drawNode(canvas)
         }
     }
 
