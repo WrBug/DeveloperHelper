@@ -13,7 +13,7 @@ import com.wrbug.developerhelper.base.registerReceiverComp
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.constant.ReceiverConstant.ACTION_FINISH_HIERACHY_Activity
 import com.wrbug.developerhelper.databinding.ActivityHierarchyBinding
-import com.wrbug.developerhelper.service.FloatWindowService
+import com.wrbug.developerhelper.service.FloatingWindowService
 import com.wrbug.developerhelper.ui.widget.hierarchyView.HierarchyView
 import com.wrbug.developerhelper.ui.widget.layoutinfoview.LayoutInfoDialog
 import java.lang.ref.WeakReference
@@ -70,7 +70,7 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
         receiver.setActivity(this)
         registerReceiverComp(receiver, filter)
         showAppInfoDialog()
-        FloatWindowService.setFloatButtonVisible(this, false)
+        FloatingWindowService.setFloatButtonVisible(this, false)
     }
 
     private fun checkNodeList() {
@@ -121,7 +121,7 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
     }
 
     override fun onDestroy() {
-        FloatWindowService.setFloatButtonVisible(this, true)
+        FloatingWindowService.setFloatButtonVisible(this, true)
         unregisterReceiver(receiver)
         super.onDestroy()
     }

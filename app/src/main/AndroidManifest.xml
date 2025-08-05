@@ -55,11 +55,10 @@
         <activity
             android:name=".ui.activity.hierachy.HierarchyActivity"
             android:theme="@style/translucent" />
-
         <service
-            android:name=".service.FloatWindowService"
+            android:name=".service.FloatingWindowService"
             android:enabled="true"
-            android:exported="true"
+            android:exported="false"
             android:foregroundServiceType="dataSync"
             android:process=":floatWindow" />
 

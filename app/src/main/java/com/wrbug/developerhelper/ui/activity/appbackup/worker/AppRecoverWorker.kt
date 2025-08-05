@@ -8,6 +8,7 @@ import androidx.work.WorkerParameters
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.base.ExtraKey
 import com.wrbug.developerhelper.commonutil.AppInfoManager
+import com.wrbug.developerhelper.commonutil.Constant
 import com.wrbug.developerhelper.commonutil.createNotification
 import com.wrbug.developerhelper.commonutil.fromJson
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
@@ -67,9 +68,48 @@ class AppRecoverWorker(appContext: Context, params: WorkerParameters) :
                 return@withContext Result.success()
             }
             sendStatus(RecoverTimeLineItem.Status.Done)
+            if (!recoverData()) {
+                sendStatus(RecoverTimeLineItem.Status.Failed)
+                sendComplete()
+                return@withContext Result.success()
+            }
+            if (!recoverAndroidData()) {
+                sendStatus(RecoverTimeLineItem.Status.Failed)
+                sendComplete()
+                return@withContext Result.success()
+            }
+            sendStatus(RecoverTimeLineItem.Status.Done)
             sendComplete()
             Result.success()
         }
+    }
+
+    private fun recoverAndroidData(): Boolean {
+        if (data?.recoverAndroidData != true) {
+            return true
+        }
+        step++
+        sendStatus(RecoverTimeLineItem.Status.Running)
+        val androidDataDir = "/sdcard/Android/data/" + data?.appItemInfo?.packageName
+        if (ShellManager.mkDir(androidDataDir)) {
+            return false
+        }
+        return ShellManager.tarXF(tmpDir + "/" + data?.appItemInfo?.androidDataFile, androidDataDir)
+    }
+
+    private fun recoverData(): Boolean {
+        if (data?.recoverData != true) {
+            return true
+        }
+        step++
+        sendStatus(RecoverTimeLineItem.Status.Running)
+        val dataDir = Constant.getDataDir(data?.appItemInfo?.packageName.orEmpty())
+        val map =
+            ShellManager.getDataDirUserAndGroup(dataDir)
+        if (!ShellManager.tarXF(tmpDir + "/" + data?.appItemInfo?.dataFile, "$dataDir/")) {
+            return false
+        }
+        return ShellManager.chownDataDir(dataDir, map)
     }
 
     private fun recoverApk(): Boolean {

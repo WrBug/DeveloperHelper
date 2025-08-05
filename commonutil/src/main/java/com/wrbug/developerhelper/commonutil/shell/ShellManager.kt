@@ -3,6 +3,7 @@ package com.wrbug.developerhelper.commonutil.shell
 import com.wrbug.developerhelper.commonutil.Constant
 import com.wrbug.developerhelper.commonutil.entity.LsFileInfo
 import com.wrbug.developerhelper.commonutil.entity.TopActivityInfo
+import com.wrbug.developerhelper.commonutil.ifNotEmpty
 import com.wrbug.developerhelper.commonutil.runOnIO
 import io.reactivex.rxjava3.core.Single
 import java.io.File
@@ -239,5 +240,39 @@ object ShellManager {
     fun openAdbWifi(): Boolean {
 //        val result = ShellUtils.runWithSu(*SHELL_OPEN_ADB_WIFI)
         return false
+    }
+
+
+    fun chownDataDir(dir: String, map: Map<String, Pair<String, String>>): Boolean {
+        val result = ShellUtils.runWithSu("ls $dir")
+        if (!result.isSuccessful) {
+            return false
+        }
+
+        val dirs = arrayOf("") + result.stdout
+        dirs.forEach {
+            val (user, group) = map[it] ?: map[""] ?: return@forEach
+            ShellUtils.runWithSu("chown -R $user:$group $dir${it.ifNotEmpty { "/$it" }}")
+        }
+        return true
+    }
+
+    fun getDataDirUserAndGroup(dir: String): Map<String, Pair<String, String>> {
+        val result = ShellUtils.runWithSu("ls $dir")
+        if (!result.isSuccessful) {
+            return emptyMap()
+        }
+        val dirs = result.stdout
+        val map = hashMapOf<String, Pair<String, String>>()
+        ShellUtils.runWithSu("stat -c \"%U %G\" $dir").takeIf { it.isSuccessful }?.let {
+            map[""] = it.getStdout().split(" ").let { it[0] to it[1] }
+        }
+        dirs.forEach {
+            val r = ShellUtils.runWithSu("stat -c \"%U %G\" $dir/$it")
+            if (r.isSuccessful) {
+                map[it] = r.getStdout().split(" ").let { it[0] to it[1] }
+            }
+        }
+        return map
     }
 }

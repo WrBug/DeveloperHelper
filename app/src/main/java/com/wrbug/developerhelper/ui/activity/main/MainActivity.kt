@@ -28,7 +28,7 @@ import com.wrbug.developerhelper.mmkv.manager.MMKVManager
 import com.wrbug.developerhelper.model.entity.VersionInfo
 import com.wrbug.developerhelper.service.AccessibilityManager
 import com.wrbug.developerhelper.service.DeveloperHelperAccessibilityService
-import com.wrbug.developerhelper.service.FloatWindowService
+import com.wrbug.developerhelper.service.FloatingWindowService
 import com.wrbug.developerhelper.ui.activity.appbackup.BackupAppActivity
 import com.wrbug.developerhelper.util.DeviceUtils
 
@@ -41,7 +41,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (DeviceUtils.isFloatWindowOpened()) {
-            FloatWindowService.start(this)
+            FloatingWindowService.start(this)
         }
         setContentView(binding.root)
         setupActionBar(R.id.toolbar)
@@ -66,9 +66,9 @@ class MainActivity : BaseActivity() {
     private fun initListener() {
         binding.floatWindowSettingView.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked && DeviceUtils.isFloatWindowOpened()) {
-                FloatWindowService.start(this)
+                FloatingWindowService.start(this)
             } else {
-                FloatWindowService.stop(this)
+                FloatingWindowService.stop(this)
             }
         }
         binding.backupAppSettingView.setOnDoubleCheckClickListener {
@@ -135,7 +135,7 @@ class MainActivity : BaseActivity() {
             }
         }
         if (DeviceUtils.isFloatWindowOpened()) {
-            FloatWindowService.start(application)
+            FloatingWindowService.start(application)
         }
     }
 
@@ -165,7 +165,7 @@ class MainActivity : BaseActivity() {
     private fun showExitMenuDialog() = AlertDialog.Builder(this).setTitle(R.string.notice)
         .setMessage(getString(R.string.exit_content))
         .setPositiveButton(getString(R.string.ok)) { _, _ ->
-            FloatWindowService.stop(this)
+            FloatingWindowService.stop(this)
             finish()
         }.setNegativeButton(getString(R.string.cancel), null).create().show()
 
