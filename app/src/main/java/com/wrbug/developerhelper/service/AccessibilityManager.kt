@@ -4,16 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import com.wrbug.developerhelper.R
-import com.wrbug.developerhelper.base.showToast
 import com.wrbug.developerhelper.commonutil.shell.ShellManager
 import com.wrbug.developerhelper.util.getString
 import io.reactivex.rxjava3.core.Single
+import org.jetbrains.anko.toast
 
 object AccessibilityManager {
     fun startService(context: Context?): Single<Boolean> {
         return ShellManager.openAccessibilityService().doOnSuccess {
             if (!it) {
-                context?.showToast(getString(R.string.please_open_accessbility_service))
+                context?.toast(getString(R.string.please_open_accessbility_service))
             }
         }
     }

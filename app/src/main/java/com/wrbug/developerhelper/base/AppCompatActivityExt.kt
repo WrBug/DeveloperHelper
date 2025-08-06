@@ -34,6 +34,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.base.activityresultcallback.ActResultRequest
 import com.wrbug.developerhelper.base.activityresultcallback.ActivityResultCallback
+import com.wrbug.developerhelper.constant.ReceiverConstant
 
 /**
  * Various extension functions for AppCompatActivity.
@@ -105,14 +106,15 @@ fun Context.requestStoragePermission(callback: () -> Unit) {
         }
 
         else -> {
-            requestPermission(arrayOf(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ), object : BaseActivity.PermissionCallback() {
-                override fun granted() {
-                    callback()
-                }
-            })
+            requestPermission(
+                arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ), object : BaseActivity.PermissionCallback() {
+                    override fun granted() {
+                        callback()
+                    }
+                })
         }
     }
 }
@@ -127,4 +129,11 @@ fun Context.registerReceiverComp(
     } else {
         registerReceiver(broadcastReceiver, intentFilter)
     }
+}
+
+fun Context.sendBroadcastComp(action: String, intentCallback: (Intent) -> Unit = {}) {
+    val intent = Intent(action)
+    intentCallback(intent)
+    intent.setPackage(packageName)
+    sendBroadcast(intent)
 }

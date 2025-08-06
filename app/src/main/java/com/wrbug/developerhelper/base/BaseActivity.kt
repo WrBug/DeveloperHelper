@@ -18,6 +18,9 @@ abstract class BaseActivity : AppCompatActivity() {
     protected lateinit var context: BaseActivity
     private var mPermissionCallback: PermissionCallback? = null
     protected lateinit var disposable: CompositeDisposable
+    protected val createTime by lazy {
+        System.currentTimeMillis()
+    }
 
     companion object {
         private const val PERMISSION_REQUEST_CODE = 0xAADF1
@@ -97,7 +100,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
         }
     ) {
-        showDialog(title,
+        showDialog(
+            title,
             msg,
             positiveText,
             negativeText,
@@ -110,12 +114,13 @@ abstract class BaseActivity : AppCompatActivity() {
         msg: String,
         @StringRes positiveText: Int,
         @StringRes negativeText: Int,
-        onPositiveClick: DialogInterface?.(Int) -> Unit,
-        onNegativeClick: DialogInterface?.(Int) -> Unit? = {
+        onPositiveClick: DialogInterface.(Int) -> Unit,
+        onNegativeClick: DialogInterface.(Int) -> Unit? = {
 
         }
     ) {
-        showDialog(title,
+        showDialog(
+            title,
             msg,
             positiveText,
             negativeText,

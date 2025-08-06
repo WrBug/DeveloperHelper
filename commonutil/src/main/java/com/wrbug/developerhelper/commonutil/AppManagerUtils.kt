@@ -27,6 +27,10 @@ object AppManagerUtils {
             Toast.makeText(context, "重启失败", Toast.LENGTH_SHORT).show()
             return
         }
+        startApp(context, packageName)
+    }
+
+    fun startApp(context: Context, packageName: String) {
         val intent = context.packageManager.getLaunchIntentForPackage(packageName)
         intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)

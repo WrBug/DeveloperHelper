@@ -17,6 +17,7 @@ import com.wrbug.developerhelper.util.DatabaseUtils
 import com.wrbug.developerhelper.commonutil.dp2px
 import com.wrbug.developerhelper.databinding.ActivityDatabaseEditBinding
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 import java.io.File
 import java.util.*
@@ -56,7 +57,7 @@ class DatabaseEditActivity: BaseActivity() {
             filePath = getStringExtra("filePath")
         }
         if (filePath.isNullOrEmpty()) {
-            showToast(getString(R.string.get_database_failed))
+            toast(getString(R.string.get_database_failed))
             finish()
             return
         }
@@ -102,7 +103,7 @@ class DatabaseEditActivity: BaseActivity() {
                 ShellManager.cpFile(dbPath.absolutePath, "${dstDir.absolutePath}/${dbPath.name}")
             if (!success) {
                 uiThread {
-                    showToast(getString(R.string.get_database_failed))
+                    toast(getString(R.string.get_database_failed))
                     finish()
                 }
                 return@doAsync

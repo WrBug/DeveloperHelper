@@ -9,6 +9,7 @@ import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.base.BaseActivity
 import com.wrbug.developerhelper.base.ExtraKey
 import com.wrbug.developerhelper.commonutil.AppInfoManager
+import com.wrbug.developerhelper.commonutil.GlobalEvent
 import com.wrbug.developerhelper.commonutil.addTo
 import com.wrbug.developerhelper.commonutil.dpInt
 import com.wrbug.developerhelper.databinding.ActivityAppBackupDetailBinding
@@ -21,10 +22,12 @@ import com.yanzhenjie.recyclerview.SwipeMenuItem
 class AppBackupDetailActivity : BaseActivity() {
 
     companion object {
-        fun start(context: Context, appName: String, packageName: String) {
+        private const val REQUEST_CODE = 100
+        fun start(context: Context, appName: String, packageName: String, fromAppSetting: Boolean) {
             context.startActivity(Intent(context, AppBackupDetailActivity::class.java).apply {
                 putExtra(ExtraKey.PACKAGE_NAME, packageName)
                 putExtra(ExtraKey.KEY_1, appName)
+                putExtra(ExtraKey.KEY_2, fromAppSetting)
             })
         }
     }
@@ -37,6 +40,9 @@ class AppBackupDetailActivity : BaseActivity() {
     }
     private val appName by lazy {
         intent?.getStringExtra(ExtraKey.KEY_1).orEmpty()
+    }
+    private val fromAppSetting by lazy {
+        intent?.getBooleanExtra(ExtraKey.KEY_2, false) ?: false
     }
     private val binding by lazy {
         ActivityAppBackupDetailBinding.inflate(layoutInflater)
@@ -126,7 +132,11 @@ class AppBackupDetailActivity : BaseActivity() {
             showSnack(getString(R.string.not_installed_and_backup_apk_notice))
             return
         }
-        AppRecoverActivity.start(this, appName, backupAppItemInfo)
+        if (fromAppSetting) {
+            AppRecoverActivity.startForResult(this, REQUEST_CODE, appName, backupAppItemInfo)
+        } else {
+            AppRecoverActivity.start(this, appName, backupAppItemInfo)
+        }
     }
 
     private fun deleteBackup(backupAppItemInfo: BackupAppItemInfo?) {
@@ -137,5 +147,15 @@ class AppBackupDetailActivity : BaseActivity() {
             }, {
                 showSnack(getString(R.string.delete_backup_failed_retry))
             })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                GlobalEvent.postEvent(GlobalEvent.Action.CloseAll)
+                finish()
+            }
+        }
     }
 }

@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentActivity
 import com.wrbug.developerhelper.BuildConfig
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.base.requestStoragePermission
-import com.wrbug.developerhelper.base.showToast
 import com.wrbug.developerhelper.commonutil.AppManagerUtils
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.util.setOnRootCheckClickListener
@@ -19,8 +18,10 @@ import com.wrbug.developerhelper.databinding.DialogBackupAppSelectBinding
 import com.wrbug.developerhelper.databinding.ViewAppSettingBinding
 import com.wrbug.developerhelper.mmkv.ConfigKv
 import com.wrbug.developerhelper.mmkv.manager.MMKVManager
+import com.wrbug.developerhelper.ui.activity.appbackup.AppBackupDetailActivity
 import com.wrbug.developerhelper.util.getString
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import org.jetbrains.anko.toast
 
 class AppSettingView : ScrollView {
 
@@ -54,6 +55,11 @@ class AppSettingView : ScrollView {
             showBackupSelect()
         }
         binding.restoreAppBtn.setOnRootCheckClickListener {
+            AppBackupDetailActivity.start(
+                context,
+                apkInfo?.getAppName().orEmpty(),
+                apkInfo?.packageInfo?.packageName.orEmpty(), true
+            )
         }
         binding.restartAppBtn.setOnRootCheckClickListener {
             doRestartApp()
@@ -87,11 +93,8 @@ class AppSettingView : ScrollView {
                     apkInfo?.getAppName().orEmpty()
                 )
             )
-            AlertDialog.Builder(context)
-                .setTitle(R.string.backup_app_file)
-                .setView(binding.root)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(
+            AlertDialog.Builder(context).setTitle(R.string.backup_app_file).setView(binding.root)
+                .setNegativeButton(R.string.cancel, null).setPositiveButton(
                     R.string.ok
                 ) { _, _ ->
                     doBackup(selected, binding.tvMemo.text.toString())
@@ -115,12 +118,7 @@ class AppSettingView : ScrollView {
             return
         }
         BackupAppDialog.show(
-            activity.supportFragmentManager,
-            apkInfo,
-            memo,
-            selected[0],
-            selected[1],
-            selected[2]
+            activity.supportFragmentManager, apkInfo, memo, selected[0], selected[1], selected[2]
         )
     }
 
@@ -140,7 +138,7 @@ class AppSettingView : ScrollView {
             ) {
                 if (AppManagerUtils.clearAppData(applicationInfo.packageName)) {
                     activityFinish()
-                    showToast(context.getString(R.string.clear_complete))
+                    context.toast(context.getString(R.string.clear_complete))
                 }
             }
 
@@ -176,7 +174,7 @@ class AppSettingView : ScrollView {
 
     private fun checkRoot(): Boolean {
         if (configKv.isOpenRoot().not()) {
-            showToast(context.getString(R.string.please_open_root))
+            context.toast(context.getString(R.string.please_open_root))
             return false
         }
         return true

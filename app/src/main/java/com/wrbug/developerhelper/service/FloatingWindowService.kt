@@ -14,7 +14,9 @@ import android.content.pm.ServiceInfo
 import android.graphics.PixelFormat
 import android.graphics.Point
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -28,8 +30,10 @@ import androidx.core.app.ServiceCompat
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import com.wrbug.developerhelper.R
+import com.wrbug.developerhelper.base.ExtraKey
 import com.wrbug.developerhelper.base.isServiceRunning
 import com.wrbug.developerhelper.base.registerReceiverComp
+import com.wrbug.developerhelper.commonutil.AppManagerUtils
 import com.wrbug.developerhelper.commonutil.UiUtils
 import com.wrbug.developerhelper.commonutil.addTo
 import com.wrbug.developerhelper.commonutil.dpInt
@@ -109,6 +113,7 @@ class FloatingWindowService : Service() {
         receiver = Receiver()
         val filter = IntentFilter(ReceiverConstant.ACTION_SET_FLOAT_BUTTON_VISIBLE)
         filter.addAction(ReceiverConstant.ACTION_ADB_WIFI_CLICKED)
+        filter.addAction(ReceiverConstant.ACTION_DELAY_START_APP)
         registerReceiverComp(receiver, filter)
     }
 
@@ -285,8 +290,7 @@ class FloatingWindowService : Service() {
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         }
         val builder = NotificationCompat.Builder(this, CHANNEL_ID).setAutoCancel(false)
-            .setContentIntent(pendingIntent)
-            .setContentTitle(getString(R.string.app_name))
+            .setContentIntent(pendingIntent).setContentTitle(getString(R.string.app_name))
             .setContentText(getString(R.string.demon_process_content))
             .setSmallIcon(R.drawable.ic_launcher_notify).setVibrate(null)
         notification = builder.build()
@@ -357,6 +361,15 @@ class FloatingWindowService : Service() {
                     } else {
                         updateNotificationContent("adb wifi 开启失败")
                         updateNotificationWifi(R.drawable.ic_wifi_gray)
+                    }
+                }
+
+                ReceiverConstant.ACTION_DELAY_START_APP -> {
+                    val pkg = intent.getStringExtra(ExtraKey.PACKAGE_NAME) ?: return
+                    context?.let {
+                        Handler(Looper.getMainLooper()).post {
+                            AppManagerUtils.startApp(it, pkg)
+                        }
                     }
                 }
             }

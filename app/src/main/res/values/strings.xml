@@ -118,6 +118,7 @@
     <string name="recover_data_title">选择需要恢复的数据</string>
     <string name="time_line_recover_title">恢复%1$s</string>
     <string name="not_installed_and_backup_apk_notice">未安装该应用，且apk未备份，无法恢复</string>
-    <string name="apk_version_backup_version_not_same_notice">当前应用版本与备份版本不一致，备份数据可能不兼容，建议勾选恢复安装包，是否继续</string>
+    <string name="apk_version_backup_version_not_same_notice">当前应用版本[%1$s]与备份版本[%2$s]不一致，备份数据可能不兼容，建议勾选恢复安装包，是否继续</string>
     <string name="recovering_app_data">正在恢复%1$s数据</string>
+    <string name="recover_success_launch_app">正在启动 %1$s</string>
 </resources>

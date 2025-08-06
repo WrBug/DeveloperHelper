@@ -10,6 +10,7 @@ import android.view.View
 import com.wrbug.developerhelper.base.BaseActivity
 import com.wrbug.developerhelper.base.entry.HierarchyNode
 import com.wrbug.developerhelper.base.registerReceiverComp
+import com.wrbug.developerhelper.commonutil.GlobalEvent
 import com.wrbug.developerhelper.commonutil.entity.ApkInfo
 import com.wrbug.developerhelper.constant.ReceiverConstant.ACTION_FINISH_HIERACHY_Activity
 import com.wrbug.developerhelper.databinding.ActivityHierarchyBinding
@@ -68,6 +69,9 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
         checkNodeList()
         val filter = IntentFilter(ACTION_FINISH_HIERACHY_Activity)
         receiver.setActivity(this)
+        GlobalEvent.register(GlobalEvent.Action.CloseAll, createTime) {
+            finish()
+        }
         registerReceiverComp(receiver, filter)
         showAppInfoDialog()
         FloatingWindowService.setFloatButtonVisible(this, false)
@@ -123,6 +127,7 @@ class HierarchyActivity : BaseActivity(), AppInfoDialogEventListener {
     override fun onDestroy() {
         FloatingWindowService.setFloatButtonVisible(this, true)
         unregisterReceiver(receiver)
+        GlobalEvent.unRegister(GlobalEvent.Action.CloseAll, createTime)
         super.onDestroy()
     }
 

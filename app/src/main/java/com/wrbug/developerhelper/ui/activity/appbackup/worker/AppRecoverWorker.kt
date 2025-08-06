@@ -2,12 +2,15 @@ package com.wrbug.developerhelper.ui.activity.appbackup.worker
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import com.wrbug.developerhelper.R
 import com.wrbug.developerhelper.base.ExtraKey
+import com.wrbug.developerhelper.base.sendBroadcastComp
 import com.wrbug.developerhelper.commonutil.AppInfoManager
+import com.wrbug.developerhelper.commonutil.AppManagerUtils
 import com.wrbug.developerhelper.commonutil.Constant
 import com.wrbug.developerhelper.commonutil.createNotification
 import com.wrbug.developerhelper.commonutil.fromJson
@@ -37,7 +40,8 @@ class AppRecoverWorker(appContext: Context, params: WorkerParameters) :
 
     companion object {
         const val ACTION_STEP_STATUS = "ACTION_STEP_STATUS"
-        const val ACTION_COMPLETED = "ACTION_COMPLETED"
+        const val ACTION_SUCCESS = "ACTION_SUCCESS"
+        const val ACTION_FAILED = "ACTION_FAILED"
         const val DATA = "data"
         private const val CHANNEL_ID = "APP_RECOVER_DEMON"
         const val TAG = "AppRecoverWorker"
@@ -49,7 +53,7 @@ class AppRecoverWorker(appContext: Context, params: WorkerParameters) :
             setContentTitle(R.string.app_name.getString())
             setSmallIcon(R.drawable.ic_launcher_notify)
             setContentText(R.string.recovering_app_data.getString(data?.appName.orEmpty()))
-        }
+        }, FOREGROUND_SERVICE_TYPE_DATA_SYNC
     )
 
     override suspend fun doWork(): Result {
@@ -58,28 +62,29 @@ class AppRecoverWorker(appContext: Context, params: WorkerParameters) :
             step = 0
             if (!prepareExecute()) {
                 sendStatus(RecoverTimeLineItem.Status.Failed)
-                sendComplete()
+                sendComplete(false)
                 return@withContext Result.success()
             }
             sendStatus(RecoverTimeLineItem.Status.Done)
             if (!recoverApk()) {
                 sendStatus(RecoverTimeLineItem.Status.Failed)
-                sendComplete()
+                sendComplete(false)
                 return@withContext Result.success()
             }
             sendStatus(RecoverTimeLineItem.Status.Done)
             if (!recoverData()) {
                 sendStatus(RecoverTimeLineItem.Status.Failed)
-                sendComplete()
-                return@withContext Result.success()
-            }
-            if (!recoverAndroidData()) {
-                sendStatus(RecoverTimeLineItem.Status.Failed)
-                sendComplete()
+                sendComplete(false)
                 return@withContext Result.success()
             }
             sendStatus(RecoverTimeLineItem.Status.Done)
-            sendComplete()
+            if (!recoverAndroidData()) {
+                sendStatus(RecoverTimeLineItem.Status.Failed)
+                sendComplete(false)
+                return@withContext Result.success()
+            }
+            sendStatus(RecoverTimeLineItem.Status.Done)
+            sendComplete(true)
             Result.success()
         }
     }
@@ -104,8 +109,7 @@ class AppRecoverWorker(appContext: Context, params: WorkerParameters) :
         step++
         sendStatus(RecoverTimeLineItem.Status.Running)
         val dataDir = Constant.getDataDir(data?.appItemInfo?.packageName.orEmpty())
-        val map =
-            ShellManager.getDataDirUserAndGroup(dataDir)
+        val map = ShellManager.getDataDirUserAndGroup(dataDir)
         if (!ShellManager.tarXF(tmpDir + "/" + data?.appItemInfo?.dataFile, "$dataDir/")) {
             return false
         }
@@ -133,6 +137,7 @@ class AppRecoverWorker(appContext: Context, params: WorkerParameters) :
 
     private fun prepareExecute(): Boolean {
         sendStatus(RecoverTimeLineItem.Status.Running)
+        AppManagerUtils.forceStopApp(data?.appItemInfo?.packageName.orEmpty())
         if (!ShellManager.rmFile(tmpDir)) {
             return false
         }
@@ -140,8 +145,7 @@ class AppRecoverWorker(appContext: Context, params: WorkerParameters) :
             return false
         }
         return ShellManager.tarXF(
-            File(workDir, data?.appItemInfo?.backupFile.orEmpty()).absolutePath,
-            tmpDir
+            File(workDir, data?.appItemInfo?.backupFile.orEmpty()).absolutePath, tmpDir
         )
     }
 
@@ -151,12 +155,12 @@ class AppRecoverWorker(appContext: Context, params: WorkerParameters) :
     }
 
     private fun sendStatus(status: RecoverTimeLineItem.Status) {
-        applicationContext.sendBroadcast(Intent(ACTION_STEP_STATUS).apply {
-            putExtra(ExtraKey.KEY_1, step to status.status)
-        })
+        applicationContext.sendBroadcastComp(ACTION_STEP_STATUS) {
+            it.putExtra(ExtraKey.KEY_1, step to status.status)
+        }
     }
 
-    private fun sendComplete() {
-        applicationContext.sendBroadcast(Intent(ACTION_COMPLETED))
+    private fun sendComplete(success: Boolean) {
+        applicationContext.sendBroadcastComp(if (success) ACTION_SUCCESS else ACTION_FAILED)
     }
 }
